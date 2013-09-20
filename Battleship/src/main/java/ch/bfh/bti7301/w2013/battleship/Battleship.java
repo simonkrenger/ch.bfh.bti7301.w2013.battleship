@@ -23,15 +23,40 @@
  */
 package ch.bfh.bti7301.w2013.battleship;
 
+import java.util.ResourceBundle;
+
+import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+
 /**
  * @author Christian Meyer <chrigu.meyer@gmail.com>
  * 
  */
-public class Battleship {
+public class Battleship extends Application {
+	private ResourceBundle labels;
+
+	public Battleship() {
+		labels = ResourceBundle.getBundle("translations");
+	}
+
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		System.out.println("Hello world!");
+		launch(args);
+	}
+
+	@Override
+	public void start(Stage primaryStage) {
+		primaryStage.setTitle(labels.getString("title"));
+
+		Group root = new Group();
+		Scene scene = new Scene(root, 800, 600, Color.BLACK);
+		primaryStage.setScene(scene);
+
+		primaryStage.show();
 	}
 }
