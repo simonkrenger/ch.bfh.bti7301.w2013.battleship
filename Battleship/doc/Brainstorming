@@ -1,3 +1,9 @@
+----------------------------------------------------------------------------------
+BRAINSTORMING 2013-09-19
+----------------------------------------------------------------------------------
+
+Fragen:
+---------------------------
 
 - Daten, Präsentation zwischenpräsentation.
 - methode vorgegeben? relevant für präsentation?
@@ -5,46 +11,45 @@
 - UML ?? was?
 
 
-- AI 
-- 
+----------------------------------------------------------------------------------
 
-
-Freita Meetings
+Themen Freitags Meeting:
+---------------------------
 
 Was ist gegangen?
 Code Walk Trough
-Problem Diskussion.
+Problem Diskussion
 Battleship jeder gegen jeden!
+Fragen an Dozenten
 
+----------------------------------------------------------------------------------
 
-
-Donnerstag Homeoffice
-Java
-Github
+Grobe Aufteilung der Aufgaben:
+---------------------------
 
 Simu AI, Meyer Graphik, Fränzi Kommunikation
 
----------------------------
-Scrum Initial Meeting
+----------------------------------------------------------------------------------
+
+Initial Meeting:
 ---------------------------
 
 Project Setup, Brainstorming, Project Administration, General Task Asignement.
 
 
-
-Pretask:
+Pretasks:
 Diary
 Projectlog
 
 
-Task1
+Task1:
 Simon: GitProject
-Meyer Initial Project
-Scrum Anschauen
+Meyer: Initial Project
+Alle: Scrum Anschauen
 
 
 
-Usaccases:
+Use cases:
 
 Search Oponent
 Schiffe setzte
@@ -52,7 +57,6 @@ darstellen vom gegner
 piu piu
 schiff remove
 loose/ win
-
 hiscore
 history
 chat
@@ -60,10 +64,12 @@ speed chess /timer
 define ships
 Themes
 Spiel Abspeicher (Checksum)
-
 Find Computer oponent
 
--------------------------------
+ToDo
+BattleShip Film Schauen.
+
+----------------------------------------------------------------------------------
 
 UML
 Context Model
@@ -72,37 +78,31 @@ Activity Diagramm
 Zustandsdiagramm (Speichern)
 Domain Model
 Sequence Diagramm
-
 CCRC-Karten
-
 Class Diagramm
 Package Diagramm
 
 
 
+----------------------------------------------------------------------------------
+BRAINSTORMING 2013-09-20
+----------------------------------------------------------------------------------
 
-
-
-
-
-ToDo
-BattleShip Film Schauen.
-
-
-
----------------------
-Lektion2 20-09-2013
----------------------
-
+ToDo / UML / Documents / 
+---------------------------
 Vision (Requirements)(Context Model)
 Zeitplan (Excel)
 Use Cases
 -bis Freitag 27-09-2013
 
+Work
+---------------------------
 
-DomainModel
+--//---Vision Draft---\\---
+--//------------------\\---
 
-
+Vision
+--------------------
 Intorduction
 -------------------
 Im rahmen des Moduls "Projekt 1" wird das bekannte Spiel "Schiffeversenken (engl. Battleship)" implementiert.
@@ -121,6 +121,21 @@ Das Projektteam besteht aus drei Personen, namentlich: Simon Krenger, Christian 
 Das Projekt soll gemäss UML umgesetzt werden. 
 
 
+Spiel Beschreibung:
+-----------------------------
+CLJ1-HS13-2
+
+Titel: Ship sunk game simulation
+
+Beschreibung: The aim of the project is to implement the ship sunk game on the PC/Notebook. The issues of defining the contents and dimensions of the game area and the visual and acoustical effects are part of the project.
+
+Gruppengrösse: 2-3
+
+Anzuwendende Technologien: UML, any of the following programming languages: C/C++/Java.
+
+Link: ---
+
+Betreuer: Jean-Pierre Caillot (clj1@bfh.ch)
 
 Systemspezifikation
 --------------------
@@ -129,13 +144,14 @@ Das Projekt besteht hauptsächchli aus drei Teilen. Graphische Darstellung, Spie
 
 Als Programmiersprache kommt Java zum Einsatzt. Die Kommunikation soll direkt zwischen den Spielpartnern Stattfinden und daher ohne Server auskommen. 
 
-
-Vision
---------------------
-
+--//------------------\\---
+--//------------------\\---
 
 
-Requirements
+
+
+--//---Requirements---\\---
+--//------------------\\---
 
 Non Funktional Requiremenst
 
@@ -144,9 +160,6 @@ Stabilität
 Fehlertoleranz Netzwerk 
 Flüssig
 Graphisch ansprechende Darstellung
-
-
-Aufgabenstellung (gemäss liste)
 
 
 Functional Requirements
@@ -204,16 +217,26 @@ Solution Overview
 
 Mayor Feautures
 
+--//------------------\\---
+--//------------------\\---
 
 
-Arbeiten 20.09.2013
-Arbeitsverteilung
-
+Hausaufgaben
+-------------------------------
 Simu: Projektplan
 Meyer: UseCases
 Fränzi: Vision
 
 
+----------------------------------------------------------------------------------
+Ideen 2013-09-20 - Corradi
+----------------------------------------------------------------------------------
+
+Ein Ideen und ein Todo Dokument wäre cool, Fas finden Meyer und Krenger?
+Produktbacklog nicht Vergessen.
+Der Highscore könnte ins Diary?
+
+----------------------------------------------------------------------------------
 
 
 
