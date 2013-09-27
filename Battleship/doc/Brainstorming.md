@@ -1,19 +1,18 @@
-# ----------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
 # BRAINSTORMING 2013-09-19
-# ----------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
 
-Fragen:
+### Fragen:
 ---------------------------
 
-- Daten, Präsentation zwischenpräsentation.
-- methode vorgegeben? relevant für präsentation?
-- gehst es ausschliesslich um das Produkt oder auch um das Wie?
-- UML ?? was?
+* Daten, Präsentation zwischenpräsentation.
+* methode vorgegeben? relevant für präsentation?
+* gehst es ausschliesslich um das Produkt oder auch um das Wie?
+* UML ?? was?
 
 
 ----------------------------------------------------------------------------------
-
-Themen Freitags Meeting:
+### Themen Freitags Meeting:
 ---------------------------
 
 Was ist gegangen?
@@ -244,9 +243,24 @@ Fränzi: Vision
 # ----------------------------------------------------------------------------------
 
 ## Verbindungsablauf & Spielstart:
+
  * Verbindungsdaten eingeben
  * connect klicken
  * Ein Butten mit Label Ready wird aktiviert.
  * Sobald der gegenspieler Ready Clickt welchselt der Button in Play!
  
-
+ 
+ ## ToDo bis Mi 03.10.2013 00:00 
+  
+  * Burn-down chart / Product Backlog(Krenger)
+  * Use Case Netzunterbruch (Meyer) 
+  * Plannung: wer macht wann was. (Team) 
+  * Domain Model / Use Case Diagram / Activity Diagramm (Fränzi)
+  * Klassen Diagramm (Fränzi)
+  * Sprint 1 planen (Team)
+  * CRC-Karten (Meye)
+  
+  
+  
+  
+ 
