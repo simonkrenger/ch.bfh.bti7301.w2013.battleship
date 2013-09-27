@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Diary: ch.bfh.bti7301.w2013.battleship</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<!-- Bootstrap -->
+
+<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="css/style.css" rel="stylesheet" media="screen">
+
+</head>
+<body>
+	<div class="container-narrow shadowed-box">
+
+		<div class="masthead">
+			<h3 class="muted">Project Battleship</h3>
+			<div class="mascot">&nbsp;</div>
+		</div>
+
+		<hr>
+
+		<div class="jumbotron">
+			<h1>Diary</h1>
+			<p class="lead">The battle is on</p>
+			<div class="clearfix">
+				<ul class="week-filter nav nav-pills pull-left">
+					<li class="active"><a show-week="all">All entries</a></li>
+				</ul>
+			</div>
+			<audio autoplay loop>
+				<source src="audio/theme.mp3" type="audio/mpeg"></source>
+			</audio>
+		</div>
+		
+		<hr>
+		
+		
+	<div class="score-board">
+	<table >
+	<caption>score-board</caption>
+	<tr>
+	   <th>name <th>won <th>lost <th> place
+	<tr>
+	   <td>krenger  <td>1  <td>1 <td>1
+	<tr>
+	   <td>meyer    <td>1  <td>1 <td>1
+	<tr>
+	   <td>corradi  <td>1  <td>1 <td>1
+	</table>
+	</div>
+		
+		<hr>
+
+		<div class="row-fluid marketing">
+			<div class="span12">
+				<table class="table diary-log">
+					<colgroup>
+						<col width="100px" />
+						<col width="80px" />
+						<col width="*" />
+					</colgroup>
+					<tr week="title">
+						<th>Date</th>
+						<th>Person</th>
+						<th>Comment</th>
+					</tr>
+
+
+					
+				<tr week="38">
+						<td>2013-09-19</td>
+						<td>Krenger/Meyer/Corradi</td>
+						<td><b>First Meeting</b><br />
+							Initial Meeting, Brainstorming about what and how to do the Project. Set up of the Project in Git and Eclipse.
+					</tr>
+					
+				<tr week="38">
+						<td>2013-09-20</td>
+						<td>Krenger/Meyer/Corradi</td>
+						<td><b>Project Start</b><br />
+							Start to define the mission and requirements. Discussion about general task distribution. Working on the Project Vision.
+					</tr>
+					
+				<tr week="38">
+						<td>2013-09-21</td>
+						<td>Corradi</td>
+						<td><b>Work done</b><br />
+							Set Up Initial Diary. Has to be improved.</br>
+							Wrote Vision Document. Please review.</br>
+							Added some Ideas to Brainstorming.txt</br>
+							Added SystemSchema.vsd
+					</tr>
+					
+				<tr week="38">
+						<td>2013-09-22</td>
+						<td>Corradi</td>
+						<td><b>Work done</b><br />
+							Improved diary
+					</tr>
+				<tr week="39">
+						<td>2013-09-25</td>
+						<td>Krenger</td>
+						<td><b>Work done</b><br />
+							Added project plan (XLSX and Project files)
+					</tr>
+					
+				</table>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="footer">
+			<p>Project Battleship</p>
+		</div>
+	</div>
+
+	<script src="http://code.jquery.com/jquery.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/TaskFilter.js"></script>
+
+	<script>
+		$(function() {
+			new Diary.Classes.TaskFilter($(".week-filter"), $(".diary-log"));
+		});
+	</script>
+</body>
+</html>
