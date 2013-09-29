@@ -250,7 +250,7 @@ Fränzi: Vision
  * Sobald der gegenspieler Ready Clickt welchselt der Button in Play!
  
  
- ## ToDo bis Mi 03.10.2013 00:00 
+## ToDo bis Mi 03.10.2013 00:00 
   
   * Burn-down chart / Product Backlog(Krenger)
   * Use Case Netzunterbruch (Meyer) 
@@ -258,7 +258,7 @@ Fränzi: Vision
   * Domain Model / Use Case Diagram / Activity Diagramm (Fränzi)
   * Klassen Diagramm (Fränzi)
   * Sprint 1 planen (Team)
-  * CRC-Karten (Meye)
+  * CRC-Karten (Meyer)
   
   
   
