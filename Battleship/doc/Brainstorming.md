@@ -170,7 +170,7 @@ Functional Requirements
    Auf dem eigenen Spielfeld müssen die Vorgegebenen Schiffe platzert, verschoben und gedreht werden 	     können. Die Platzierung muss den Regeln entsprechen.
 
 3. Verbinden mit einem Gegenspieler
-   Ein Gegenspieler muss über das Netzwerk gefunden werden können. 
+   Ein Gegenspieler muss über das Netzwerk gefunden werden können. Zur Suche muss auch die eigene IP-Adresse dargestellt werden (Benutzerfreundlichkeit) 
 
 4. Durchführen des Spiles
    Es soll möglich sein, via Eingabe einen schuss auf das gegnerische Spielfeld abzugeben. Es findet eine  Rückmeldung statt, ob ein schiff getroffen oder gar verenkt wurde. Treffer und Fehlschüsse werden Visuell differenziert auf dem Gegnerischen Spieufeld Angezegt. Die Schussabgaben des Gegners werden auf dem Eigenen SPielfeld angezeigt. Wenn eine partei alle gegnerischen schiffe verenkt hat, wird eine nachricht über den Sieg/Verlust angezeigt und das spiel ist beendet.
