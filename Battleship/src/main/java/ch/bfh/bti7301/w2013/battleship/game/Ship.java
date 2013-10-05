@@ -24,9 +24,19 @@
 package ch.bfh.bti7301.w2013.battleship.game;
 
 /**
+ * 
  * @author simon
  *
  */
-public class Ship {
+public interface Ship {
 
+	public Board.Coordinates getStartCoordinates();
+	public Board.Coordinates getEndCoordinates();
+	
+	public int getSize();
+	public String getName();
+	public int getDamage();
+	public boolean isSunk();
+	
+	
 }

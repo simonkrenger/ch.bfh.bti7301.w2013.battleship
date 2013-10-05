@@ -21,47 +21,28 @@
  * 
  * For more information, please refer to [http://unlicense.org]
  */
-package ch.bfh.bti7301.w2013.battleship;
+package ch.bfh.bti7301.w2013.battleship.game.ships;
 
-import java.util.ResourceBundle;
+import ch.bfh.bti7301.w2013.battleship.game.Board;
+import ch.bfh.bti7301.w2013.battleship.game.Ship;
 
-import ch.bfh.bti7301.w2013.battleship.game.Game;
-import ch.bfh.bti7301.w2013.battleship.game.ships.AircraftCarrier;
-import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 /**
- * @author Christian Meyer <chrigu.meyer@gmail.com>
- * 
+ * @author simon
+ *
  */
-public class Battleship extends Application {
-	private ResourceBundle labels;
+public class AircraftCarrier extends GenericShip implements Ship {
 
-	public Battleship() {
-		labels = ResourceBundle.getBundle("translations");
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		
-		Game g = new Game();
-		
-		launch(args);
-	}
-
+	private int shipSize = 5;
+	
 	@Override
-	public void start(Stage primaryStage) {
-		primaryStage.setTitle(labels.getString("title"));
-
-		Group root = new Group();
-		Scene scene = new Scene(root, 800, 600, Color.BLACK);
-		primaryStage.setScene(scene);
-
-		primaryStage.show();
+	public String getName() {
+		return "Aircraft carrier";
+	}
+	
+	public AircraftCarrier(Board.Coordinates start, Board.Coordinates end) {
+		this.startCoordinates = start;
+		this.endCoordinates = end;
+		this.size = shipSize;
 	}
 }

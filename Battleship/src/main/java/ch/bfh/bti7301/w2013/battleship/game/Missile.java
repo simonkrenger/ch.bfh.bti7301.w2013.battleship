@@ -25,8 +25,29 @@ package ch.bfh.bti7301.w2013.battleship.game;
 
 /**
  * @author simon
- *
+ * 
  */
 public class Missile {
 
+	public enum MissileState {
+		HIT, MISS, SUNK, GAME_WON
+	}
+
+	private MissileState status = null;
+	
+	
+
+	public Missile() {
+
+	}
+
+	/**
+	 * Returns the state of the missile. Caution, this function may return NULL
+	 * if the missile does not contain an explicit status.
+	 * 
+	 * @return The state of this missile
+	 */
+	public MissileState getMissileState() {
+		return this.status;
+	}
 }
