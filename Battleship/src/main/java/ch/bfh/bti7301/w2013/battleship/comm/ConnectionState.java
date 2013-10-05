@@ -21,47 +21,12 @@
  * 
  * For more information, please refer to [http://unlicense.org]
  */
-package ch.bfh.bti7301.w2013.battleship;
-
-import java.util.ResourceBundle;
-
-import ch.bfh.bti7301.w2013.battleship.game.Game;
-import ch.bfh.bti7301.w2013.battleship.game.ships.AircraftCarrier;
-import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
+package ch.bfh.bti7301.w2013.battleship.comm;
 
 /**
- * @author Christian Meyer <chrigu.meyer@gmail.com>
- * 
+ * @author simon
+ *
  */
-public class Battleship extends Application {
-	private ResourceBundle labels;
+public enum ConnectionState {
 
-	public Battleship() {
-		labels = ResourceBundle.getBundle("translations");
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		
-		Game g = new Game();
-		
-		launch(args);
-	}
-
-	@Override
-	public void start(Stage primaryStage) {
-		primaryStage.setTitle(labels.getString("title"));
-
-		Group root = new Group();
-		Scene scene = new Scene(root, 800, 600, Color.BLACK);
-		primaryStage.setScene(scene);
-
-		primaryStage.show();
-	}
 }

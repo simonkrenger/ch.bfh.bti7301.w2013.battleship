@@ -23,10 +23,47 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game;
 
+import java.awt.List;
+import java.util.ArrayList;
+
 /**
  * @author simon
  *
  */
 public class Board {
 
+	private int boardSize = 10;
+	private ArrayList<Ship> placedShips = new ArrayList<Ship>();
+	private ArrayList<Missile> placedMissiles = new ArrayList<Missile>();
+	
+	public Board() {
+		
+	}
+	
+	public Board(int size) {
+		this.boardSize = size;
+	}
+	
+	public int getBoardSize() {
+		return this.boardSize;
+	}
+	
+	public void placeShip(Ship s) {
+		
+	}
+	
+	public boolean withinBoard(Coordinates c) {
+		return (c.x <= boardSize) && (c.y <= boardSize);
+	}
+	
+	public class Coordinates {
+		
+		public int x;
+		public int y;
+		
+		public Coordinates(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}		
+	}
 }
