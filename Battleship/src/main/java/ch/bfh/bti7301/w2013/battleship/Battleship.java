@@ -26,7 +26,6 @@ package ch.bfh.bti7301.w2013.battleship;
 import java.util.ResourceBundle;
 
 import ch.bfh.bti7301.w2013.battleship.game.Game;
-import ch.bfh.bti7301.w2013.battleship.game.ships.AircraftCarrier;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;

@@ -29,6 +29,8 @@ package ch.bfh.bti7301.w2013.battleship.game;
  */
 public class Player {
 
+	private static String DEFAULT_NAME = "Unnamed player";
+	
 	private String name;
 	private PlayerState status;
 	private Board playerBoard;
@@ -39,7 +41,7 @@ public class Player {
 	}
 	
 	public Player(Game g) {
-		this(g, "Unnamed");
+		this(g, DEFAULT_NAME);
 	}
 
 	public Player(Game g, String name) {
@@ -52,4 +54,22 @@ public class Player {
 	public Board getBoard() {
 		return playerBoard;
 	}
+
+	public PlayerState getStatus() {
+		return status;
+	}
+
+	public void setStatus(PlayerState status) {
+		this.status = status;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public Game getGame() {
+		return playerGame;
+	}
+	
+	
 }
