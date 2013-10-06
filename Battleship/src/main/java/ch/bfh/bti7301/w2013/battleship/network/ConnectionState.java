@@ -21,17 +21,12 @@
  * 
  * For more information, please refer to [http://unlicense.org]
  */
-package ch.bfh.bti7301.w2013.battleship.comm;
-
-import java.util.List;
+package ch.bfh.bti7301.w2013.battleship.network;
 
 /**
  * @author simon
  *
  */
-public interface NetworkInformation {
+public enum ConnectionState {
 
-	public List<String> getLocalIP();
-	
-	public ConnectionState getConnectionState();
 }
