@@ -260,6 +260,44 @@ Fränzi: Vision
   * Sprint 1 planen (Team)
   * CRC-Karten (Meyer)
   
+
+# ----------------------------------------------------------------------------------
+# Teammeeting 2013-10-04
+# ----------------------------------------------------------------------------------
+
+
+## Interfaces
+  
+  * to be defined in detail. Diskussion ist noch im gange.
+  
+## Notes
+ 
+  * Aktive und Gültge IPv4 Addresse als liste > GUI
+
+
+## ToDo bis Mi 10.10.2013 00:00 
+
+  * Object Diagramm überarbeiten (+ bei methoden wegnehmen)  
+    Ship > direction Attribut. (Wie genau machen wir das Schiff) (Fränzi)
+    Missile (Cooridnates mit C)
+  * Sequence Diagramm network (Fränzi)
+  * Network interruption > Activity Diagram (Fränzi)
+  * Grunsätzliche Klassen erstellen, Interfaces andenken. Anfordeungen für Schnittstellen finden. (Alle)
+
+
+# ----------------------------------------------------------------------------------
+# corradi 2013-10-04
+# ----------------------------------------------------------------------------------
+
+  * Wie vergleicht man ein Byte...???
+  * In welcher form Genau möchte Meyer die IP Adressen?
+
+
+
+
+
+
+
   
   
   
