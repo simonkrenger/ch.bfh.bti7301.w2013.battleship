@@ -24,56 +24,22 @@
 package ch.bfh.bti7301.w2013.battleship.game.ships;
 
 import ch.bfh.bti7301.w2013.battleship.game.Board;
-import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
 
 /**
  * @author simon
  *
  */
-public class GenericShip implements Ship {
+public class PatrolBoat extends GenericShip implements Ship {
 
-	protected Board.Coordinates startCoordinates;
-	protected Board.Coordinates endCoordinates;
+private static int SHIP_SIZE = 2;
 	
-	protected int size;
-	
-	protected GenericShip(Board.Coordinates start, Board.Coordinates end, int size) {
-		this.startCoordinates = start;
-		this.endCoordinates = end;
-		this.size = size;
-	}
-	
-	@Override
-	public Coordinates getStartCoordinates() {
-		return startCoordinates;
-	}
-
-	@Override
-	public Coordinates getEndCoordinates() {
-		return endCoordinates;
-	}
-
-	@Override
-	public int getSize() {
-		return this.size;
-	}
-
 	@Override
 	public String getName() {
-		return "Generic ship";
+		return "Patrol boat";
 	}
-
-	@Override
-	public int getDamage() {
-		// TODO Auto-generated method stub
-		return 0;
+	
+	public PatrolBoat(Board.Coordinates start, Board.Coordinates end) {
+		super(start, end, SHIP_SIZE);
 	}
-
-	@Override
-	public boolean isSunk() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 }
