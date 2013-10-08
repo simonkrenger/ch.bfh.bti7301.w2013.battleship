@@ -29,6 +29,7 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import ch.bfh.bti7301.w2013.battleship.game.Board;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
@@ -70,6 +71,13 @@ public class Battleship extends Application {
 		BoardView pbv = new BoardView(playerBoard);
 		pbv.relocate(10, 10);
 		root.getChildren().add(pbv);
+
+		Board opponentBoard = game.getOpponent().getBoard();
+		BoardView obv = new BoardView(opponentBoard);
+		obv.getTransforms().add(new Scale(0.5, 0.5, 0, 0));
+
+		obv.relocate(pbv.getBoundsInParent().getMaxX() + 20, 10);
+		root.getChildren().add(obv);
 
 		primaryStage.show();
 	}

@@ -25,29 +25,30 @@ package ch.bfh.bti7301.w2013.battleship.game;
 
 /**
  * @author simon
- *
+ * 
  */
 public class Game {
 
 	private int gameID;
-	
+
 	private Player localPlayer;
 	private Player opponentPlayer;
-	
+
 	private Player activePlayer;
-	
+
 	public Game() {
 		this.localPlayer = new Player(this);
+		this.opponentPlayer = new Player(this);
 	}
-	
+
 	public Player getLocalPlayer() {
 		return localPlayer;
 	}
-	
+
 	public Player getOpponent() {
 		return opponentPlayer;
 	}
-	
+
 	public Player getActivePlayer() {
 		return activePlayer;
 	}
