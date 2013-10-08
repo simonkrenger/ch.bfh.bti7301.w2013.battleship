@@ -30,9 +30,9 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import ch.bfh.bti7301.w2013.battleship.game.Board;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
-import ch.bfh.bti7301.w2013.battleship.gui.ShipView;
 
 /**
  * @author Christian Meyer <chrigu.meyer@gmail.com>
@@ -41,17 +41,20 @@ import ch.bfh.bti7301.w2013.battleship.gui.ShipView;
 public class Battleship extends Application {
 	private ResourceBundle labels;
 
+	private Game game;
+
 	public Battleship() {
 		labels = ResourceBundle.getBundle("translations");
+		game = new Game();
 	}
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
+
 		Game g = new Game();
-		
+
 		launch(args);
 	}
 
@@ -63,10 +66,10 @@ public class Battleship extends Application {
 		Scene scene = new Scene(root, 800, 600, Color.YELLOW);
 		primaryStage.setScene(scene);
 
-		root.getChildren().add(new BoardView(10, 10));
-		ShipView ship = new ShipView(2);
-		ship.relocate(BoardView.SIZE*2, BoardView.SIZE);
-		root.getChildren().add(ship);
+		Board playerBoard = game.getLocalPlayer().getBoard();
+		BoardView pbv = new BoardView(playerBoard);
+		pbv.relocate(10, 10);
+		root.getChildren().add(pbv);
 
 		primaryStage.show();
 	}
