@@ -4,9 +4,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javafx.geometry.Bounds;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.transform.Rotate;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import ch.bfh.bti7301.w2013.battleship.game.Board;
 import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
@@ -19,6 +22,7 @@ public class BoardView extends Parent {
 		int rows, columns;
 		rows = columns = board.getBoardSize();
 
+		getChildren().add(getWater(rows, columns));
 		for (int i = 0; i <= rows; i++) {
 			getChildren().add(getLine(i * SIZE, 0, i * SIZE, SIZE * columns));
 		}
@@ -43,6 +47,12 @@ public class BoardView extends Parent {
 					BoardView.SIZE * ship.getStartCoordinates().y);
 			getChildren().add(sv);
 		}
+	}
+
+	private Shape getWater(int rows, int columns) {
+		Rectangle water = new Rectangle(columns * SIZE, rows * SIZE);
+		water.setFill(Color.LIGHTBLUE);
+		return water;
 	}
 
 	private Line getLine(double x1, double y1, double x2, double y2) {

@@ -12,7 +12,7 @@ public class ShipView extends Parent {
 	}
 
 	private Shape set(Shape node) {
-		node.setFill(Color.BLUE);
+		node.setFill(Color.DARKGRAY);
 		return node;
 	}
 }

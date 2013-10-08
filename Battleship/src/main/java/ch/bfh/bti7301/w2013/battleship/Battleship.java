@@ -64,7 +64,7 @@ public class Battleship extends Application {
 		primaryStage.setTitle(labels.getString("title"));
 
 		Group root = new Group();
-		Scene scene = new Scene(root, 800, 600, Color.YELLOW);
+		Scene scene = new Scene(root, 800, 600, Color.WHITE);
 		primaryStage.setScene(scene);
 
 		Board playerBoard = game.getLocalPlayer().getBoard();
