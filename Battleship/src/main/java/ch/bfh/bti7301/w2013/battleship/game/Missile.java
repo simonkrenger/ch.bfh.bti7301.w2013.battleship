@@ -21,53 +21,33 @@
  * 
  * For more information, please refer to [http://unlicense.org]
  */
-package ch.bfh.bti7301.w2013.battleship;
-
-import java.util.ResourceBundle;
-
-import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import ch.bfh.bti7301.w2013.battleship.game.Game;
-import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
-import ch.bfh.bti7301.w2013.battleship.gui.ShipView;
+package ch.bfh.bti7301.w2013.battleship.game;
 
 /**
- * @author Christian Meyer <chrigu.meyer@gmail.com>
+ * @author simon
  * 
  */
-public class Battleship extends Application {
-	private ResourceBundle labels;
+public class Missile {
 
-	public Battleship() {
-		labels = ResourceBundle.getBundle("translations");
+	public enum MissileState {
+		HIT, MISS, SUNK, GAME_WON
+	}
+
+	private MissileState status = null;
+	
+	
+
+	public Missile() {
+
 	}
 
 	/**
-	 * @param args
+	 * Returns the state of the missile. Caution, this function may return NULL
+	 * if the missile does not contain an explicit status.
+	 * 
+	 * @return The state of this missile
 	 */
-	public static void main(String[] args) {
-		
-		Game g = new Game();
-		
-		launch(args);
-	}
-
-	@Override
-	public void start(Stage primaryStage) {
-		primaryStage.setTitle(labels.getString("title"));
-
-		Group root = new Group();
-		Scene scene = new Scene(root, 800, 600, Color.YELLOW);
-		primaryStage.setScene(scene);
-
-		root.getChildren().add(new BoardView(10, 10));
-		ShipView ship = new ShipView(2);
-		ship.relocate(BoardView.SIZE*2, BoardView.SIZE);
-		root.getChildren().add(ship);
-
-		primaryStage.show();
+	public MissileState getMissileState() {
+		return this.status;
 	}
 }

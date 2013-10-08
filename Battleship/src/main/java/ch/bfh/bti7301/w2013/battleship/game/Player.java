@@ -21,53 +21,35 @@
  * 
  * For more information, please refer to [http://unlicense.org]
  */
-package ch.bfh.bti7301.w2013.battleship;
-
-import java.util.ResourceBundle;
-
-import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import ch.bfh.bti7301.w2013.battleship.game.Game;
-import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
-import ch.bfh.bti7301.w2013.battleship.gui.ShipView;
+package ch.bfh.bti7301.w2013.battleship.game;
 
 /**
- * @author Christian Meyer <chrigu.meyer@gmail.com>
- * 
+ * @author simon
+ *
  */
-public class Battleship extends Application {
-	private ResourceBundle labels;
+public class Player {
 
-	public Battleship() {
-		labels = ResourceBundle.getBundle("translations");
+	private String name;
+	private PlayerState status;
+	private Board playerBoard;
+	private Game playerGame;
+	
+	public enum PlayerState {
+		GAME_STARTED, READY, WAITING, PLAYING, GAME_WON, GAME_LOST
+	}
+	
+	public Player(Game g) {
+		this(g, "Unnamed");
 	}
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		
-		Game g = new Game();
-		
-		launch(args);
+	public Player(Game g, String name) {
+		this.name = name;
+		this.status = PlayerState.GAME_STARTED;
+		this.playerBoard = new Board();
+		this.playerGame = g;
 	}
-
-	@Override
-	public void start(Stage primaryStage) {
-		primaryStage.setTitle(labels.getString("title"));
-
-		Group root = new Group();
-		Scene scene = new Scene(root, 800, 600, Color.YELLOW);
-		primaryStage.setScene(scene);
-
-		root.getChildren().add(new BoardView(10, 10));
-		ShipView ship = new ShipView(2);
-		ship.relocate(BoardView.SIZE*2, BoardView.SIZE);
-		root.getChildren().add(ship);
-
-		primaryStage.show();
+	
+	public Board getBoard() {
+		return playerBoard;
 	}
 }

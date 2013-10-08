@@ -21,53 +21,49 @@
  * 
  * For more information, please refer to [http://unlicense.org]
  */
-package ch.bfh.bti7301.w2013.battleship;
+package ch.bfh.bti7301.w2013.battleship.game;
 
-import java.util.ResourceBundle;
-
-import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import ch.bfh.bti7301.w2013.battleship.game.Game;
-import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
-import ch.bfh.bti7301.w2013.battleship.gui.ShipView;
+import java.awt.List;
+import java.util.ArrayList;
 
 /**
- * @author Christian Meyer <chrigu.meyer@gmail.com>
- * 
+ * @author simon
+ *
  */
-public class Battleship extends Application {
-	private ResourceBundle labels;
+public class Board {
 
-	public Battleship() {
-		labels = ResourceBundle.getBundle("translations");
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
+	private int boardSize = 10;
+	private ArrayList<Ship> placedShips = new ArrayList<Ship>();
+	private ArrayList<Missile> placedMissiles = new ArrayList<Missile>();
+	
+	public Board() {
 		
-		Game g = new Game();
-		
-		launch(args);
 	}
-
-	@Override
-	public void start(Stage primaryStage) {
-		primaryStage.setTitle(labels.getString("title"));
-
-		Group root = new Group();
-		Scene scene = new Scene(root, 800, 600, Color.YELLOW);
-		primaryStage.setScene(scene);
-
-		root.getChildren().add(new BoardView(10, 10));
-		ShipView ship = new ShipView(2);
-		ship.relocate(BoardView.SIZE*2, BoardView.SIZE);
-		root.getChildren().add(ship);
-
-		primaryStage.show();
+	
+	public Board(int size) {
+		this.boardSize = size;
+	}
+	
+	public int getBoardSize() {
+		return this.boardSize;
+	}
+	
+	public void placeShip(Ship s) {
+		
+	}
+	
+	public boolean withinBoard(Coordinates c) {
+		return (c.x <= boardSize) && (c.y <= boardSize);
+	}
+	
+	public class Coordinates {
+		
+		public int x;
+		public int y;
+		
+		public Coordinates(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}		
 	}
 }
