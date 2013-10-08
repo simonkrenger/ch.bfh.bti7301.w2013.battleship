@@ -25,6 +25,9 @@ package ch.bfh.bti7301.w2013.battleship;
 
 import java.util.ResourceBundle;
 
+import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
+import ch.bfh.bti7301.w2013.battleship.gui.ShipView;
+
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -54,8 +57,13 @@ public class Battleship extends Application {
 		primaryStage.setTitle(labels.getString("title"));
 
 		Group root = new Group();
-		Scene scene = new Scene(root, 800, 600, Color.BLACK);
+		Scene scene = new Scene(root, 800, 600, Color.YELLOW);
 		primaryStage.setScene(scene);
+
+		root.getChildren().add(new BoardView(10, 10));
+		ShipView ship = new ShipView(2);
+		ship.relocate(BoardView.SIZE*2, BoardView.SIZE);
+		root.getChildren().add(ship);
 
 		primaryStage.show();
 	}
