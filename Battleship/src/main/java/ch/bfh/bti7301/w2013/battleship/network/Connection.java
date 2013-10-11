@@ -4,18 +4,28 @@ import java.io.*;
 import java.net.*;
 import java.util.Date;
 
+import ch.bfh.bti7301.w2013.battleship.game.Missile;
+
 public class Connection {
 
 	final static int GAMEPORT = 42423;
 	public Socket connection;
 
 	public Connection() {
-		createServerSocket(GAMEPORT);
+		connection = createServerSocket(GAMEPORT);
 	}
 
-	public Connection(String opponentIP) {
-		// Create a Client Socket
+	public Connection(String opponentIP) throws UnknownHostException {
+
+		try {
+			Socket player = new Socket(opponentIP, GAMEPORT);
+			connection = player;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
+	
 
 	private static Socket createServerSocket(int gameport) {
 
@@ -30,25 +40,16 @@ public class Connection {
 		while (true) {
 			try {
 				Socket commSocket = listener.accept();
-				return commSocket;
+				listener.close();
+				return commSocket;		
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
 		}
 	}
-
-	public static boolean sendObject(Socket socket) {
-
-		return false;
-
-	}
-
-	public static boolean receiveObject(Socket socket) {
-		return false;
-
-	}
-
+	
 	/**
 	 * private static Socket createClientSocket(String opponentIP) {
 	 * 
@@ -62,6 +63,34 @@ public class Connection {
 	 * 
 	 * return bsSocket; }
 	 */
+	
+	
+
+	private static boolean sendObject(Socket socket, Object missile) {
+		// checkNetwork connection
+
+		return false;
+
+	}
+
+	private static boolean receiveObject(Socket socket) {
+
+		return false;
+
+	}
+
+	/**
+	 * 
+	 * @param missile
+	 * @return
+	 */
+
+	public Missile placeShot(Missile missile) {
+		sendObject(connection, missile);
+		return null;
+	}
+
+
 
 	/**
 	 * private static ObjectInputStream getInputStream(Socket socket){
