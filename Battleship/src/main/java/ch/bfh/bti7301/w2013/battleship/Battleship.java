@@ -25,6 +25,10 @@ package ch.bfh.bti7301.w2013.battleship;
 
 import java.util.ResourceBundle;
 
+<<<<<<< HEAD
+=======
+import ch.bfh.bti7301.w2013.battleship.game.Game;
+>>>>>>> refs/remotes/origin/gamelogic-sprint1
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;

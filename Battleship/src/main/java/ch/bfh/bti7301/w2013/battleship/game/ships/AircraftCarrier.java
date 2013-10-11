@@ -23,7 +23,8 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game.ships;
 
-import ch.bfh.bti7301.w2013.battleship.game.Board;
+import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
+import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
 
 
@@ -32,17 +33,19 @@ import ch.bfh.bti7301.w2013.battleship.game.Ship;
  *
  */
 public class AircraftCarrier extends GenericShip implements Ship {
-
-	private int shipSize = 5;
+	
+	private static int SHIP_SIZE = 5;
 	
 	@Override
 	public String getName() {
 		return "Aircraft carrier";
 	}
 	
-	public AircraftCarrier(Board.Coordinates start, Board.Coordinates end) {
-		this.startCoordinates = start;
-		this.endCoordinates = end;
-		this.size = shipSize;
+	public AircraftCarrier(Coordinates start, Coordinates end) {
+		super(start, end, SHIP_SIZE);
+	}
+	
+	public AircraftCarrier(Coordinates start, Direction dir) {
+		super(start, dir, SHIP_SIZE);
 	}
 }
