@@ -38,6 +38,8 @@ public class Board {
 	
 	private ArrayList<Ship> placedShips = new ArrayList<Ship>();
 	private ArrayList<Missile> placedMissiles = new ArrayList<Missile>();
+	
+	private BoardSetup setup = new BoardSetup();
 
 	public Board() {
 		this(DEFAULT_BOARD_SIZE);
@@ -84,6 +86,28 @@ public class Board {
 
 	public boolean withinBoard(Coordinates c) {
 		return (c.x <= size) && (c.y <= size);
+	}
+	
+	public BoardSetup getBoardSetup() {
+		return this.setup;
+	}
+	
+	public class BoardSetup {
+		private BoardSetup() {
+			
+		}
+		
+		public void moveShip(Ship s, Coordinates newStartCoordinates, Direction d) {
+			
+		}
+		
+		public void moveShip(Ship s, Coordinates newStartCoordinates, Coordinates newEndCoordinates) {
+			
+		}
+		
+		public void done() {
+			setup = null;
+		}
 	}
 
 	public static class Coordinates {
