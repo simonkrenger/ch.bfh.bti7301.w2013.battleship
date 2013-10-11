@@ -298,10 +298,11 @@ Fränzi: Vision
 # TeamMeetin 2013-10-11
 # ---------------------------------------------------------------------------------
 
-  - Sprint 1 Fertig bis  17.10.2013
-  - 
-
-
+  * Sprint 1 Fertig bis  17.10.2013
+  * Bei Tasks Sprint 4 und 5 Planen oder in der Planung aufführen bis wo geplant ist.
+  * MS Project
+  * Nächste Woche noch treffen, dann erst wieder 15.11.2013
+  
   
   
   
