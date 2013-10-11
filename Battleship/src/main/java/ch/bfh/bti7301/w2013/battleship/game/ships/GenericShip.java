@@ -47,6 +47,12 @@ public class GenericShip implements Ship {
 		this.size = size;
 	}
 	
+	protected GenericShip(Board.Coordinates start, Direction direction, int size) {
+		this.startCoordinates = start;
+		this.size = size;
+		// TODO
+	}
+	
 	@Override
 	public Coordinates getStartCoordinates() {
 		return startCoordinates;

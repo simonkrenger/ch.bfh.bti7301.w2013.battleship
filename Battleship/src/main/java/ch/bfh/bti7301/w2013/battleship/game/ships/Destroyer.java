@@ -23,8 +23,9 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game.ships;
 
-import ch.bfh.bti7301.w2013.battleship.game.Board;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
+import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
+import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
 
 /**
  * @author simon
@@ -39,7 +40,11 @@ private static int SHIP_SIZE = 3;
 		return "Battleship";
 	}
 	
-	public Destroyer(Board.Coordinates start, Board.Coordinates end) {
+	public Destroyer(Coordinates start, Coordinates end) {
 		super(start, end, SHIP_SIZE);
+	}
+	
+	public Destroyer(Coordinates start, Direction dir) {
+		super(start, dir, SHIP_SIZE);
 	}
 }
