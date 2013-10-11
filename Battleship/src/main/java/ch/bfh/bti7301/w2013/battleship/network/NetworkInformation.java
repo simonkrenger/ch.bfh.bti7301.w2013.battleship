@@ -1,4 +1,4 @@
-package ch.bfh.bti7301.w2012.battleship.network;
+package ch.bfh.bti7301.w2013.battleship.network;
 
 import java.net.*;
 import java.util.*;
