@@ -39,6 +39,9 @@ public class Game {
 	public Game() {
 		this.localPlayer = new Player(this);
 		this.opponentPlayer = new Player(this);
+		
+		//TODO: Fix active player (not local)
+		this.activePlayer = localPlayer;
 	}
 
 	public Player getLocalPlayer() {
@@ -51,5 +54,13 @@ public class Game {
 
 	public Player getActivePlayer() {
 		return activePlayer;
+	}
+
+	public int getGameID() {
+		return gameID;
+	}
+
+	public void setGameID(int gameID) {
+		this.gameID = gameID;
 	}
 }

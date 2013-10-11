@@ -23,6 +23,8 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game;
 
+import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
+
 /**
  * @author simon
  * 
@@ -33,12 +35,12 @@ public class Missile {
 		HIT, MISS, SUNK, GAME_WON
 	}
 
+	private Coordinates coordinates = null;
+	
 	private MissileState status = null;
-	
-	
 
-	public Missile() {
-
+	public Missile(Coordinates c) {
+		this.coordinates = c;
 	}
 
 	/**
@@ -49,5 +51,9 @@ public class Missile {
 	 */
 	public MissileState getMissileState() {
 		return this.status;
+	}
+	
+	public Coordinates getCoordinates() {
+		return this.coordinates;
 	}
 }
