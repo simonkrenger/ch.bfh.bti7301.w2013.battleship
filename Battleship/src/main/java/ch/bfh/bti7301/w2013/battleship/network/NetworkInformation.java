@@ -1,4 +1,4 @@
-package ch.bfh.bti7301.w2012.battleship.network;
+package ch.bfh.bti7301.w2013.battleship.network;
 
 import java.net.*;
 import java.util.*;
@@ -45,6 +45,7 @@ public class NetworkInformation {
 
 			for (InetAddress ifAddress : Collections.list(inetAddresses)) {
 
+				//hier vergleich für 0-255 , Byte vergleichen mit dezimalzahl.
 				if (ifAddress.getAddress().length == 4) {
 					ipv4Interfaces.add(" IP:" + ifAddress.getHostAddress()
 							+ " ");
