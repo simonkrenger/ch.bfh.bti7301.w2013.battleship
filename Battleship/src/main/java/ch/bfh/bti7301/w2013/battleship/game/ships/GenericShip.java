@@ -40,18 +40,44 @@ public class GenericShip implements Ship {
 	protected Board.Coordinates endCoordinates;
 
 	protected int size;
+	protected Direction direction;
 
 	protected GenericShip(Board.Coordinates start, Board.Coordinates end,
 			int size) {
 		this.startCoordinates = start;
 		this.endCoordinates = end;
 		this.size = size;
+		if (start.x == end.x) {
+			if (start.y < end.y)
+				direction = Direction.SOUTH;
+			else
+				direction = Direction.NORTH;
+		} else {
+			if (start.x > end.x)
+				direction = Direction.WEST;
+			else
+				direction = Direction.EAST;
+		}
 	}
 
 	protected GenericShip(Board.Coordinates start, Direction direction, int size) {
 		this.startCoordinates = start;
 		this.size = size;
-		// TODO
+		this.direction = direction;
+		switch (direction) {
+		case NORTH:
+			this.endCoordinates = new Coordinates(start.x, start.y - size);
+			break;
+		case EAST:
+			this.endCoordinates = new Coordinates(start.x + size, start.y);
+			break;
+		case SOUTH:
+			this.endCoordinates = new Coordinates(start.x, start.y + size);
+			break;
+		case WEST:
+			this.endCoordinates = new Coordinates(start.x - size, start.y);
+			break;
+		}
 	}
 
 	@Override
@@ -94,7 +120,6 @@ public class GenericShip implements Ship {
 
 	@Override
 	public Direction getDirection() {
-		// TODO Auto-generated method stub
-		return null;
+		return direction;
 	}
 }

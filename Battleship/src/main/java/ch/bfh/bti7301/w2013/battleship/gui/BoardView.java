@@ -1,11 +1,11 @@
 package ch.bfh.bti7301.w2013.battleship.gui;
 
-import javafx.geometry.Bounds;
 import javafx.scene.Parent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.scene.transform.Rotate;
 import ch.bfh.bti7301.w2013.battleship.game.Board;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
@@ -27,11 +27,18 @@ public class BoardView extends Parent {
 
 		for (Ship ship : board.getPlacedShips()) {
 			ShipView sv = new ShipView(ship.getSize());
-			if (ship.getStartCoordinates().x != ship.getEndCoordinates().x) {
-				Bounds b = sv.getBoundsInLocal();
-				sv.setTranslateY(-(b.getHeight() - SIZE) / 2);
-				sv.setRotate(90);
-				sv.setTranslateX((b.getHeight() - SIZE) / 2);
+			switch (ship.getDirection()) {
+			case NORTH:
+				sv.getTransforms().add(new Rotate(180, SIZE / 2, SIZE / 2));
+				break;
+			case EAST:
+				sv.getTransforms().add(new Rotate(-90, SIZE / 2, SIZE / 2));
+				break;
+			case WEST:
+				sv.getTransforms().add(new Rotate(90, SIZE / 2, SIZE / 2));
+				break;
+			case SOUTH:
+				break;
 			}
 			sv.relocate(SIZE * ship.getStartCoordinates().x,
 					SIZE * ship.getStartCoordinates().y);
