@@ -97,4 +97,8 @@ public class Board {
 			return alpha + y;
 		}
 	}
+	
+	public enum Direction {
+		NORTH, SOUTH, WEST, EAST
+	}
 }
