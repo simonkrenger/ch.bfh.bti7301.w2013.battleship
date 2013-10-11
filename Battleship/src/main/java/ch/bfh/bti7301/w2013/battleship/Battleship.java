@@ -23,8 +23,6 @@
  */
 package ch.bfh.bti7301.w2013.battleship;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
@@ -35,7 +33,6 @@ import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import ch.bfh.bti7301.w2013.battleship.game.Board;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
-import ch.bfh.bti7301.w2013.battleship.game.Ship;
 import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.ships.AircraftCarrier;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView;

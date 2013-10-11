@@ -23,6 +23,7 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game.players;
 
+import ch.bfh.bti7301.w2013.battleship.game.Board;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 
 /**
@@ -31,22 +32,20 @@ import ch.bfh.bti7301.w2013.battleship.game.Missile;
  */
 public class Opponent extends GenericPlayer implements Player {
 
-	/* (non-Javadoc)
-	 * @see ch.bfh.bti7301.w2013.battleship.game.PlayerInterface#placeShot(ch.bfh.bti7301.w2013.battleship.game.Missile)
-	 */
 	@Override
 	public Missile placeShot(Missile m) {
 		// TODO CALL NETWORK (FRÄNZI!)
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see ch.bfh.bti7301.w2013.battleship.game.PlayerInterface#getPlayerState()
-	 */
 	@Override
 	public PlayerState getPlayerState() {
 		// TODO CALL NETWORK (FRÄNZI!)
 		return null;
+	}
+	
+	public Board getBoard() {
+		return this.playerBoard;
 	}
 
 }

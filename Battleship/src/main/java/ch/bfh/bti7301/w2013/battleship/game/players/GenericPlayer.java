@@ -34,8 +34,8 @@ public class GenericPlayer {
 	private static String DEFAULT_NAME = "Unnamed player";
 	
 	private String name;
-	private PlayerState status;
-	private Board playerBoard;
+	protected PlayerState status;
+	protected Board playerBoard;
 	
 	public enum PlayerState {
 		GAME_STARTED, READY, WAITING, PLAYING, GAME_WON, GAME_LOST
@@ -57,5 +57,9 @@ public class GenericPlayer {
 
 	public String getName() {
 		return name;
+	}
+	
+	public void setPlayerState(PlayerState ps) {
+		this.status = ps;
 	}
 }

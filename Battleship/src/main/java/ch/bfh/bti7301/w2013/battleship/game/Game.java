@@ -48,11 +48,11 @@ public class Game {
 		this.activePlayer = localPlayer;
 	}
 
-	public Player getLocalPlayer() {
+	public LocalPlayer getLocalPlayer() {
 		return localPlayer;
 	}
 
-	public Player getOpponent() {
+	public Opponent getOpponent() {
 		return opponentPlayer;
 	}
 

@@ -36,6 +36,4 @@ public interface Player {
 	public Missile placeShot(Missile m);
 	
 	public PlayerState getPlayerState();
-	
-	public Board getBoard();
 }

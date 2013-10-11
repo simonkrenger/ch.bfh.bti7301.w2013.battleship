@@ -23,6 +23,7 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game.players;
 
+import ch.bfh.bti7301.w2013.battleship.game.Board;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 
 /**
@@ -39,8 +40,10 @@ public class LocalPlayer extends GenericPlayer implements Player{
 
 	@Override
 	public PlayerState getPlayerState() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.status;
 	}
 
+	public Board getBoard() {
+		return this.playerBoard;
+	}
 }
