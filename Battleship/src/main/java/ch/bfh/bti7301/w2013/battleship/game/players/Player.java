@@ -23,7 +23,6 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game.players;
 
-import ch.bfh.bti7301.w2013.battleship.game.Board;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 
