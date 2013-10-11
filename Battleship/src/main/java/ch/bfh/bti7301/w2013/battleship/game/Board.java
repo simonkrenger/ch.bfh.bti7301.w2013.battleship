@@ -67,6 +67,12 @@ public class Board {
 		// Check 
 	}
 	
+	public void placeMissile(Missile m) {
+		//TODO
+		
+		//TODO: Check if coordinates of missile were already used
+	}
+	
 	public ArrayList<Ship> getPlacedShips() {
 		return this.placedShips;
 	}
