@@ -25,7 +25,6 @@ package ch.bfh.bti7301.w2013.battleship.game;
 
 import java.util.ArrayList;
 
-
 /**
  * @author simon
  * 
@@ -33,9 +32,9 @@ import java.util.ArrayList;
 public class Board {
 
 	private static int DEFAULT_BOARD_SIZE = 10;
-	
+
 	private int size;
-	
+
 	private ArrayList<Ship> placedShips = new ArrayList<Ship>();
 	private ArrayList<Missile> placedMissiles = new ArrayList<Missile>();
 	
@@ -55,19 +54,21 @@ public class Board {
 
 	public void placeShip(Ship s) {
 		placedShips.add(s);
-		// TODO: Do some sanity checks, throw exception if placement is not possible
+		// TODO: Do some sanity checks, throw exception if placement is not
+		// possible
 
 		// First, check if ship can be placed (game state)
 		// Check if number of ships is allowed
-		
+
 		// Check boundaries of board
-		if(withinBoard(s.getStartCoordinates()) && withinBoard(s.getEndCoordinates())) {
-			
+		if (withinBoard(s.getStartCoordinates())
+				&& withinBoard(s.getEndCoordinates())) {
+
 		} else {
 			// Start or end coordinates are not within board!
 		}
-		
-		// Check 
+
+		// Check
 	}
 	
 	public void placeMissile(Missile m) {
@@ -77,7 +78,7 @@ public class Board {
 		//TODO: Check if coordinates of missile were already used
 		//TODO: Observer pattern
 	}
-	
+
 	public ArrayList<Ship> getPlacedShips() {
 		return this.placedShips;
 	}
@@ -130,7 +131,7 @@ public class Board {
 			return alpha + y;
 		}
 	}
-	
+
 	public enum Direction {
 		NORTH, SOUTH, WEST, EAST
 	}

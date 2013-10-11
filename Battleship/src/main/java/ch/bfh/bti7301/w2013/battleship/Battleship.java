@@ -32,8 +32,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import ch.bfh.bti7301.w2013.battleship.game.Board;
-import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
+import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.ships.AircraftCarrier;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
 
