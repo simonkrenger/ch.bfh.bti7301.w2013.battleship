@@ -21,40 +21,41 @@
  * 
  * For more information, please refer to [http://unlicense.org]
  */
-package ch.bfh.bti7301.w2013.battleship.game;
+package ch.bfh.bti7301.w2013.battleship.game.players;
 
-import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
+import ch.bfh.bti7301.w2013.battleship.game.Board;
 
 /**
  * @author simon
- * 
+ *
  */
-public class Missile {
+public class GenericPlayer {
 
-	public enum MissileState {
-		FIRED, HIT, MISS, SUNK, GAME_WON
-	}
-
-	private Coordinates coordinates = null;
+	private static String DEFAULT_NAME = "Unnamed player";
 	
-	private MissileState status = null;
-
-	public Missile(Coordinates c) {
-		this.status = MissileState.FIRED;
-		this.coordinates = c;
+	private String name;
+	private PlayerState status;
+	private Board playerBoard;
+	
+	public enum PlayerState {
+		GAME_STARTED, READY, WAITING, PLAYING, GAME_WON, GAME_LOST
 	}
 
-	/**
-	 * Returns the state of the missile. Caution, this function may return NULL
-	 * if the missile does not contain an explicit status.
-	 * 
-	 * @return The state of this missile
-	 */
-	public MissileState getMissileState() {
-		return this.status;
+	public GenericPlayer() {
+		this(DEFAULT_NAME);
 	}
 	
-	public Coordinates getCoordinates() {
-		return this.coordinates;
+	public GenericPlayer(String name) {
+		this.name = name;
+		this.status = PlayerState.GAME_STARTED;
+		this.playerBoard = new Board();
+	}
+	
+	public Board getBoard() {
+		return playerBoard;
+	}
+
+	public String getName() {
+		return name;
 	}
 }

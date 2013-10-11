@@ -21,40 +21,32 @@
  * 
  * For more information, please refer to [http://unlicense.org]
  */
-package ch.bfh.bti7301.w2013.battleship.game;
+package ch.bfh.bti7301.w2013.battleship.game.players;
 
-import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
+import ch.bfh.bti7301.w2013.battleship.game.Missile;
 
 /**
  * @author simon
- * 
+ *
  */
-public class Missile {
+public class Opponent extends GenericPlayer implements Player {
 
-	public enum MissileState {
-		FIRED, HIT, MISS, SUNK, GAME_WON
-	}
-
-	private Coordinates coordinates = null;
-	
-	private MissileState status = null;
-
-	public Missile(Coordinates c) {
-		this.status = MissileState.FIRED;
-		this.coordinates = c;
-	}
-
-	/**
-	 * Returns the state of the missile. Caution, this function may return NULL
-	 * if the missile does not contain an explicit status.
-	 * 
-	 * @return The state of this missile
+	/* (non-Javadoc)
+	 * @see ch.bfh.bti7301.w2013.battleship.game.PlayerInterface#placeShot(ch.bfh.bti7301.w2013.battleship.game.Missile)
 	 */
-	public MissileState getMissileState() {
-		return this.status;
+	@Override
+	public Missile placeShot(Missile m) {
+		// TODO CALL NETWORK (FRÄNZI!)
+		return null;
 	}
-	
-	public Coordinates getCoordinates() {
-		return this.coordinates;
+
+	/* (non-Javadoc)
+	 * @see ch.bfh.bti7301.w2013.battleship.game.PlayerInterface#getPlayerState()
+	 */
+	@Override
+	public PlayerState getPlayerState() {
+		// TODO CALL NETWORK (FRÄNZI!)
+		return null;
 	}
+
 }
