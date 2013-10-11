@@ -21,12 +21,30 @@
  * 
  * For more information, please refer to [http://unlicense.org]
  */
-package ch.bfh.bti7301.w2013.battleship.comm;
+package ch.bfh.bti7301.w2013.battleship.game.ships;
+
+import ch.bfh.bti7301.w2013.battleship.game.Ship;
+import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
+import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
 
 /**
  * @author simon
  *
  */
-public enum ConnectionState {
+public class Battleship extends GenericShip implements Ship {
 
+private static int SHIP_SIZE = 4;
+	
+	@Override
+	public String getName() {
+		return "Battleship";
+	}
+	
+	public Battleship(Coordinates start, Coordinates end) {
+		super(start, end, SHIP_SIZE);
+	}
+	
+	public Battleship(Coordinates start, Direction dir) {
+		super(start, dir, SHIP_SIZE);
+	}
 }

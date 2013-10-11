@@ -23,6 +23,10 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game;
 
+import java.util.ArrayList;
+
+import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
+
 /**
  * 
  * @author simon
@@ -32,11 +36,13 @@ public interface Ship {
 
 	public Board.Coordinates getStartCoordinates();
 	public Board.Coordinates getEndCoordinates();
+	public Board.Direction getDirection();
 	
 	public int getSize();
 	public String getName();
 	public int getDamage();
 	public boolean isSunk();
+	public ArrayList<Coordinates> getCoordinatesForShip();
 	
 	
 }
