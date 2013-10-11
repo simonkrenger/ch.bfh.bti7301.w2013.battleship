@@ -21,55 +21,45 @@
  * 
  * For more information, please refer to [http://unlicense.org]
  */
-package ch.bfh.bti7301.w2013.battleship.game;
+package ch.bfh.bti7301.w2013.battleship.game.players;
+
+import ch.bfh.bti7301.w2013.battleship.game.Board;
 
 /**
  * @author simon
  *
  */
-public class Player {
+public class GenericPlayer {
 
 	private static String DEFAULT_NAME = "Unnamed player";
 	
 	private String name;
-	private PlayerState status;
-	private Board playerBoard;
-	private Game playerGame;
+	protected PlayerState status;
+	protected Board playerBoard;
 	
 	public enum PlayerState {
 		GAME_STARTED, READY, WAITING, PLAYING, GAME_WON, GAME_LOST
 	}
-	
-	public Player(Game g) {
-		this(g, DEFAULT_NAME);
-	}
 
-	public Player(Game g, String name) {
+	public GenericPlayer() {
+		this(DEFAULT_NAME);
+	}
+	
+	public GenericPlayer(String name) {
 		this.name = name;
 		this.status = PlayerState.GAME_STARTED;
 		this.playerBoard = new Board();
-		this.playerGame = g;
 	}
 	
 	public Board getBoard() {
 		return playerBoard;
 	}
 
-	public PlayerState getStatus() {
-		return status;
-	}
-
-	public void setStatus(PlayerState status) {
-		this.status = status;
-	}
-
 	public String getName() {
 		return name;
 	}
-
-	public Game getGame() {
-		return playerGame;
+	
+	public void setPlayerState(PlayerState ps) {
+		this.status = ps;
 	}
-	
-	
 }

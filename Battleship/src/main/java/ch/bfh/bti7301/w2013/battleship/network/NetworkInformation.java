@@ -45,7 +45,7 @@ public class NetworkInformation {
 
 			for (InetAddress ifAddress : Collections.list(inetAddresses)) {
 
-				//hier vergleich für 0-255 , Byte vergleichen mit dezimalzahl.
+				//hier vergleich 0-255 , Byte vergleichen mit dezimalzahl.
 				if (ifAddress.getAddress().length == 4) {
 					ipv4Interfaces.add(" IP:" + ifAddress.getHostAddress()
 							+ " ");

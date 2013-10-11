@@ -21,40 +21,18 @@
  * 
  * For more information, please refer to [http://unlicense.org]
  */
-package ch.bfh.bti7301.w2013.battleship.game;
+package ch.bfh.bti7301.w2013.battleship.game.players;
 
-import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
+import ch.bfh.bti7301.w2013.battleship.game.Missile;
+import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 
 /**
  * @author simon
- * 
+ *
  */
-public class Missile {
+public interface Player {
 
-	public enum MissileState {
-		FIRED, HIT, MISS, SUNK, GAME_WON
-	}
-
-	private Coordinates coordinates = null;
+	public Missile placeShot(Missile m);
 	
-	private MissileState status = null;
-
-	public Missile(Coordinates c) {
-		this.status = MissileState.FIRED;
-		this.coordinates = c;
-	}
-
-	/**
-	 * Returns the state of the missile. Caution, this function may return NULL
-	 * if the missile does not contain an explicit status.
-	 * 
-	 * @return The state of this missile
-	 */
-	public MissileState getMissileState() {
-		return this.status;
-	}
-	
-	public Coordinates getCoordinates() {
-		return this.coordinates;
-	}
+	public PlayerState getPlayerState();
 }

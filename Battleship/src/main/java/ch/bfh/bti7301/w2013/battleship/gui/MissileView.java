@@ -19,7 +19,7 @@ public class MissileView extends Parent {
 		case MISS:
 			shape.setFill(Color.BLUE);
 			break;
-		case FLYING:
+		case FIRED:
 			shape.setFill(new Color(0, 0, 1, 0.1));
 			shape.setEffect(new GaussianBlur());
 			break;

@@ -75,6 +75,10 @@ public class Board {
 		placedMissiles.add(m);
 
 		// TODO: Check if coordinates of missile were already used
+
+		// TODO: Check if its the players turn?
+		// TODO: Check if coordinates of missile were already used
+		// TODO: Observer pattern
 	}
 
 	public ArrayList<Ship> getPlacedShips() {
