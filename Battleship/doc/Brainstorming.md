@@ -285,7 +285,21 @@ Fränzi: Vision
   * Grunsätzliche Klassen erstellen, Interfaces andenken. Anfordeungen für Schnittstellen finden. (Alle)
 
 
+# ----------------------------------------------------------------------------------
+# corradi 2013-10-04
+# ----------------------------------------------------------------------------------
 
+  * Wie vergleicht man ein Byte...???
+  * In welcher form Genau möchte Meyer die IP Adressen?
+
+
+
+# ----------------------------------------------------------------------------------
+# TeamMeetin 2013-10-11
+# ---------------------------------------------------------------------------------
+
+  - Sprint 1 Fertig bis  17.10.2013
+  - 
 
 
   

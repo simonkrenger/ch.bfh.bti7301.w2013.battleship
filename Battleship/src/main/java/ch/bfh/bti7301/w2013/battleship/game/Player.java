@@ -29,4 +29,27 @@ package ch.bfh.bti7301.w2013.battleship.game;
  */
 public class Player {
 
+	private String name;
+	private PlayerState status;
+	private Board playerBoard;
+	private Game playerGame;
+	
+	public enum PlayerState {
+		GAME_STARTED, READY, WAITING, PLAYING, GAME_WON, GAME_LOST
+	}
+	
+	public Player(Game g) {
+		this(g, "Unnamed");
+	}
+
+	public Player(Game g, String name) {
+		this.name = name;
+		this.status = PlayerState.GAME_STARTED;
+		this.playerBoard = new Board();
+		this.playerGame = g;
+	}
+	
+	public Board getBoard() {
+		return playerBoard;
+	}
 }
