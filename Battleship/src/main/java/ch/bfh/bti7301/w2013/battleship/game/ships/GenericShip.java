@@ -32,16 +32,17 @@ import ch.bfh.bti7301.w2013.battleship.game.Ship;
 
 /**
  * @author simon
- *
+ * 
  */
 public class GenericShip implements Ship {
 
 	protected Board.Coordinates startCoordinates;
 	protected Board.Coordinates endCoordinates;
-	
+
 	protected int size;
-	
-	protected GenericShip(Board.Coordinates start, Board.Coordinates end, int size) {
+
+	protected GenericShip(Board.Coordinates start, Board.Coordinates end,
+			int size) {
 		this.startCoordinates = start;
 		this.endCoordinates = end;
 		this.size = size;
