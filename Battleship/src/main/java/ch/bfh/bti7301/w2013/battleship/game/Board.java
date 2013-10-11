@@ -56,7 +56,7 @@ public class Board {
 		return (c.x <= boardSize) && (c.y <= boardSize);
 	}
 	
-	public class Coordinates {
+	public static class Coordinates {
 		
 		public int x;
 		public int y;

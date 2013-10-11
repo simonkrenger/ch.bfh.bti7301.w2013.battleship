@@ -25,13 +25,15 @@ package ch.bfh.bti7301.w2013.battleship;
 
 import java.util.ResourceBundle;
 
-import ch.bfh.bti7301.w2013.battleship.game.Game;
-import ch.bfh.bti7301.w2013.battleship.game.ships.AircraftCarrier;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
+import ch.bfh.bti7301.w2013.battleship.game.Board;
+import ch.bfh.bti7301.w2013.battleship.game.Game;
+import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
 
 /**
  * @author Christian Meyer <chrigu.meyer@gmail.com>
@@ -40,17 +42,20 @@ import javafx.stage.Stage;
 public class Battleship extends Application {
 	private ResourceBundle labels;
 
+	private Game game;
+
 	public Battleship() {
 		labels = ResourceBundle.getBundle("translations");
+		game = new Game();
 	}
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
+
 		Game g = new Game();
-		
+
 		launch(args);
 	}
 
@@ -59,8 +64,20 @@ public class Battleship extends Application {
 		primaryStage.setTitle(labels.getString("title"));
 
 		Group root = new Group();
-		Scene scene = new Scene(root, 800, 600, Color.BLACK);
+		Scene scene = new Scene(root, 800, 600, Color.YELLOW);
 		primaryStage.setScene(scene);
+
+		Board playerBoard = game.getLocalPlayer().getBoard();
+		BoardView pbv = new BoardView(playerBoard);
+		pbv.relocate(10, 10);
+		root.getChildren().add(pbv);
+
+		Board opponentBoard = game.getOpponent().getBoard();
+		BoardView obv = new BoardView(opponentBoard);
+		obv.getTransforms().add(new Scale(0.5, 0.5, 0, 0));
+
+		obv.relocate(pbv.getBoundsInParent().getMaxX() + 20, 10);
+		root.getChildren().add(obv);
 
 		primaryStage.show();
 	}

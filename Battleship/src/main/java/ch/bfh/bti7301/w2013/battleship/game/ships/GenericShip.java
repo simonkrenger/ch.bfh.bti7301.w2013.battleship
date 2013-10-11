@@ -29,23 +29,23 @@ import ch.bfh.bti7301.w2013.battleship.game.Ship;
 
 /**
  * @author simon
- *
+ * 
  */
 public class GenericShip implements Ship {
 
 	protected Board.Coordinates startCoordinates;
 	protected Board.Coordinates endCoordinates;
-	
+
 	protected int size;
-	
+
 	@Override
 	public Coordinates getStartCoordinates() {
-		return null;
+		return startCoordinates;
 	}
 
 	@Override
 	public Coordinates getEndCoordinates() {
-		return null;
+		return endCoordinates;
 	}
 
 	@Override
