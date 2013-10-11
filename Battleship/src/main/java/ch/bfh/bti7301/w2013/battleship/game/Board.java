@@ -52,7 +52,8 @@ public class Board {
 	}
 
 	public void placeShip(Ship s) {
-		// Do some sanity checks, throw exception if placement is not possible
+		placedShips.add(s);
+		// TODO: Do some sanity checks, throw exception if placement is not possible
 
 		// First, check if ship can be placed (game state)
 		// Check if number of ships is allowed
@@ -70,7 +71,7 @@ public class Board {
 	public ArrayList<Ship> getPlacedShips() {
 		return this.placedShips;
 	}
-	
+
 	public ArrayList<Missile> getPlacedMissiles() {
 		return this.placedMissiles;
 	}
