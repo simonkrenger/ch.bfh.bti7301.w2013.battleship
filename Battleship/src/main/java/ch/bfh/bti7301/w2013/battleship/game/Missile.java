@@ -32,12 +32,12 @@ import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
 public class Missile {
 
 	public enum MissileState {
-		HIT, MISS, SUNK, GAME_WON
+		HIT, MISS, SUNK, GAME_WON, FLYING
 	}
 
 	private Coordinates coordinates = null;
 	
-	private MissileState status = null;
+	private MissileState status = MissileState.FLYING;
 
 	public Missile(Coordinates c) {
 		this.coordinates = c;

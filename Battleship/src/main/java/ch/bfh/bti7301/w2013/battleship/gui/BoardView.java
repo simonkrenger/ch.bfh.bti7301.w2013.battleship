@@ -37,11 +37,11 @@ public class BoardView extends Parent {
 					SIZE * ship.getStartCoordinates().y);
 			getChildren().add(sv);
 		}
+
 		for (Missile missile : board.getPlacedMissiles()) {
 			MissileView mv = new MissileView(missile);
-			// TODO (waiting for coordinates)
-			// mv.relocate(SIZE * missile.getCoordinates().x,
-			// SIZE * missile.getCoordinates().y);
+			mv.relocate(SIZE * missile.getCoordinates().x,
+					SIZE * missile.getCoordinates().y);
 			getChildren().add(mv);
 		}
 	}

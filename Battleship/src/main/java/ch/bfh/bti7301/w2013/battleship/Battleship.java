@@ -34,6 +34,7 @@ import javafx.stage.Stage;
 import ch.bfh.bti7301.w2013.battleship.game.Board;
 import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
+import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.ships.AircraftCarrier;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
 
@@ -60,6 +61,11 @@ public class Battleship extends Application {
 				.placeShip(
 						new AircraftCarrier(new Coordinates(4, 2),
 								new Coordinates(9, 2)));
+
+		game.getOpponent().getBoard()
+				.placeMissile(new Missile(new Coordinates(1, 1)));
+		game.getOpponent().getBoard()
+				.placeMissile(new Missile(new Coordinates(3, 4)));
 	}
 
 	/**
