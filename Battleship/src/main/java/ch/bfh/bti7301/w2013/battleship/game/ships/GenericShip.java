@@ -23,8 +23,11 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game.ships;
 
+import java.util.ArrayList;
+
 import ch.bfh.bti7301.w2013.battleship.game.Board;
 import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
+import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
 
 /**
@@ -77,4 +80,15 @@ public class GenericShip implements Ship {
 		return false;
 	}
 
+	@Override
+	public ArrayList<Coordinates> getCoordinatesForShip() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Direction getDirection() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
