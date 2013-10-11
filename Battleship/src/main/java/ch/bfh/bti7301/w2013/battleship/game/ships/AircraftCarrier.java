@@ -32,8 +32,8 @@ import ch.bfh.bti7301.w2013.battleship.game.Ship;
  *
  */
 public class AircraftCarrier extends GenericShip implements Ship {
-
-	private int shipSize = 5;
+	
+	private static int SHIP_SIZE = 5;
 	
 	@Override
 	public String getName() {
@@ -41,8 +41,6 @@ public class AircraftCarrier extends GenericShip implements Ship {
 	}
 	
 	public AircraftCarrier(Board.Coordinates start, Board.Coordinates end) {
-		this.startCoordinates = start;
-		this.endCoordinates = end;
-		this.size = shipSize;
+		super(start, end, SHIP_SIZE);
 	}
 }

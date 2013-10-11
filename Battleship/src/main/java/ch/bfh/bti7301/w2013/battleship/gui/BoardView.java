@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javafx.geometry.Bounds;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;

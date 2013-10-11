@@ -21,12 +21,25 @@
  * 
  * For more information, please refer to [http://unlicense.org]
  */
-package ch.bfh.bti7301.w2013.battleship.comm;
+package ch.bfh.bti7301.w2013.battleship.game.ships;
+
+import ch.bfh.bti7301.w2013.battleship.game.Board;
+import ch.bfh.bti7301.w2013.battleship.game.Ship;
 
 /**
  * @author simon
  *
  */
-public enum ConnectionState {
+public class PatrolBoat extends GenericShip implements Ship {
 
+private static int SHIP_SIZE = 2;
+	
+	@Override
+	public String getName() {
+		return "Patrol boat";
+	}
+	
+	public PatrolBoat(Board.Coordinates start, Board.Coordinates end) {
+		super(start, end, SHIP_SIZE);
+	}
 }

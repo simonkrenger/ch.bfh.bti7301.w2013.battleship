@@ -23,47 +23,69 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game;
 
-import java.awt.List;
 import java.util.ArrayList;
 
 /**
  * @author simon
- *
+ * 
  */
 public class Board {
 
-	private int boardSize = 10;
+	private static int DEFAULT_BOARD_SIZE = 10;
+	
+	private int size;
+	
 	private ArrayList<Ship> placedShips = new ArrayList<Ship>();
 	private ArrayList<Missile> placedMissiles = new ArrayList<Missile>();
-	
+
 	public Board() {
-		
+		this(DEFAULT_BOARD_SIZE);
 	}
-	
+
 	public Board(int size) {
-		this.boardSize = size;
+		this.size = size;
 	}
-	
+
 	public int getBoardSize() {
-		return this.boardSize;
+		return this.size;
 	}
-	
+
 	public void placeShip(Ship s) {
+		// Do some sanity checks, throw exception if placement is not possible
+
+		// First, check if ship can be placed (game state)
+		// Check if number of ships is allowed
 		
+		// Check boundaries of board
+		if(withinBoard(s.getStartCoordinates()) && withinBoard(s.getEndCoordinates())) {
+			
+		} else {
+			// Start or end coordinates are not within board!
+		}
+		
+		// Check 
 	}
-	
+
 	public boolean withinBoard(Coordinates c) {
-		return (c.x <= boardSize) && (c.y <= boardSize);
+		return (c.x <= size) && (c.y <= size);
 	}
-	
+
 	public static class Coordinates {
-		
+
 		public int x;
 		public int y;
-		
+
 		public Coordinates(int x, int y) {
 			this.x = x;
 			this.y = y;
-		}		
+		}
+
+		@Override
+		public String toString() {
+			// http://stackoverflow.com/questions/10813154/converting-number-to-letterhttp://stackoverflow.com/questions/10813154/converting-number-to-letter
+			String alpha = x > 0 && x < 27 ? String
+					.valueOf((char) (x + 'A' - 1)) : null;
+			return alpha + y;
+		}
 	}
 }

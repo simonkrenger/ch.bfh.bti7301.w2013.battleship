@@ -21,17 +21,25 @@
  * 
  * For more information, please refer to [http://unlicense.org]
  */
-package ch.bfh.bti7301.w2013.battleship.comm;
+package ch.bfh.bti7301.w2013.battleship.game.ships;
 
-import java.util.List;
+import ch.bfh.bti7301.w2013.battleship.game.Board;
+import ch.bfh.bti7301.w2013.battleship.game.Ship;
 
 /**
  * @author simon
  *
  */
-public interface NetworkInformation {
+public class Submarine extends GenericShip implements Ship {
 
-	public List<String> getLocalIP();
+private static int SHIP_SIZE = 3;
 	
-	public ConnectionState getConnectionState();
+	@Override
+	public String getName() {
+		return "Submarine";
+	}
+	
+	public Submarine(Board.Coordinates start, Board.Coordinates end) {
+		super(start, end, SHIP_SIZE);
+	}
 }

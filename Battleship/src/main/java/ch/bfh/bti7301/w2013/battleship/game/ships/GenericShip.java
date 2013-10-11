@@ -38,6 +38,13 @@ public class GenericShip implements Ship {
 
 	protected int size;
 
+	protected GenericShip(Board.Coordinates start, Board.Coordinates end,
+			int size) {
+		this.startCoordinates = start;
+		this.endCoordinates = end;
+		this.size = size;
+	}
+
 	@Override
 	public Coordinates getStartCoordinates() {
 		return startCoordinates;
