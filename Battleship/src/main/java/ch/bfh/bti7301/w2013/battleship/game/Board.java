@@ -25,6 +25,7 @@ package ch.bfh.bti7301.w2013.battleship.game;
 
 import java.util.ArrayList;
 
+
 /**
  * @author simon
  * 
@@ -64,6 +65,14 @@ public class Board {
 		}
 		
 		// Check 
+	}
+	
+	public ArrayList<Ship> getPlacedShips() {
+		return this.placedShips;
+	}
+	
+	public ArrayList<Missile> getPlacedMissiles() {
+		return this.placedMissiles;
 	}
 
 	public boolean withinBoard(Coordinates c) {
