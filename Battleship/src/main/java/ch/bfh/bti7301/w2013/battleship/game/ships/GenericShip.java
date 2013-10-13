@@ -61,6 +61,7 @@ public class GenericShip implements Ship {
 		this.startCoordinates = start;
 		this.endCoordinates = end;
 		this.size = size;
+
 		// Now we've set the private variables, cross-check them
 		checkSize();
 	}
@@ -173,7 +174,6 @@ public class GenericShip implements Ship {
 
 	@Override
 	public Direction getDirection() {
-		// TODO
 		// Note that we don't need to check for diagonal here, the ship was
 		// already constructed and therefore has valid coordinates
 

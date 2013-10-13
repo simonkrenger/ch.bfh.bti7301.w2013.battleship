@@ -37,7 +37,7 @@ public class Board {
 
 	private ArrayList<Ship> placedShips = new ArrayList<Ship>();
 	private ArrayList<Missile> placedMissiles = new ArrayList<Missile>();
-	
+
 	private BoardSetup setup = new BoardSetup();
 
 	public Board() {
@@ -70,8 +70,9 @@ public class Board {
 
 		// Check
 	}
-	
+
 	public void placeMissile(Missile m) {
+
 		//TODO
 		
 		//TODO: Check if its the players turn?
@@ -81,7 +82,7 @@ public class Board {
 		//TODO: ship.setDamage(m.getCoordinates());
 		//TODO: Observer pattern (Notify all)
 		
-		
+		placedMissiles.add(m);
 	}
 
 	public ArrayList<Ship> getPlacedShips() {
@@ -95,24 +96,26 @@ public class Board {
 	public boolean withinBoard(Coordinates c) {
 		return (c.x <= size) && (c.y <= size);
 	}
-	
+
 	public BoardSetup getBoardSetup() {
 		return this.setup;
 	}
-	
+
 	public class BoardSetup {
 		private BoardSetup() {
-			
+
 		}
-		
-		public void moveShip(Ship s, Coordinates newStartCoordinates, Direction d) {
-			
+
+		public void moveShip(Ship s, Coordinates newStartCoordinates,
+				Direction d) {
+
 		}
-		
-		public void moveShip(Ship s, Coordinates newStartCoordinates, Coordinates newEndCoordinates) {
-			
+
+		public void moveShip(Ship s, Coordinates newStartCoordinates,
+				Coordinates newEndCoordinates) {
+
 		}
-		
+
 		public void done() {
 			setup = null;
 		}
