@@ -21,32 +21,17 @@
  * 
  * For more information, please refer to [http://unlicense.org]
  */
-package ch.bfh.bti7301.w2013.battleship.game.players;
+package ch.bfh.bti7301.w2013.battleship.game;
 
-import ch.bfh.bti7301.w2013.battleship.game.Board;
-import ch.bfh.bti7301.w2013.battleship.game.Missile;
-import ch.bfh.bti7301.w2013.battleship.game.Player;
+import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 
 /**
  * @author simon
  *
  */
-public class LocalPlayer extends GenericPlayer implements Player{
+public interface Player {
 
-	@Override
-	public Missile placeShot(Missile m) {
-		
-
-		
-		return null;
-	}
-
-	@Override
-	public PlayerState getPlayerState() {
-		return this.status;
-	}
-
-	public Board getBoard() {
-		return this.playerBoard;
-	}
+	public Missile placeShot(Missile m);
+	
+	public PlayerState getPlayerState();
 }
