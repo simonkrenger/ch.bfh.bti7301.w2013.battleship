@@ -53,12 +53,13 @@ public class GenericShip implements Ship {
 	protected GenericShip(Board.Coordinates start, Direction direction, int size) {
 		this.startCoordinates = start;
 		this.size = size;
+		
 		switch (direction) {
 		case NORTH:
-			this.endCoordinates = new Coordinates(start.x, start.y + (size - 1));
+			this.endCoordinates = new Coordinates(start.x, start.y - (size - 1));
 			break;
 		case SOUTH:
-			this.endCoordinates = new Coordinates(start.x, start.y - (size - 1));
+			this.endCoordinates = new Coordinates(start.x, start.y + (size - 1));
 			break;
 		case WEST:
 			this.endCoordinates = new Coordinates(start.x - (size - 1), start.y);
