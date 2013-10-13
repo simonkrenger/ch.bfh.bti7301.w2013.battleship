@@ -43,15 +43,66 @@ public class GenericShip implements Ship {
 
 	protected GenericShip(Board.Coordinates start, Board.Coordinates end,
 			int size) {
+		// TODO: Check if coordinates and size match
 		this.startCoordinates = start;
 		this.endCoordinates = end;
 		this.size = size;
+		checkSize();
 	}
 
 	protected GenericShip(Board.Coordinates start, Direction direction, int size) {
 		this.startCoordinates = start;
 		this.size = size;
-		// TODO
+		switch (direction) {
+		case NORTH:
+			this.endCoordinates = new Coordinates(start.x, start.y + (size - 1));
+			break;
+		case SOUTH:
+			this.endCoordinates = new Coordinates(start.x, start.y - (size - 1));
+			break;
+		case WEST:
+			this.endCoordinates = new Coordinates(start.x - (size - 1), start.y);
+			break;
+		case EAST:
+			this.endCoordinates = new Coordinates(start.x + (size - 1), start.y);
+			break;
+		}
+		checkSize();
+	}
+
+	private void checkSize() throws RuntimeException {
+		if (startCoordinates.x == endCoordinates.x) {
+			if (startCoordinates.y > endCoordinates.y) {
+				// Ship faces north
+				if (!((startCoordinates.y - endCoordinates.y + 1) == size)) {
+					throw new RuntimeException(
+							"Coordinates and size do not match!");
+				}
+			} else {
+				// Ship faces south
+				if (!((endCoordinates.y - startCoordinates.y + 1) == size)) {
+					throw new RuntimeException(
+							"Coordinates and size do not match!");
+				}
+			}
+		} else if (startCoordinates.y == endCoordinates.y) {
+			if (startCoordinates.x > endCoordinates.x) {
+				// Ship faces west
+				if (!((startCoordinates.x - endCoordinates.x + 1) == size)) {
+					throw new RuntimeException(
+							"Coordinates and size do not match!");
+				}
+			} else {
+				// Ship faces east
+				if (!((endCoordinates.x - startCoordinates.x + 1) == size)) {
+					throw new RuntimeException(
+							"Coordinates and size do not match!");
+				}
+			}
+		} else {
+			// Diagonal, throw exception!
+			throw new RuntimeException("Diagonal ships not allowed!");
+		}
 	}
 
 	@Override
@@ -87,13 +138,33 @@ public class GenericShip implements Ship {
 	}
 
 	@Override
+	public Direction getDirection() {
+		// Note that we don't need to check for diagonal here, the ship was
+		// already constructed and therefore has valid coordinates
+
+		if (startCoordinates.x == endCoordinates.x) {
+			if (startCoordinates.y > endCoordinates.y) {
+				return Direction.NORTH;
+			} else {
+				return Direction.SOUTH;
+			}
+		} else {
+			if (startCoordinates.x > endCoordinates.x) {
+				return Direction.WEST;
+			} else {
+				return Direction.EAST;
+			}
+		}
+	}
+
+	@Override
 	public ArrayList<Coordinates> getCoordinatesForShip() {
-		// TODO Auto-generated method stub
+		//ArrayList<Coordinates> coords = new ArrayList<Coordinates>();
 		return null;
 	}
 
 	@Override
-	public Direction getDirection() {
+	public ArrayList<Coordinates> getCoordinatesForDamage() {
 		// TODO Auto-generated method stub
 		return null;
 	}
