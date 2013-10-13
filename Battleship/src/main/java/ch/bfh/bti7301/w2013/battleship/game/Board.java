@@ -132,7 +132,7 @@ public class Board {
 		}
 	}
 
-	public enum Direction {
+	public static enum Direction {
 		NORTH, SOUTH, WEST, EAST
 	}
 }

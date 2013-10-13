@@ -25,7 +25,6 @@ package ch.bfh.bti7301.w2013.battleship.game;
 
 import ch.bfh.bti7301.w2013.battleship.game.players.LocalPlayer;
 import ch.bfh.bti7301.w2013.battleship.game.players.Opponent;
-import ch.bfh.bti7301.w2013.battleship.game.players.Player;
 
 /**
  * @author simon

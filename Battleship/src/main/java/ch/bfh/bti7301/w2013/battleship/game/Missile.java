@@ -32,11 +32,37 @@ import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
 public class Missile {
 
 	public enum MissileState {
-		FIRED, HIT, MISS, SUNK, GAME_WON
+		/**
+		 * Initial state of the missile
+		 */
+		FIRED,
+
+		/**
+		 * The missile coordinates mark a ship
+		 */
+		HIT,
+
+		/**
+		 * The missile coordinates do not mark a ship
+		 */
+		MISS,
+
+		/**
+		 * This state is returned when the missile coordinates mark a ship and
+		 * the ship was sunk as a result of that hit. This will then indicate
+		 * the user that this ship was sunk.
+		 */
+		SUNK,
+
+		/**
+		 * This state is returned when the missile coordinates mark a ship, that
+		 * ship was sunk as a result of that hit and the game is won.
+		 */
+		GAME_WON
 	}
 
 	private Coordinates coordinates = null;
-	
+
 	private MissileState status = null;
 
 	public Missile(Coordinates c) {
@@ -53,7 +79,11 @@ public class Missile {
 	public MissileState getMissileState() {
 		return this.status;
 	}
-	
+
+	public void setMissileState(MissileState state) {
+		this.status = state;
+	}
+
 	public Coordinates getCoordinates() {
 		return this.coordinates;
 	}

@@ -54,7 +54,7 @@ public class Battleship extends Application {
 				.getBoard()
 				.placeShip(
 						new AircraftCarrier(new Coordinates(2, 2),
-								new Coordinates(2, 7)));
+								new Coordinates(2, 6)));
 		game.getLocalPlayer()
 				.getBoard()
 				.placeShip(
