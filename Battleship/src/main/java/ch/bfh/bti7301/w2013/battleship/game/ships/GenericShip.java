@@ -36,24 +36,39 @@ import ch.bfh.bti7301.w2013.battleship.game.Ship;
  */
 public class GenericShip implements Ship {
 
+	/**
+	 * Start coordinates for the ship
+	 */
 	protected Board.Coordinates startCoordinates;
+
+	/**
+	 * End coordinates for the ship
+	 */
 	protected Board.Coordinates endCoordinates;
 
+	/**
+	 * Size of the ship
+	 */
 	protected int size;
+
+	/**
+	 * ArrayList containing all the coordinates where the ship was damaged
+	 */
+	protected ArrayList<Coordinates> damage = new ArrayList<Coordinates>();
 
 	protected GenericShip(Board.Coordinates start, Board.Coordinates end,
 			int size) {
-		// TODO: Check if coordinates and size match
 		this.startCoordinates = start;
 		this.endCoordinates = end;
 		this.size = size;
+		// Now we've set the private variables, cross-check them
 		checkSize();
 	}
 
 	protected GenericShip(Board.Coordinates start, Direction direction, int size) {
 		this.startCoordinates = start;
 		this.size = size;
-		
+
 		switch (direction) {
 		case NORTH:
 			this.endCoordinates = new Coordinates(start.x, start.y - (size - 1));
@@ -71,7 +86,17 @@ public class GenericShip implements Ship {
 		checkSize();
 	}
 
+	/**
+	 * Method to perform a crosscheck of the coordinates and the size of the
+	 * ship. This method checks if the ship was placed horizontally or
+	 * vertically (and not diagonally)
+	 * 
+	 * @throws RuntimeException
+	 */
 	private void checkSize() throws RuntimeException {
+		// Note that this method indirectly checks for invalid coordinates such
+		// as ([2,2],[2,2]), where the ship would have size of 0
+
 		if (startCoordinates.x == endCoordinates.x) {
 			if (startCoordinates.y > endCoordinates.y) {
 				// Ship faces north
@@ -128,18 +153,27 @@ public class GenericShip implements Ship {
 
 	@Override
 	public int getDamage() {
-		// TODO Auto-generated method stub
-		return 0;
+		return damage.size();
+	}
+
+	@Override
+	public void setDamage(Coordinates c) {
+		// TODO
+		// Check if c is in getCoordinatesForShip()
+		// Check if there was already damage there before (ArrayList damage)
+		// If all was ok, add coordinates to damage list
+		damage.add(c);
+
 	}
 
 	@Override
 	public boolean isSunk() {
-		// TODO Auto-generated method stub
-		return false;
+		return (damage.size() == size);
 	}
 
 	@Override
 	public Direction getDirection() {
+		// TODO
 		// Note that we don't need to check for diagonal here, the ship was
 		// already constructed and therefore has valid coordinates
 
@@ -160,13 +194,13 @@ public class GenericShip implements Ship {
 
 	@Override
 	public ArrayList<Coordinates> getCoordinatesForShip() {
-		//ArrayList<Coordinates> coords = new ArrayList<Coordinates>();
+		// TODO
+		// ArrayList<Coordinates> coords = new ArrayList<Coordinates>();
 		return null;
 	}
 
 	@Override
 	public ArrayList<Coordinates> getCoordinatesForDamage() {
-		// TODO Auto-generated method stub
-		return null;
+		return damage;
 	}
 }

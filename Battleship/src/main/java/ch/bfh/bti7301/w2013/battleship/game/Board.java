@@ -76,7 +76,12 @@ public class Board {
 		
 		//TODO: Check if its the players turn?
 		//TODO: Check if coordinates of missile were already used
-		//TODO: Observer pattern
+		//TODO: Check if there is a ship placed there?
+		//TODO: If there is a ship, get coordinates
+		//TODO: ship.setDamage(m.getCoordinates());
+		//TODO: Observer pattern (Notify all)
+		
+		
 	}
 
 	public ArrayList<Ship> getPlacedShips() {

@@ -96,5 +96,11 @@ public interface Ship {
 	 * @return
 	 */
 	public ArrayList<Coordinates> getCoordinatesForDamage();
+	
+	/**
+	 * 
+	 * @param c
+	 */
+	public void setDamage(Coordinates c);
 
 }
