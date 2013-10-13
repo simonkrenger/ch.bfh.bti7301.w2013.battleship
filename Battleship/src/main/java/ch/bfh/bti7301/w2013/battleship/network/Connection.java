@@ -2,88 +2,76 @@ package ch.bfh.bti7301.w2013.battleship.network;
 
 import java.io.*;
 import java.net.*;
-import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class Connection {
+public class Connection implements Runnable {
 
-	final static int GAMEPORT = 42423;
-	public Socket connection;
+	private static Connection instance = null;
+	final static int GAMEPORT = 42423, POOLSIZE = 1;
+	private final ServerSocket listener;
+	private final ExecutorService pool;
+	private final String opponentIP;
 
-	public Connection() {
-		createServerSocket(GAMEPORT);
+	/**
+	 * 
+	 * @throws IOException
+	 */
+
+	private Connection() throws IOException {
+		listener = new ServerSocket(GAMEPORT);
+		pool = Executors.newFixedThreadPool(POOLSIZE);
+		opponentIP = null;
+
 	}
 
-	public Connection(String opponentIP) {
-		// Create a Client Socket
+	/**
+	 * 
+	 * @param opponentIP
+	 */
+
+	private Connection(String opponentIP) {
+		listener = null;
+		this.opponentIP = opponentIP;
+		pool = Executors.newFixedThreadPool(POOLSIZE);
 	}
 
-	private static Socket createServerSocket(int gameport) {
-
-		ServerSocket listener = null;
+	/**
+ * 
+ */
+	public void run() { // run the service
 		try {
-			listener = new ServerSocket(gameport);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		while (true) {
-			try {
-				Socket commSocket = listener.accept();
-				return commSocket;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			for (;;) {
+				if (opponentIP == null) {
+					pool.execute(new ConnectionHandler(listener.accept()));
+				} else {
+					pool.execute(new ConnectionHandler(new Socket(opponentIP,
+							GAMEPORT)));
+				}
 			}
+		} catch (IOException ex) {
+			pool.shutdown();
 		}
 	}
 
-	public static boolean sendObject(Socket socket) {
-
-		return false;
-
-	}
-
-	public static boolean receiveObject(Socket socket) {
-		return false;
-
-	}
-
 	/**
-	 * private static Socket createClientSocket(String opponentIP) {
 	 * 
-	 * Socket bsSocket = null;
-	 * 
-	 * try { bsSocket = new Socket(opponentIP, GAMEPORT);
-	 * 
-	 * } catch (UnknownHostException e) {
-	 * System.err.println("Don't know about host: " + opponentIP);
-	 * System.exit(1); }
-	 * 
-	 * return bsSocket; }
+	 * @param opponentIP
+	 * @return
+	 * @throws IOException
 	 */
 
-	/**
-	 * private static ObjectInputStream getInputStream(Socket socket){
-	 * 
-	 * ObjectOutputStream out = null; ObjectInputStream in = null;
-	 * 
-	 * //out = new ObjectOutputStream(bsClientSocket.getOutputStream(),) //out =
-	 * new PrintWriter(echoSocket.getOutputStream(), true); //in = new
-	 * BufferedReader(new InputStreamReader(
-	 * 
-	 * BufferedReader stdIn = new BufferedReader( new
-	 * InputStreamReader(System.in)); String userInput;
-	 * 
-	 * while ((userInput = stdIn.readLine()) != null) { out.println(userInput);
-	 * System.out.println("echo: " + in.readLine()); }
-	 * 
-	 * out.close(); in.close(); stdIn.close(); echoSocket.close(); }
-	 */
+	public Connection getInstance(String opponentIP) throws IOException {
 
-	private static ObjectOutputStream getOutputStream(Socket socket) {
-		return null;
-
+		if (instance != null) {
+			return instance;
+		} else if (opponentIP == null) {
+			instance = new Connection();
+			return instance;
+		} else {
+			instance = new Connection(opponentIP);
+			return instance;
+		}
 	}
 
 }
