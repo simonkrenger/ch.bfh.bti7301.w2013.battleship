@@ -25,6 +25,7 @@ package ch.bfh.bti7301.w2013.battleship;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
@@ -40,12 +41,10 @@ import ch.bfh.bti7301.w2013.battleship.game.Board;
 import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
+import ch.bfh.bti7301.w2013.battleship.game.GameRule;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
 import ch.bfh.bti7301.w2013.battleship.game.ships.AircraftCarrier;
-import ch.bfh.bti7301.w2013.battleship.game.ships.Destroyer;
-import ch.bfh.bti7301.w2013.battleship.game.ships.PatrolBoat;
-import ch.bfh.bti7301.w2013.battleship.game.ships.Submarine;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
 import ch.bfh.bti7301.w2013.battleship.gui.ShipView;
 
@@ -57,21 +56,23 @@ public class Battleship extends Application {
 	private ResourceBundle labels;
 
 	private Game game;
+	private GameRule rule;
 
 	public Battleship() {
 		labels = ResourceBundle.getBundle("translations");
 		game = new Game();
+		rule = new GameRule();
 
 		game.getLocalPlayer()
 				.getBoard()
 				.placeShip(
 						new AircraftCarrier(new Coordinates(2, 2),
-								new Coordinates(2, 6)));
+								Direction.SOUTH));
 		game.getLocalPlayer()
 				.getBoard()
 				.placeShip(
 						new AircraftCarrier(new Coordinates(4, 2),
-								new Coordinates(9, 2)));
+								Direction.EAST));
 
 		game.getOpponent().getBoard()
 				.placeMissile(new Missile(new Coordinates(1, 1)));
@@ -140,32 +141,23 @@ public class Battleship extends Application {
 	}
 
 	private List<Ship> getAvailableShips() {
-		// TODO: get the ships from somewhere else (game rule object)
 		List<Ship> availableShips = new LinkedList<>();
-		availableShips.add(new AircraftCarrier(new Coordinates(0, 0),
-				Direction.NORTH));
-		availableShips
-				.add(new ch.bfh.bti7301.w2013.battleship.game.ships.Battleship(
-						new Coordinates(0, 0), Direction.NORTH));
-		availableShips
-				.add(new ch.bfh.bti7301.w2013.battleship.game.ships.Battleship(
-						new Coordinates(0, 0), Direction.NORTH));
-		availableShips
-				.add(new Destroyer(new Coordinates(0, 0), Direction.NORTH));
-		availableShips
-				.add(new Destroyer(new Coordinates(0, 0), Direction.NORTH));
-		availableShips
-				.add(new Submarine(new Coordinates(0, 0), Direction.NORTH));
-		availableShips
-				.add(new Submarine(new Coordinates(0, 0), Direction.NORTH));
-		availableShips.add(new PatrolBoat(new Coordinates(0, 0),
-				Direction.NORTH));
-		availableShips.add(new PatrolBoat(new Coordinates(0, 0),
-				Direction.NORTH));
-		availableShips.add(new PatrolBoat(new Coordinates(0, 0),
-				Direction.NORTH));
-		availableShips.add(new PatrolBoat(new Coordinates(0, 0),
-				Direction.NORTH));
+		Coordinates dc = new Coordinates(0, 0);
+		Direction dd = Direction.NORTH;
+
+		for (Entry<Class<? extends Ship>, Integer> e : rule.getShipList()
+				.entrySet()) {
+			try {
+				Ship ship = e.getKey()
+						.getConstructor(Coordinates.class, Direction.class)
+						.newInstance(dc, dd);
+				for (int i = 0; i < e.getValue(); i++)
+					availableShips.add(ship);
+			} catch (Exception x) {
+				throw new RuntimeException(
+						"Error while creating ships through reflection", x);
+			}
+		}
 		return availableShips;
 	}
 

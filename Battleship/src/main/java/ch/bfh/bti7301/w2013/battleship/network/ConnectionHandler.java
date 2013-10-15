@@ -14,13 +14,12 @@ public class ConnectionHandler implements Runnable {
 	}
 
 	public void run() {
-		
-		connection.getInputStream()
-		connection.set
+
+		// connection.getInputStream()
+		// connection.set
 
 	}
 
-	
 	public Missile placeShot(Missile missile) {
 		sendObject(connection, missile);
 		return null;
@@ -35,11 +34,10 @@ public class ConnectionHandler implements Runnable {
 	}
 
 	private static boolean receiveObject(Socket socket) {
-		
-		connectio
-		
-		ObjectInputStream = new ObjectInputStream(connection);
-		
+
+		// connectio
+
+		// ObjectInputStream = new ObjectInputStream(connection);
 
 		return false;
 
