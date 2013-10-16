@@ -23,6 +23,7 @@
  */
 package ch.bfh.bti7301.w2013.battleship;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -47,6 +48,7 @@ import ch.bfh.bti7301.w2013.battleship.game.Ship;
 import ch.bfh.bti7301.w2013.battleship.game.ships.AircraftCarrier;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
 import ch.bfh.bti7301.w2013.battleship.gui.ShipView;
+import static ch.bfh.bti7301.w2013.battleship.gui.BoardView.SIZE;
 
 /**
  * @author Christian Meyer <chrigu.meyer@gmail.com>
@@ -91,11 +93,11 @@ public class Battleship extends Application {
 	public void start(Stage primaryStage) {
 		primaryStage.setTitle(labels.getString("title"));
 
-		Group root = new Group();
-		Scene scene = new Scene(root, 800, 600, Color.WHITE);
+		final Group root = new Group();
+		final Scene scene = new Scene(root, 800, 600, Color.WHITE);
 		primaryStage.setScene(scene);
 
-		Board playerBoard = game.getLocalPlayer().getBoard();
+		final Board playerBoard = game.getLocalPlayer().getBoard();
 		final BoardView pbv = new BoardView(playerBoard);
 		pbv.relocate(10, 10);
 		root.getChildren().add(pbv);
@@ -113,7 +115,7 @@ public class Battleship extends Application {
 			sv.relocate(obv.getBoundsInParent().getMinX() + offset, pbv
 					.getBoundsInParent().getMaxY() - 40);
 			root.getChildren().add(sv);
-			offset += BoardView.SIZE * 1.1;
+			offset += SIZE * 1.1;
 
 			sv.setOnMousePressed(new EventHandler<MouseEvent>() {
 				@Override
@@ -139,8 +141,16 @@ public class Battleship extends Application {
 				@Override
 				public void handle(MouseEvent me) {
 					if (pbv.contains(me.getSceneX(), me.getSceneY())) {
-						// TODO: if on board, snap & add to it
-
+						// if on board, snap & add to it
+						Coordinates c = pbv.getCoordinates(
+								me.getSceneX() - pbv.getLayoutX() + me.getX(),
+								me.getSceneY() - pbv.getLayoutY() + me.getY());
+						Ship ship = buildShip(sv.getShipType(), c,
+								Direction.NORTH);
+						playerBoard.placeShip(ship);
+						// TODO: handle illegal ship placement
+						root.getChildren().remove(sv);
+						pbv.addShip(ship);
 					} else {
 						// snap back
 						sv.setTranslateX(initX);
@@ -160,18 +170,22 @@ public class Battleship extends Application {
 
 		for (Entry<Class<? extends Ship>, Integer> e : rule.getShipList()
 				.entrySet()) {
-			try {
-				Ship ship = e.getKey()
-						.getConstructor(Coordinates.class, Direction.class)
-						.newInstance(dc, dd);
-				for (int i = 0; i < e.getValue(); i++)
-					availableShips.add(ship);
-			} catch (Exception x) {
-				throw new RuntimeException(
-						"Error while creating ships through reflection", x);
-			}
+			Ship ship = buildShip(e.getKey(), dc, dd);
+			for (int i = 0; i < e.getValue(); i++)
+				availableShips.add(ship);
 		}
 		return availableShips;
+	}
+
+	private Ship buildShip(Class<? extends Ship> type, Coordinates c,
+			Direction d) {
+		try {
+			return type.getConstructor(Coordinates.class, Direction.class)
+					.newInstance(c, d);
+		} catch (Exception e) {
+			throw new RuntimeException(
+					"Error while creating ships through reflection", e);
+		}
 	}
 
 	private double initX;

@@ -28,10 +28,7 @@ public class BoardView extends Parent {
 		}
 
 		for (Ship ship : board.getPlacedShips()) {
-			ShipView sv = new ShipView(ship);
-			sv.relocate(SIZE * ship.getStartCoordinates().x,
-					SIZE * ship.getStartCoordinates().y);
-			getChildren().add(sv);
+			addShip(ship);
 		}
 
 		for (Missile missile : board.getPlacedMissiles()) {
@@ -43,13 +40,22 @@ public class BoardView extends Parent {
 		setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				int c = (int) (e.getX() / SIZE);
-				int r = (int) (e.getY() / SIZE);
-				Missile m = new Missile(new Coordinates(c, r));
+				Missile m = new Missile(getCoordinates(e.getX(), e.getY()));
 				board.placeMissile(m);
 				drawMissile(m);
 			}
 		});
+	}
+
+	public void addShip(Ship ship) {
+		ShipView sv = new ShipView(ship);
+		sv.relocate(SIZE * ship.getStartCoordinates().x,
+				SIZE * ship.getStartCoordinates().y);
+		getChildren().add(sv);
+	}
+
+	public Coordinates getCoordinates(double x, double y) {
+		return new Coordinates((int) (x / SIZE), (int) (y / SIZE));
 	}
 
 	private void drawMissile(Missile missile) {

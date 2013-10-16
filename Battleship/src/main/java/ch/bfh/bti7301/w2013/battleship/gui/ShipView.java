@@ -12,7 +12,11 @@ import ch.bfh.bti7301.w2013.battleship.game.Ship;
 import static ch.bfh.bti7301.w2013.battleship.gui.BoardView.SIZE;
 
 public class ShipView extends Parent {
+	private Class<? extends Ship> shipType;
+
 	public ShipView(Ship ship) {
+		shipType = ship.getClass();
+
 		Circle c1 = new Circle(SIZE / 2);
 		set(c1);
 		getChildren().add(c1);
@@ -46,6 +50,9 @@ public class ShipView extends Parent {
 		case SOUTH:
 			break;
 		}
+	}
 
+	public Class<? extends Ship> getShipType() {
+		return shipType;
 	}
 }
