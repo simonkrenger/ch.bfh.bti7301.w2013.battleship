@@ -96,7 +96,7 @@ public class Battleship extends Application {
 		primaryStage.setScene(scene);
 
 		Board playerBoard = game.getLocalPlayer().getBoard();
-		BoardView pbv = new BoardView(playerBoard);
+		final BoardView pbv = new BoardView(playerBoard);
 		pbv.relocate(10, 10);
 		root.getChildren().add(pbv);
 
@@ -133,6 +133,19 @@ public class Battleship extends Application {
 					double newYPosition = initY + dragY;
 					sv.setTranslateX(newXPosition);
 					sv.setTranslateY(newYPosition);
+				}
+			});
+			sv.setOnMouseReleased(new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent me) {
+					if (pbv.contains(me.getSceneX(), me.getSceneY())) {
+						// TODO: if on board, snap & add to it
+
+					} else {
+						// snap back
+						sv.setTranslateX(initX);
+						sv.setTranslateY(initY);
+					}
 				}
 			});
 		}
