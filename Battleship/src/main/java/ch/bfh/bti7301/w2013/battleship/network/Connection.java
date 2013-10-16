@@ -8,10 +8,10 @@ import java.util.concurrent.Executors;
 public class Connection implements Runnable {
 
 	private static Connection instance = null;
-	final static int GAMEPORT = 42423, POOLSIZE = 1;
+	final static int GAMEPORT = 42423;
 	private final ServerSocket listener;
-	private final ExecutorService pool;
 	private final String opponentIP;
+	private ConnectionHandler handler;
 
 	/**
 	 * 
@@ -20,8 +20,8 @@ public class Connection implements Runnable {
 
 	private Connection() throws IOException {
 		listener = new ServerSocket(GAMEPORT);
-		pool = Executors.newFixedThreadPool(POOLSIZE);
 		opponentIP = null;
+		run();
 
 	}
 
@@ -33,7 +33,7 @@ public class Connection implements Runnable {
 	private Connection(String opponentIP) {
 		listener = null;
 		this.opponentIP = opponentIP;
-		pool = Executors.newFixedThreadPool(POOLSIZE);
+		run();
 	}
 
 	/**
@@ -43,14 +43,14 @@ public class Connection implements Runnable {
 		try {
 			for (;;) {
 				if (opponentIP == null) {
-					pool.execute(new ConnectionHandler(listener.accept()));
+					handler = new ConnectionHandler(listener.accept());
 				} else {
-					pool.execute(new ConnectionHandler(new Socket(opponentIP,
-							GAMEPORT)));
+					handler = new ConnectionHandler(new Socket(opponentIP,
+							GAMEPORT));
 				}
 			}
 		} catch (IOException ex) {
-			pool.shutdown();
+			ex.printStackTrace();
 		}
 	}
 
