@@ -21,70 +21,45 @@
  * 
  * For more information, please refer to [http://unlicense.org]
  */
-package ch.bfh.bti7301.w2013.battleship.game;
+package ch.bfh.bti7301.w2013.battleship.game.players;
 
-import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
+import ch.bfh.bti7301.w2013.battleship.game.Board;
 
 /**
  * @author simon
- * 
+ *
  */
-public class Missile {
+public class GenericPlayer {
 
-	public enum MissileState {
-		/**
-		 * Initial state of the missile
-		 */
-		FIRED,
-
-		/**
-		 * The missile coordinates mark a ship
-		 */
-		HIT,
-
-		/**
-		 * The missile coordinates do not mark a ship
-		 */
-		MISS,
-
-		/**
-		 * This state is returned when the missile coordinates mark a ship and
-		 * the ship was sunk as a result of that hit. This will then indicate
-		 * the user that this ship was sunk.
-		 */
-		SUNK,
-
-		/**
-		 * This state is returned when the missile coordinates mark a ship, that
-		 * ship was sunk as a result of that hit and the game is won.
-		 */
-		GAME_WON
+	private static String DEFAULT_NAME = "Unnamed player";
+	
+	private String name;
+	protected PlayerState status;
+	protected Board playerBoard;
+	
+	public enum PlayerState {
+		GAME_STARTED, READY, WAITING, PLAYING, GAME_WON, GAME_LOST
 	}
 
-	private Coordinates coordinates = null;
-
-	private MissileState status = null;
-
-	public Missile(Coordinates c) {
-		this.status = MissileState.FIRED;
-		this.coordinates = c;
+	public GenericPlayer() {
+		this(DEFAULT_NAME);
+	}
+	
+	public GenericPlayer(String name) {
+		this.name = name;
+		this.status = PlayerState.GAME_STARTED;
+		this.playerBoard = new Board();
+	}
+	
+	public Board getBoard() {
+		return playerBoard;
 	}
 
-	/**
-	 * Returns the state of the missile. Caution, this function may return NULL
-	 * if the missile does not contain an explicit status.
-	 * 
-	 * @return The state of this missile
-	 */
-	public MissileState getMissileState() {
-		return this.status;
+	public String getName() {
+		return name;
 	}
-
-	public void setMissileState(MissileState state) {
-		this.status = state;
-	}
-
-	public Coordinates getCoordinates() {
-		return this.coordinates;
+	
+	public void setPlayerState(PlayerState ps) {
+		this.status = ps;
 	}
 }

@@ -1,20 +1,22 @@
 package ch.bfh.bti7301.w2013.battleship.gui;
 
-import javafx.geometry.Bounds;
+import javafx.event.EventHandler;
 import javafx.scene.Parent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import ch.bfh.bti7301.w2013.battleship.game.Board;
+import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
 
 public class BoardView extends Parent {
 	public static final int SIZE = 40;
 
-	public BoardView(Board board) {
-		int rows, columns;
+	public BoardView(final Board board) {
+		final int rows, columns;
 		rows = columns = board.getBoardSize();
 
 		getChildren().add(getWater(rows, columns));
@@ -26,24 +28,35 @@ public class BoardView extends Parent {
 		}
 
 		for (Ship ship : board.getPlacedShips()) {
-			ShipView sv = new ShipView(ship.getSize());
-			if (ship.getStartCoordinates().x != ship.getEndCoordinates().x) {
-				Bounds b = sv.getBoundsInLocal();
-				sv.setTranslateY(-(b.getHeight() - SIZE) / 2);
-				sv.setRotate(90);
-				sv.setTranslateX((b.getHeight() - SIZE) / 2);
-			}
+			ShipView sv = new ShipView(ship);
 			sv.relocate(SIZE * ship.getStartCoordinates().x,
 					SIZE * ship.getStartCoordinates().y);
 			getChildren().add(sv);
 		}
+
 		for (Missile missile : board.getPlacedMissiles()) {
-			MissileView mv = new MissileView(missile);
-			// TODO (waiting for coordinates)
-			// mv.relocate(SIZE * missile.getCoordinates().x,
-			// SIZE * missile.getCoordinates().y);
-			getChildren().add(mv);
+			drawMissile(missile);
 		}
+
+		// This is for the opponent's board. This has to move somewhere else
+		// later, I think
+		setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				int c = (int) (e.getX() / SIZE);
+				int r = (int) (e.getY() / SIZE);
+				Missile m = new Missile(new Coordinates(c, r));
+				board.placeMissile(m);
+				drawMissile(m);
+			}
+		});
+	}
+
+	private void drawMissile(Missile missile) {
+		MissileView mv = new MissileView(missile);
+		mv.relocate(SIZE * missile.getCoordinates().x,
+				SIZE * missile.getCoordinates().y);
+		getChildren().add(mv);
 	}
 
 	private Shape getWater(int rows, int columns) {

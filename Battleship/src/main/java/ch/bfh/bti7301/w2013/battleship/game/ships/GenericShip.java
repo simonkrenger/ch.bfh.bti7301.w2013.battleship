@@ -36,24 +36,102 @@ import ch.bfh.bti7301.w2013.battleship.game.Ship;
  */
 public class GenericShip implements Ship {
 
+	/**
+	 * Start coordinates for the ship
+	 */
 	protected Board.Coordinates startCoordinates;
+
+	/**
+	 * End coordinates for the ship
+	 */
 	protected Board.Coordinates endCoordinates;
 
+	/**
+	 * Size of the ship
+	 */
 	protected int size;
+
+	/**
+	 * ArrayList containing all the coordinates where the ship was damaged
+	 */
+	protected ArrayList<Coordinates> damage = new ArrayList<Coordinates>();
 
 	protected GenericShip(Board.Coordinates start, Board.Coordinates end,
 			int size) {
 		this.startCoordinates = start;
 		this.endCoordinates = end;
 		this.size = size;
+
+		// Now we've set the private variables, cross-check them
+		checkSize();
 	}
-	
+
 	protected GenericShip(Board.Coordinates start, Direction direction, int size) {
 		this.startCoordinates = start;
 		this.size = size;
-		// TODO
+
+		switch (direction) {
+		case NORTH:
+			this.endCoordinates = new Coordinates(start.x, start.y - (size - 1));
+			break;
+		case SOUTH:
+			this.endCoordinates = new Coordinates(start.x, start.y + (size - 1));
+			break;
+		case WEST:
+			this.endCoordinates = new Coordinates(start.x - (size - 1), start.y);
+			break;
+		case EAST:
+			this.endCoordinates = new Coordinates(start.x + (size - 1), start.y);
+			break;
+		}
+		checkSize();
 	}
-	
+
+	/**
+	 * Method to perform a crosscheck of the coordinates and the size of the
+	 * ship. This method checks if the ship was placed horizontally or
+	 * vertically (and not diagonally)
+	 * 
+	 * @throws RuntimeException
+	 */
+	private void checkSize() throws RuntimeException {
+		// Note that this method indirectly checks for invalid coordinates such
+		// as ([2,2],[2,2]), where the ship would have size of 0
+
+		if (startCoordinates.x == endCoordinates.x) {
+			if (startCoordinates.y > endCoordinates.y) {
+				// Ship faces north
+				if (!((startCoordinates.y - endCoordinates.y + 1) == size)) {
+					throw new RuntimeException(
+							"Coordinates and size do not match!");
+				}
+			} else {
+				// Ship faces south
+				if (!((endCoordinates.y - startCoordinates.y + 1) == size)) {
+					throw new RuntimeException(
+							"Coordinates and size do not match!");
+				}
+			}
+		} else if (startCoordinates.y == endCoordinates.y) {
+			if (startCoordinates.x > endCoordinates.x) {
+				// Ship faces west
+				if (!((startCoordinates.x - endCoordinates.x + 1) == size)) {
+					throw new RuntimeException(
+							"Coordinates and size do not match!");
+				}
+			} else {
+				// Ship faces east
+				if (!((endCoordinates.x - startCoordinates.x + 1) == size)) {
+					throw new RuntimeException(
+							"Coordinates and size do not match!");
+				}
+			}
+		} else {
+			// Diagonal, throw exception!
+			throw new RuntimeException("Diagonal ships not allowed!");
+		}
+	}
+
 	@Override
 	public Coordinates getStartCoordinates() {
 		return startCoordinates;
@@ -76,25 +154,77 @@ public class GenericShip implements Ship {
 
 	@Override
 	public int getDamage() {
-		// TODO Auto-generated method stub
-		return 0;
+		return damage.size();
+	}
+
+	@Override
+	public void setDamage(Coordinates c) {
+		// TODO
+		// Check if c is in getCoordinatesForShip()
+		// Check if there was already damage there before (ArrayList damage)
+		// If all was ok, add coordinates to damage list
+		damage.add(c);
+
 	}
 
 	@Override
 	public boolean isSunk() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public ArrayList<Coordinates> getCoordinatesForShip() {
-		// TODO Auto-generated method stub
-		return null;
+		return (damage.size() == size);
 	}
 
 	@Override
 	public Direction getDirection() {
-		// TODO Auto-generated method stub
-		return null;
+		// Note that we don't need to check for diagonal here, the ship was
+		// already constructed and therefore has valid coordinates
+
+		if (startCoordinates.x == endCoordinates.x) {
+			if (startCoordinates.y > endCoordinates.y) {
+				return Direction.NORTH;
+			} else {
+				return Direction.SOUTH;
+			}
+		} else {
+			if (startCoordinates.x > endCoordinates.x) {
+				return Direction.WEST;
+			} else {
+				return Direction.EAST;
+			}
+		}
+	}
+
+	@Override
+	public ArrayList<Coordinates> getCoordinatesForShip() {
+		ArrayList<Coordinates> coords = new ArrayList<Coordinates>();
+		if (startCoordinates.x == endCoordinates.x) {
+			if (startCoordinates.y > endCoordinates.y) {
+				// Ship faces north
+				for(int i=endCoordinates.y; i <= startCoordinates.y; i++) {
+					coords.add(new Coordinates(startCoordinates.x, i));
+				}
+			} else {
+				// Ship faces south
+				for(int i=startCoordinates.y; i <= endCoordinates.y; i++) {
+					coords.add(new Coordinates(startCoordinates.x, i));
+				}
+			}
+		} else {
+			if (startCoordinates.x > endCoordinates.x) {
+				// Ship faces west
+				for(int i=endCoordinates.x; i <= startCoordinates.x; i++) {
+					coords.add(new Coordinates(i, startCoordinates.y));
+				}
+			} else {
+				// Ship faces east
+				for(int i=startCoordinates.x; i <= endCoordinates.x; i++) {
+					coords.add(new Coordinates(i, startCoordinates.y));
+				}
+			}
+		}
+		return coords;
+	}
+
+	@Override
+	public ArrayList<Coordinates> getCoordinatesForDamage() {
+		return damage;
 	}
 }

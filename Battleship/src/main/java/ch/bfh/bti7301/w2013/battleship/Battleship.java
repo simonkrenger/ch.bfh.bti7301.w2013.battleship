@@ -25,20 +25,28 @@ package ch.bfh.bti7301.w2013.battleship;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import ch.bfh.bti7301.w2013.battleship.game.Board;
-import ch.bfh.bti7301.w2013.battleship.game.Game;
-import ch.bfh.bti7301.w2013.battleship.game.Ship;
 import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
+import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
+import ch.bfh.bti7301.w2013.battleship.game.Game;
+import ch.bfh.bti7301.w2013.battleship.game.GameRule;
+import ch.bfh.bti7301.w2013.battleship.game.Missile;
+import ch.bfh.bti7301.w2013.battleship.game.Ship;
 import ch.bfh.bti7301.w2013.battleship.game.ships.AircraftCarrier;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
+import ch.bfh.bti7301.w2013.battleship.gui.ShipView;
 
 /**
  * @author Christian Meyer <chrigu.meyer@gmail.com>
@@ -48,21 +56,28 @@ public class Battleship extends Application {
 	private ResourceBundle labels;
 
 	private Game game;
+	private GameRule rule;
 
 	public Battleship() {
 		labels = ResourceBundle.getBundle("translations");
 		game = new Game();
+		rule = new GameRule();
 
 		game.getLocalPlayer()
 				.getBoard()
 				.placeShip(
 						new AircraftCarrier(new Coordinates(2, 2),
-								new Coordinates(2, 7)));
+								Direction.SOUTH));
 		game.getLocalPlayer()
 				.getBoard()
 				.placeShip(
 						new AircraftCarrier(new Coordinates(4, 2),
-								new Coordinates(9, 2)));
+								Direction.EAST));
+
+		game.getOpponent().getBoard()
+				.placeMissile(new Missile(new Coordinates(1, 1)));
+		game.getOpponent().getBoard()
+				.placeMissile(new Missile(new Coordinates(3, 4)));
 	}
 
 	/**
@@ -81,7 +96,7 @@ public class Battleship extends Application {
 		primaryStage.setScene(scene);
 
 		Board playerBoard = game.getLocalPlayer().getBoard();
-		BoardView pbv = new BoardView(playerBoard);
+		final BoardView pbv = new BoardView(playerBoard);
 		pbv.relocate(10, 10);
 		root.getChildren().add(pbv);
 
@@ -92,6 +107,74 @@ public class Battleship extends Application {
 		obv.relocate(pbv.getBoundsInParent().getMaxX() + 20, 10);
 		root.getChildren().add(obv);
 
+		int offset = 0;
+		for (Ship s : getAvailableShips()) {
+			final ShipView sv = new ShipView(s);
+			sv.relocate(obv.getBoundsInParent().getMinX() + offset, pbv
+					.getBoundsInParent().getMaxY() - 40);
+			root.getChildren().add(sv);
+			offset += BoardView.SIZE * 1.1;
+
+			sv.setOnMousePressed(new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent me) {
+					initX = sv.getTranslateX();
+					initY = sv.getTranslateY();
+					dragAnchor = new Point2D(me.getSceneX(), me.getSceneY());
+				}
+			});
+			sv.setOnMouseDragged(new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent me) {
+					double dragX = me.getSceneX() - dragAnchor.getX();
+					double dragY = me.getSceneY() - dragAnchor.getY();
+					// calculate new position of the circle
+					double newXPosition = initX + dragX;
+					double newYPosition = initY + dragY;
+					sv.setTranslateX(newXPosition);
+					sv.setTranslateY(newYPosition);
+				}
+			});
+			sv.setOnMouseReleased(new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent me) {
+					if (pbv.contains(me.getSceneX(), me.getSceneY())) {
+						// TODO: if on board, snap & add to it
+
+					} else {
+						// snap back
+						sv.setTranslateX(initX);
+						sv.setTranslateY(initY);
+					}
+				}
+			});
+		}
+
 		primaryStage.show();
 	}
+
+	private List<Ship> getAvailableShips() {
+		List<Ship> availableShips = new LinkedList<>();
+		Coordinates dc = new Coordinates(0, 0);
+		Direction dd = Direction.NORTH;
+
+		for (Entry<Class<? extends Ship>, Integer> e : rule.getShipList()
+				.entrySet()) {
+			try {
+				Ship ship = e.getKey()
+						.getConstructor(Coordinates.class, Direction.class)
+						.newInstance(dc, dd);
+				for (int i = 0; i < e.getValue(); i++)
+					availableShips.add(ship);
+			} catch (Exception x) {
+				throw new RuntimeException(
+						"Error while creating ships through reflection", x);
+			}
+		}
+		return availableShips;
+	}
+
+	private double initX;
+	private double initY;
+	private Point2D dragAnchor;
 }

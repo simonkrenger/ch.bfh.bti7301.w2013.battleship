@@ -30,19 +30,77 @@ import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
 /**
  * 
  * @author simon
- *
+ * 
  */
 public interface Ship {
 
+	/**
+	 * Get the start coordinates for the ship
+	 * 
+	 * @return Returns the starting coordinates of the ship
+	 */
 	public Board.Coordinates getStartCoordinates();
+
+	/**
+	 * Get the end coordinates for the ship
+	 * 
+	 * @return Returns the end coordinates of the ship
+	 */
 	public Board.Coordinates getEndCoordinates();
+
+	/**
+	 * Get the direction for the ship
+	 * 
+	 * @return Returns the direction the ship is facing (north, south, east or
+	 *         west)
+	 */
 	public Board.Direction getDirection();
-	
+
+	/**
+	 * Gets the size of the ship (unit is "boxes")
+	 * 
+	 * @return Number of boxes occupied by the ship
+	 */
 	public int getSize();
+
+	/**
+	 * Get the human-readable name for the ship. For example "Aircraft carrier"
+	 * 
+	 * @return Returns a string containing the name of the ship
+	 */
 	public String getName();
+
+	/**
+	 * Gets the number of boxes damaged for this ship
+	 * 
+	 * @return Number of boxes damaged
+	 */
 	public int getDamage();
+
+	/**
+	 * Checks if the ship was sunk (all boxes of the ship damaged)
+	 * 
+	 * @return Returns TRUE if the ship was sunk
+	 */
 	public boolean isSunk();
+
+	/**
+	 * Returns a list of all coordinates occupied by this ship
+	 * 
+	 * @return List of coordinates occupied by this ship
+	 */
 	public ArrayList<Coordinates> getCoordinatesForShip();
 	
+	/**
+	 * 
+	 * @return
+	 */
+	public ArrayList<Coordinates> getCoordinatesForDamage();
 	
+	/**
+	 * 
+	 * @param c
+	 */
+	public void setDamage(Coordinates c);
+
 }

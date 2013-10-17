@@ -21,70 +21,33 @@
  * 
  * For more information, please refer to [http://unlicense.org]
  */
-package ch.bfh.bti7301.w2013.battleship.game;
+package ch.bfh.bti7301.w2013.battleship.game.players;
 
-import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
+import ch.bfh.bti7301.w2013.battleship.game.Board;
+import ch.bfh.bti7301.w2013.battleship.game.Missile;
+import ch.bfh.bti7301.w2013.battleship.game.Player;
 
 /**
  * @author simon
- * 
+ *
  */
-public class Missile {
+public class Opponent extends GenericPlayer implements Player {
+	
 
-	public enum MissileState {
-		/**
-		 * Initial state of the missile
-		 */
-		FIRED,
-
-		/**
-		 * The missile coordinates mark a ship
-		 */
-		HIT,
-
-		/**
-		 * The missile coordinates do not mark a ship
-		 */
-		MISS,
-
-		/**
-		 * This state is returned when the missile coordinates mark a ship and
-		 * the ship was sunk as a result of that hit. This will then indicate
-		 * the user that this ship was sunk.
-		 */
-		SUNK,
-
-		/**
-		 * This state is returned when the missile coordinates mark a ship, that
-		 * ship was sunk as a result of that hit and the game is won.
-		 */
-		GAME_WON
+	@Override
+	public Missile placeShot(Missile m) {
+		// TODO CALL NETWORK (FRÄNZI!)
+		return null;
 	}
 
-	private Coordinates coordinates = null;
-
-	private MissileState status = null;
-
-	public Missile(Coordinates c) {
-		this.status = MissileState.FIRED;
-		this.coordinates = c;
+	@Override
+	public PlayerState getPlayerState() {
+		// TODO CALL NETWORK (FRÄNZI!)
+		return null;
+	}
+	
+	public Board getBoard() {
+		return this.playerBoard;
 	}
 
-	/**
-	 * Returns the state of the missile. Caution, this function may return NULL
-	 * if the missile does not contain an explicit status.
-	 * 
-	 * @return The state of this missile
-	 */
-	public MissileState getMissileState() {
-		return this.status;
-	}
-
-	public void setMissileState(MissileState state) {
-		this.status = state;
-	}
-
-	public Coordinates getCoordinates() {
-		return this.coordinates;
-	}
 }

@@ -25,7 +25,6 @@ package ch.bfh.bti7301.w2013.battleship.game;
 
 import java.util.ArrayList;
 
-
 /**
  * @author simon
  * 
@@ -33,11 +32,13 @@ import java.util.ArrayList;
 public class Board {
 
 	private static int DEFAULT_BOARD_SIZE = 10;
-	
+
 	private int size;
-	
+
 	private ArrayList<Ship> placedShips = new ArrayList<Ship>();
 	private ArrayList<Missile> placedMissiles = new ArrayList<Missile>();
+
+	private BoardSetup setup = new BoardSetup();
 
 	public Board() {
 		this(DEFAULT_BOARD_SIZE);
@@ -53,21 +54,37 @@ public class Board {
 
 	public void placeShip(Ship s) {
 		placedShips.add(s);
-		// TODO: Do some sanity checks, throw exception if placement is not possible
+		// TODO: Do some sanity checks, throw exception if placement is not
+		// possible
 
 		// First, check if ship can be placed (game state)
 		// Check if number of ships is allowed
-		
+
 		// Check boundaries of board
-		if(withinBoard(s.getStartCoordinates()) && withinBoard(s.getEndCoordinates())) {
-			
+		if (withinBoard(s.getStartCoordinates())
+				&& withinBoard(s.getEndCoordinates())) {
+
 		} else {
 			// Start or end coordinates are not within board!
 		}
-		
-		// Check 
+
+		// Check
 	}
-	
+
+	public void placeMissile(Missile m) {
+
+		//TODO
+		
+		//TODO: Check if its the players turn?
+		//TODO: Check if coordinates of missile were already used
+		//TODO: Check if there is a ship placed there?
+		//TODO: If there is a ship, get coordinates
+		//TODO: ship.setDamage(m.getCoordinates());
+		//TODO: Observer pattern (Notify all)
+		
+		placedMissiles.add(m);
+	}
+
 	public ArrayList<Ship> getPlacedShips() {
 		return this.placedShips;
 	}
@@ -78,6 +95,30 @@ public class Board {
 
 	public boolean withinBoard(Coordinates c) {
 		return (c.x <= size) && (c.y <= size);
+	}
+
+	public BoardSetup getBoardSetup() {
+		return this.setup;
+	}
+
+	public class BoardSetup {
+		private BoardSetup() {
+
+		}
+
+		public void moveShip(Ship s, Coordinates newStartCoordinates,
+				Direction d) {
+
+		}
+
+		public void moveShip(Ship s, Coordinates newStartCoordinates,
+				Coordinates newEndCoordinates) {
+
+		}
+
+		public void done() {
+			setup = null;
+		}
 	}
 
 	public static class Coordinates {
@@ -97,9 +138,25 @@ public class Board {
 					.valueOf((char) (x + 'A' - 1)) : null;
 			return alpha + y;
 		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Coordinates other = (Coordinates) obj;
+			if (x != other.x)
+				return false;
+			if (y != other.y)
+				return false;
+			return true;
+		}		
 	}
-	
-	public enum Direction {
+
+	public static enum Direction {
 		NORTH, SOUTH, WEST, EAST
 	}
 }

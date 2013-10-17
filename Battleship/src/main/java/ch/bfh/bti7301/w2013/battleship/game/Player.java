@@ -23,53 +23,15 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game;
 
+import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
+
 /**
  * @author simon
  *
  */
-public class Player {
+public interface Player {
 
-	private static String DEFAULT_NAME = "Unnamed player";
+	public Missile placeShot(Missile m);
 	
-	private String name;
-	private PlayerState status;
-	private Board playerBoard;
-	private Game playerGame;
-	
-	public enum PlayerState {
-		GAME_STARTED, READY, WAITING, PLAYING, GAME_WON, GAME_LOST
-	}
-	
-	public Player(Game g) {
-		this(g, DEFAULT_NAME);
-	}
-
-	public Player(Game g, String name) {
-		this.name = name;
-		this.status = PlayerState.GAME_STARTED;
-		this.playerBoard = new Board();
-		this.playerGame = g;
-	}
-	
-	public Board getBoard() {
-		return playerBoard;
-	}
-
-	public PlayerState getStatus() {
-		return status;
-	}
-
-	public void setStatus(PlayerState status) {
-		this.status = status;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public Game getGame() {
-		return playerGame;
-	}
-	
-	
+	public PlayerState getPlayerState();
 }
