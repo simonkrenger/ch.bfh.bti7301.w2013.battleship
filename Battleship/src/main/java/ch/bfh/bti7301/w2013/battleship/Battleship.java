@@ -133,12 +133,14 @@ public class Battleship extends Application {
 			sv.setOnMouseReleased(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent me) {
-					if (pbv.contains(me.getSceneX() - me.getX(), me.getSceneY()
-							- me.getY())) {
+					double shipStartX = me.getSceneX() - me.getX()
+							- pbv.getLayoutX();
+					double shipStartY = me.getSceneY() - me.getY()
+							- pbv.getLayoutY();
+					if (pbv.contains(shipStartX, shipStartY)) {
 						// if on board, snap & add to it
-						Coordinates c = pbv.getCoordinates(
-								me.getSceneX() - me.getX(),
-								me.getSceneY() - me.getY());
+						Coordinates c = pbv.getCoordinates(shipStartX,
+								shipStartY);
 						Ship ship = buildShip(sv.getShipType(), c,
 								Direction.SOUTH);
 						playerBoard.placeShip(ship);
