@@ -6,17 +6,18 @@ import java.io.*;
 
 /**
  * Class to check and find the users network settings
+ * 
  * @author corradi
  * @version 2013-10-04 v0.1
  */
 
 public class NetworkInformation {
-	
+
 	/**
-	 * Method to get all IP Addresses of Up IPv4, non Loopback and non virtual interfaces.
-	 * uses  getUpInterfaces() to find all UP Interfaces. 
+	 * Method to get all IP Addresses of Up IPv4, non Loopback and non virtual
+	 * interfaces. uses getUpInterfaces() to find all UP Interfaces.
 	 * 
-	 * @return      An Array List With the Interfaces names and Ip Addresses.
+	 * @return An Array List With the Interfaces names and Ip Addresses.
 	 */
 
 	public static ArrayList<String> getIntAddresses() {
@@ -45,7 +46,7 @@ public class NetworkInformation {
 
 			for (InetAddress ifAddress : Collections.list(inetAddresses)) {
 
-				//hier vergleich 0-255 , Byte vergleichen mit dezimalzahl.
+				// hier vergleich für 0-255 , Byte vergleichen mit dezimalzahl.
 				if (ifAddress.getAddress().length == 4) {
 					ipv4Interfaces.add(" IP:" + ifAddress.getHostAddress()
 							+ " ");
@@ -91,9 +92,9 @@ public class NetworkInformation {
 
 		return upIpv4Interfaces;
 	}
-	
+
 	/**
-	FOR TEST ONLY!!!
+	 * FOR TEST ONLY!!!
 	 */
 	public static void main(String[] args) {
 
