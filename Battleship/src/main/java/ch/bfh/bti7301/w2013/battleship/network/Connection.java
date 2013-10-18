@@ -28,7 +28,8 @@ public class Connection extends Thread {
 		// listener = new ServerSocket(GAMEPORT);
 		// opponentIP = null;
 		start();
-		new ConnectionListener(this).start();;
+		new ConnectionListener(this).start();
+		;
 	}
 
 	/**
@@ -59,7 +60,7 @@ public class Connection extends Thread {
 		try {
 			while (true) {
 				if (opponentIP == null) {
-					connection = listener.accept();
+					// connection = listener.accept();
 					opponentIP = connection.getInetAddress().getHostAddress();
 					connectionState = ConnectionState.LISTENING;
 
@@ -71,7 +72,7 @@ public class Connection extends Thread {
 				in = new ObjectInputStream(connection.getInputStream());
 				handler = new ConnectionHandler(in, instance);
 				connectionState = ConnectionState.CONNECTED;
-				listener.close();
+				// listener.close();
 			}
 
 		} catch (IOException e) {
@@ -94,7 +95,7 @@ public class Connection extends Thread {
 			// instance = new Connection();
 			// return instance;
 		} else {
-			instance = new Connection();
+			// instance = new Connection(opponentIP);
 			return instance;
 		}
 	}
@@ -150,12 +151,12 @@ public class Connection extends Thread {
 	public ConnectionState getConnectionState() {
 		return connectionState;
 	}
-	
+
 	public void setConnectionState(ConnectionState connectionState) {
 		this.connectionState = connectionState;
-//		if (connectionStateListener!=null){
-//			connectionStateListener.stateChanged(connectionState);
-//		}
+		// if (connectionStateListener!=null){
+		// connectionStateListener.stateChanged(connectionState);
+		// }
 	}
 
 	/**

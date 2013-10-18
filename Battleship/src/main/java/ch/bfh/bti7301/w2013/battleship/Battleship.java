@@ -35,6 +35,9 @@ import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -49,6 +52,7 @@ import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
 import ch.bfh.bti7301.w2013.battleship.gui.ShipView;
+import ch.bfh.bti7301.w2013.battleship.network.NetworkInformation;
 
 /**
  * @author Christian Meyer <chrigu.meyer@gmail.com>
@@ -75,6 +79,9 @@ public class Battleship extends Application {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		// Output this for debugging and testing
+		System.out.println(NetworkInformation.getIntAddresses());
+
 		launch(args);
 	}
 
@@ -129,12 +136,14 @@ public class Battleship extends Application {
 			sv.setOnMouseReleased(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent me) {
-					if (pbv.contains(me.getSceneX() - me.getX(), me.getSceneY()
-							- me.getY())) {
+					double shipStartX = me.getSceneX() - me.getX()
+							- pbv.getLayoutX();
+					double shipStartY = me.getSceneY() - me.getY()
+							- pbv.getLayoutY();
+					if (pbv.contains(shipStartX, shipStartY)) {
 						// if on board, snap & add to it
-						Coordinates c = pbv.getCoordinates(
-								me.getSceneX() - me.getX(),
-								me.getSceneY() - me.getY());
+						Coordinates c = pbv.getCoordinates(shipStartX,
+								shipStartY);
 						Ship ship = buildShip(sv.getShipType(), c,
 								Direction.SOUTH);
 						playerBoard.placeShip(ship);
@@ -152,6 +161,18 @@ public class Battleship extends Application {
 		shipStack.relocate(obv.getBoundsInParent().getMinX(), obv
 				.getBoundsInParent().getMaxY() + 8);
 		root.getChildren().add(shipStack);
+
+		// Temporary input field to enter the opponent's
+		HBox ipBox = new HBox();
+		TextField ipAddress = new TextField();
+		ipBox.getChildren().add(ipAddress);
+		Button connect = new Button("Connect");
+		ipBox.getChildren().add(connect);
+		ipBox.relocate(pbv.getBoundsInParent().getMinX(), pbv
+				.getBoundsInParent().getMaxY() + 20);
+		ipBox.getChildren().add(
+				new Label(NetworkInformation.getIntAddresses().toString()));
+		root.getChildren().add(ipBox);
 
 		primaryStage.show();
 	}
