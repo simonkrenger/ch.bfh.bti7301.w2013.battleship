@@ -35,6 +35,9 @@ import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -158,6 +161,18 @@ public class Battleship extends Application {
 		shipStack.relocate(obv.getBoundsInParent().getMinX(), obv
 				.getBoundsInParent().getMaxY() + 8);
 		root.getChildren().add(shipStack);
+
+		// Temporary input field to enter the opponent's
+		HBox ipBox = new HBox();
+		TextField ipAddress = new TextField();
+		ipBox.getChildren().add(ipAddress);
+		Button connect = new Button("Connect");
+		ipBox.getChildren().add(connect);
+		ipBox.relocate(pbv.getBoundsInParent().getMinX(), pbv
+				.getBoundsInParent().getMaxY() + 20);
+		ipBox.getChildren().add(
+				new Label(NetworkInformation.getIntAddresses().toString()));
+		root.getChildren().add(ipBox);
 
 		primaryStage.show();
 	}
