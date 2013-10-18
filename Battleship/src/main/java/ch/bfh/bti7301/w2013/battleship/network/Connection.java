@@ -94,7 +94,7 @@ public class Connection extends Thread {
 			// instance = new Connection();
 			// return instance;
 		} else {
-			instance = new Connection(opponentIP);
+			instance = new Connection();
 			return instance;
 		}
 	}
