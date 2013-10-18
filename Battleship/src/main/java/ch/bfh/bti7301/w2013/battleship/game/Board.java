@@ -26,7 +26,7 @@ package ch.bfh.bti7301.w2013.battleship.game;
 import java.util.ArrayList;
 
 /**
- * @author simon
+ * @author Simon Krenger <simon@krenger.ch>
  * 
  */
 public class Board {
