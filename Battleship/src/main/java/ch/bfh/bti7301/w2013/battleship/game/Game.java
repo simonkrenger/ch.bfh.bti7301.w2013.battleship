@@ -33,13 +33,15 @@ import ch.bfh.bti7301.w2013.battleship.game.players.NetworkPlayer;
 public class Game {
 
 	private int gameID;
+	
+	private static Game instance = null;
 
 	private LocalPlayer localPlayer;
 	private NetworkPlayer opponentPlayer;
 
 	private Player activePlayer;
 
-	public Game() {
+	private Game() {
 		this.localPlayer = new LocalPlayer();
 		this.opponentPlayer = new NetworkPlayer();
 
@@ -47,6 +49,13 @@ public class Game {
 		this.activePlayer = localPlayer;
 	}
 
+	public static Game getInstance() {
+		if(instance == null) {
+			instance = new Game();
+		}
+		return instance;
+	}
+	
 	public LocalPlayer getLocalPlayer() {
 		return localPlayer;
 	}

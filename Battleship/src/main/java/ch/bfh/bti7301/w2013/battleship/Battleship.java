@@ -62,7 +62,7 @@ public class Battleship extends Application {
 
 	public Battleship() {
 		labels = ResourceBundle.getBundle("translations");
-		game = new Game();
+		game = Game.getInstance();
 		rule = new GameRule();
 
 		game.getOpponent().getBoard()

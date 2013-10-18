@@ -25,7 +25,6 @@ package ch.bfh.bti7301.w2013.battleship.game.players;
 
 import java.io.IOException;
 
-import ch.bfh.bti7301.w2013.battleship.game.Board;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Player;
 import ch.bfh.bti7301.w2013.battleship.network.Connection;
