@@ -23,6 +23,8 @@
  */
 package ch.bfh.bti7301.w2013.battleship;
 
+import static ch.bfh.bti7301.w2013.battleship.gui.BoardView.SIZE;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -96,10 +98,10 @@ public class Battleship extends Application {
 		obv.relocate(pbv.getBoundsInParent().getMaxX() + 20, 10);
 		root.getChildren().add(obv);
 
-		final HBox shipStack = new HBox();
-		shipStack.relocate(obv.getBoundsInParent().getMinX(), pbv
-				.getBoundsInParent().getMaxY() - 40);
-		root.getChildren().add(shipStack);
+		final HBox shipStack = new HBox(-16);
+		// FIXME: this is just for layout debugging
+		shipStack.setStyle("-fx-background-color: #ffc;");
+		shipStack.setMaxHeight(SIZE);
 		for (Ship s : getAvailableShips()) {
 			final ShipView sv = new ShipView(s);
 			shipStack.getChildren().add(sv);
@@ -127,13 +129,14 @@ public class Battleship extends Application {
 			sv.setOnMouseReleased(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent me) {
-					if (pbv.contains(me.getSceneX(), me.getSceneY())) {
+					if (pbv.contains(me.getSceneX() - me.getX(), me.getSceneY()
+							- me.getY())) {
 						// if on board, snap & add to it
 						Coordinates c = pbv.getCoordinates(
-								me.getSceneX() - pbv.getLayoutX() + me.getX(),
-								me.getSceneY() - pbv.getLayoutY() + me.getY());
+								me.getSceneX() - me.getX(),
+								me.getSceneY() - me.getY());
 						Ship ship = buildShip(sv.getShipType(), c,
-								Direction.NORTH);
+								Direction.SOUTH);
 						playerBoard.placeShip(ship);
 						// TODO: handle illegal ship placement
 						shipStack.getChildren().remove(sv);
@@ -146,6 +149,9 @@ public class Battleship extends Application {
 				}
 			});
 		}
+		shipStack.relocate(obv.getBoundsInParent().getMinX(), obv
+				.getBoundsInParent().getMaxY() + 8);
+		root.getChildren().add(shipStack);
 
 		primaryStage.show();
 	}
@@ -153,7 +159,7 @@ public class Battleship extends Application {
 	private List<Ship> getAvailableShips() {
 		List<Ship> availableShips = new LinkedList<>();
 		Coordinates dc = new Coordinates(0, 0);
-		Direction dd = Direction.NORTH;
+		Direction dd = Direction.SOUTH;
 
 		for (Entry<Class<? extends Ship>, Integer> e : rule.getShipList()
 				.entrySet()) {
