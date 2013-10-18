@@ -25,19 +25,30 @@ public class Connection extends Thread {
 	 * @throws IOException
 	 */
 	private Connection() throws IOException {
-		listener = new ServerSocket(GAMEPORT);
-		opponentIP = null;
+		// listener = new ServerSocket(GAMEPORT);
+		// opponentIP = null;
 		start();
+		new ConnectionListener(this).start();;
 	}
 
 	/**
 	 * 
 	 * @param opponentIP
 	 */
-	private Connection(String opponentIP) {
-		listener = null;
-		this.opponentIP = opponentIP;
-		start();
+	// private Connection(String opponentIP) {
+	// listener = null;
+	// this.opponentIP = opponentIP;
+	// start();
+	// }
+	public void setClientSocket(Socket socket) {
+		// TODO
+	}
+
+	public String connectOpponet(String Ip) {
+		opponentIP = Ip;
+
+		return Ip;
+
 	}
 
 	/**
@@ -79,12 +90,12 @@ public class Connection extends Thread {
 
 		if (instance != null) {
 			return instance;
+			// } else if (opponentIP == null) {
+			// instance = new Connection();
+			// return instance;
 		} else {
-			instance = new Connection();
+			instance = new Connection(opponentIP);
 			return instance;
-//		} else {
-//			instance = new Connection(opponentIP);
-//			return instance;
 		}
 	}
 
@@ -139,6 +150,13 @@ public class Connection extends Thread {
 	public ConnectionState getConnectionState() {
 		return connectionState;
 	}
+	
+	public void setConnectionState(ConnectionState connectionState) {
+		this.connectionState = connectionState;
+//		if (connectionStateListener!=null){
+//			connectionStateListener.stateChanged(connectionState);
+//		}
+	}
 
 	/**
 	 * 
@@ -153,7 +171,6 @@ public class Connection extends Thread {
 		}
 		connectionState = ConnectionState.CLOSED;
 		instance = null;
-		listener = null;
 		opponentIP = null;
 		connection = null;
 		in = null;
