@@ -23,7 +23,8 @@
  */
 package ch.bfh.bti7301.w2013.battleship;
 
-import java.lang.reflect.InvocationTargetException;
+import static ch.bfh.bti7301.w2013.battleship.gui.BoardView.SIZE;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -45,10 +46,8 @@ import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.GameRule;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
-import ch.bfh.bti7301.w2013.battleship.game.ships.AircraftCarrier;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
 import ch.bfh.bti7301.w2013.battleship.gui.ShipView;
-import static ch.bfh.bti7301.w2013.battleship.gui.BoardView.SIZE;
 
 /**
  * @author Christian Meyer <chrigu.meyer@gmail.com>
@@ -64,17 +63,6 @@ public class Battleship extends Application {
 		labels = ResourceBundle.getBundle("translations");
 		game = new Game();
 		rule = new GameRule();
-
-		game.getLocalPlayer()
-				.getBoard()
-				.placeShip(
-						new AircraftCarrier(new Coordinates(2, 2),
-								Direction.SOUTH));
-		game.getLocalPlayer()
-				.getBoard()
-				.placeShip(
-						new AircraftCarrier(new Coordinates(4, 2),
-								Direction.EAST));
 
 		game.getOpponent().getBoard()
 				.placeMissile(new Missile(new Coordinates(1, 1)));
