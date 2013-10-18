@@ -49,6 +49,7 @@ import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
 import ch.bfh.bti7301.w2013.battleship.gui.ShipView;
+import ch.bfh.bti7301.w2013.battleship.network.NetworkInformation;
 
 /**
  * @author Christian Meyer <chrigu.meyer@gmail.com>
@@ -75,6 +76,9 @@ public class Battleship extends Application {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		// Output this for debugging and testing
+		System.out.println(NetworkInformation.getIntAddresses());
+
 		launch(args);
 	}
 
