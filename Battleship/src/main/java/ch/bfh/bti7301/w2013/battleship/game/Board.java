@@ -72,8 +72,6 @@ public class Board {
 	}
 
 	public void placeMissile(Missile m) {
-
-		//TODO
 		
 		//TODO: Check if its the players turn?
 		//TODO: Check if coordinates of missile were already used
