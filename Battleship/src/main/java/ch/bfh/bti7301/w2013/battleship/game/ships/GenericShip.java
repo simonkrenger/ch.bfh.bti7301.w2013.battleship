@@ -159,12 +159,17 @@ public class GenericShip implements Ship {
 
 	@Override
 	public void setDamage(Coordinates c) {
-		// TODO
-		// Check if c is in getCoordinatesForShip()
-		// Check if there was already damage there before (ArrayList damage)
-		// If all was ok, add coordinates to damage list
-		damage.add(c);
-
+		if (getCoordinatesForShip().contains(c)) {
+			if (damage.contains(c)) {
+				damage.add(c);
+			} else {
+				throw new RuntimeException("Coordinates " + c
+						+ " are already damaged!");
+			}
+		} else {
+			throw new RuntimeException("Coordinates " + c
+					+ " don't match with ship coordinates!");
+		}
 	}
 
 	@Override
