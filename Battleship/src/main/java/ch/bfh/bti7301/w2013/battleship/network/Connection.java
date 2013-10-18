@@ -5,7 +5,7 @@ import java.net.*;
 
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 
-public class Connection implements Runnable {
+public class Connection extends Thread {
 
 	final static int GAMEPORT = 42423;
 
@@ -27,8 +27,7 @@ public class Connection implements Runnable {
 	private Connection() throws IOException {
 		listener = new ServerSocket(GAMEPORT);
 		opponentIP = null;
-		run();
-
+		start();
 	}
 
 	/**
@@ -38,15 +37,16 @@ public class Connection implements Runnable {
 	private Connection(String opponentIP) {
 		listener = null;
 		this.opponentIP = opponentIP;
-		run();
+		start();
 	}
 
 	/**
 	 * Try to connect with an opponent.
 	 */
+	@Override
 	public void run() { // run the service
 		try {
-			for (;;) {
+			while (true) {
 				if (opponentIP == null) {
 					connection = listener.accept();
 					opponentIP = connection.getInetAddress().getHostAddress();
@@ -93,7 +93,7 @@ public class Connection implements Runnable {
 	 * @param missile
 	 */
 	public void placeShot(Missile missile) {
-		ConnectionHandler.sendObject(out, missile);
+		handler.sendObject(out, missile);
 	}
 
 	/**
@@ -102,8 +102,7 @@ public class Connection implements Runnable {
 	 */
 
 	public void sendReady(String ready) {
-		ConnectionHandler.sendObject(out, ready);
-
+		handler.sendObject(out, ready);
 	}
 
 	/**
@@ -111,7 +110,7 @@ public class Connection implements Runnable {
 	 * @param end
 	 */
 	public void sendEnd(String end) {
-		ConnectionHandler.sendObject(out, end);
+		handler.sendObject(out, end);
 
 	}
 
@@ -120,7 +119,7 @@ public class Connection implements Runnable {
 	 * @param start
 	 */
 	public void sendStart(String start) {
-		ConnectionHandler.sendObject(out, start);
+		handler.sendObject(out, start);
 	}
 
 	/**

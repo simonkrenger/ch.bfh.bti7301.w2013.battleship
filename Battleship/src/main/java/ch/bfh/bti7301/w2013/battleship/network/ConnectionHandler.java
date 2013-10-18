@@ -7,8 +7,8 @@ import ch.bfh.bti7301.w2013.battleship.game.Missile;
 
 public class ConnectionHandler implements Runnable {
 
-	private static ObjectInputStream input;
-	private static Connection conn;
+	private ObjectInputStream input;
+	private Connection conn;
 
 	public ConnectionHandler(ObjectInputStream in, Connection connection) {
 		input = in;
@@ -32,7 +32,7 @@ public class ConnectionHandler implements Runnable {
 		}
 	}
 
-	public static void sendObject(ObjectOutputStream out, Object outgoingObject) {
+	public void sendObject(ObjectOutputStream out, Object outgoingObject) {
 		try {
 			// if (Protocoll.checkOutput(outgoingObject)){
 			out.writeObject(outgoingObject);
@@ -47,7 +47,6 @@ public class ConnectionHandler implements Runnable {
 	public Object receiveObject(Object receivedObject) {
 		conn.receiveObjectToGame(receivedObject);
 		return false;
-
 	}
 
 }
