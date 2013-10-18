@@ -30,21 +30,21 @@ import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
 
 /**
  * @author simon
- *
+ * 
  */
 public class PatrolBoat extends GenericShip implements Ship {
 
-private static int SHIP_SIZE = 2;
-	
+	private static int SHIP_SIZE = 2;
+
 	@Override
 	public String getName() {
 		return "Patrol boat";
 	}
-	
+
 	public PatrolBoat(Board.Coordinates start, Board.Coordinates end) {
 		super(start, end, SHIP_SIZE);
 	}
-	
+
 	public PatrolBoat(Coordinates start, Direction dir) {
 		super(start, dir, SHIP_SIZE);
 	}

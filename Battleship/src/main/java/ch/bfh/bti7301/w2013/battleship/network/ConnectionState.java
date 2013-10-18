@@ -25,8 +25,10 @@ package ch.bfh.bti7301.w2013.battleship.network;
 
 /**
  * @author simon
- *
+ * 
  */
 public enum ConnectionState {
+
+	LISTENING, CONNECTING, CONNECTED, CLOSED
 
 }

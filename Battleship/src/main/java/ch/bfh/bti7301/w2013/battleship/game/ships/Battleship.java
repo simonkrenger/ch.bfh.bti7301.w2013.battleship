@@ -29,21 +29,21 @@ import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
 
 /**
  * @author simon
- *
+ * 
  */
 public class Battleship extends GenericShip implements Ship {
 
-private static int SHIP_SIZE = 4;
-	
+	private static int SHIP_SIZE = 4;
+
 	@Override
 	public String getName() {
 		return "Battleship";
 	}
-	
+
 	public Battleship(Coordinates start, Coordinates end) {
 		super(start, end, SHIP_SIZE);
 	}
-	
+
 	public Battleship(Coordinates start, Direction dir) {
 		super(start, dir, SHIP_SIZE);
 	}

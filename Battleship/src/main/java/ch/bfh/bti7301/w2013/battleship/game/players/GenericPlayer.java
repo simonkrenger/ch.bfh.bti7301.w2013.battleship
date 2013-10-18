@@ -27,16 +27,16 @@ import ch.bfh.bti7301.w2013.battleship.game.Board;
 
 /**
  * @author simon
- *
+ * 
  */
 public class GenericPlayer {
 
 	private static String DEFAULT_NAME = "Unnamed player";
-	
+
 	private String name;
 	protected PlayerState status;
 	protected Board playerBoard;
-	
+
 	public enum PlayerState {
 		GAME_STARTED, READY, WAITING, PLAYING, GAME_WON, GAME_LOST
 	}
@@ -44,13 +44,13 @@ public class GenericPlayer {
 	public GenericPlayer() {
 		this(DEFAULT_NAME);
 	}
-	
+
 	public GenericPlayer(String name) {
 		this.name = name;
 		this.status = PlayerState.GAME_STARTED;
 		this.playerBoard = new Board();
 	}
-	
+
 	public Board getBoard() {
 		return playerBoard;
 	}
@@ -58,7 +58,7 @@ public class GenericPlayer {
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setPlayerState(PlayerState ps) {
 		this.status = ps;
 	}

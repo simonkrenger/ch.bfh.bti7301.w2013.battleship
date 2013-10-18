@@ -30,21 +30,21 @@ import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
 
 /**
  * @author simon
- *
+ * 
  */
 public class Submarine extends GenericShip implements Ship {
 
-private static int SHIP_SIZE = 3;
-	
+	private static int SHIP_SIZE = 3;
+
 	@Override
 	public String getName() {
 		return "Submarine";
 	}
-	
+
 	public Submarine(Board.Coordinates start, Board.Coordinates end) {
 		super(start, end, SHIP_SIZE);
 	}
-	
+
 	public Submarine(Coordinates start, Direction dir) {
 		super(start, dir, SHIP_SIZE);
 	}

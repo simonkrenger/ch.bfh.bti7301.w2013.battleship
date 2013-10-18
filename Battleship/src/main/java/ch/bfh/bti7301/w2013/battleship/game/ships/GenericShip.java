@@ -198,24 +198,24 @@ public class GenericShip implements Ship {
 		if (startCoordinates.x == endCoordinates.x) {
 			if (startCoordinates.y > endCoordinates.y) {
 				// Ship faces north
-				for(int i=endCoordinates.y; i <= startCoordinates.y; i++) {
+				for (int i = endCoordinates.y; i <= startCoordinates.y; i++) {
 					coords.add(new Coordinates(startCoordinates.x, i));
 				}
 			} else {
 				// Ship faces south
-				for(int i=startCoordinates.y; i <= endCoordinates.y; i++) {
+				for (int i = startCoordinates.y; i <= endCoordinates.y; i++) {
 					coords.add(new Coordinates(startCoordinates.x, i));
 				}
 			}
 		} else {
 			if (startCoordinates.x > endCoordinates.x) {
 				// Ship faces west
-				for(int i=endCoordinates.x; i <= startCoordinates.x; i++) {
+				for (int i = endCoordinates.x; i <= startCoordinates.x; i++) {
 					coords.add(new Coordinates(i, startCoordinates.y));
 				}
 			} else {
 				// Ship faces east
-				for(int i=startCoordinates.x; i <= endCoordinates.x; i++) {
+				for (int i = startCoordinates.x; i <= endCoordinates.x; i++) {
 					coords.add(new Coordinates(i, startCoordinates.y));
 				}
 			}

@@ -19,7 +19,6 @@ public class BoardView extends Parent {
 		final int rows, columns;
 		rows = columns = board.getBoardSize();
 
-		getChildren().add(getWater(rows, columns));
 		for (int i = 0; i <= rows; i++) {
 			getChildren().add(getLine(i * SIZE, 0, i * SIZE, SIZE * columns));
 		}

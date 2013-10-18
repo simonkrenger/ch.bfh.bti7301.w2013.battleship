@@ -27,7 +27,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
-
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -92,7 +91,7 @@ public class Battleship extends Application {
 		primaryStage.setTitle(labels.getString("title"));
 
 		Group root = new Group();
-		Scene scene = new Scene(root, 800, 600, Color.WHITE);
+		Scene scene = new Scene(root, 800, 600, Color.YELLOW);
 		primaryStage.setScene(scene);
 
 		Board playerBoard = game.getLocalPlayer().getBoard();

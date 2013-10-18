@@ -29,10 +29,9 @@ import ch.bfh.bti7301.w2013.battleship.game.Player;
 
 /**
  * @author simon
- *
+ * 
  */
 public class Opponent extends GenericPlayer implements Player {
-	
 
 	@Override
 	public Missile placeShot(Missile m) {
@@ -45,7 +44,7 @@ public class Opponent extends GenericPlayer implements Player {
 		// TODO CALL NETWORK (FRÄNZI!)
 		return null;
 	}
-	
+
 	public Board getBoard() {
 		return this.playerBoard;
 	}
