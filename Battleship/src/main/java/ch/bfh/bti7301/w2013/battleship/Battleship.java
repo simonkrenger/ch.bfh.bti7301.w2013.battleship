@@ -23,18 +23,18 @@
  */
 package ch.bfh.bti7301.w2013.battleship;
 
-import static ch.bfh.bti7301.w2013.battleship.gui.BoardView.SIZE;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
+
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
@@ -45,7 +45,6 @@ import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.GameRule;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
-import ch.bfh.bti7301.w2013.battleship.game.ships.AircraftCarrier;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
 import ch.bfh.bti7301.w2013.battleship.gui.ShipView;
 
@@ -97,13 +96,13 @@ public class Battleship extends Application {
 		obv.relocate(pbv.getBoundsInParent().getMaxX() + 20, 10);
 		root.getChildren().add(obv);
 
-		int offset = 0;
+		final HBox shipStack = new HBox();
+		shipStack.relocate(obv.getBoundsInParent().getMinX(), pbv
+				.getBoundsInParent().getMaxY() - 40);
+		root.getChildren().add(shipStack);
 		for (Ship s : getAvailableShips()) {
 			final ShipView sv = new ShipView(s);
-			sv.relocate(obv.getBoundsInParent().getMinX() + offset, pbv
-					.getBoundsInParent().getMaxY() - 40);
-			root.getChildren().add(sv);
-			offset += SIZE * 1.1;
+			shipStack.getChildren().add(sv);
 
 			sv.setOnMousePressed(new EventHandler<MouseEvent>() {
 				@Override
@@ -137,7 +136,7 @@ public class Battleship extends Application {
 								Direction.NORTH);
 						playerBoard.placeShip(ship);
 						// TODO: handle illegal ship placement
-						root.getChildren().remove(sv);
+						shipStack.getChildren().remove(sv);
 						pbv.addShip(ship);
 					} else {
 						// snap back
