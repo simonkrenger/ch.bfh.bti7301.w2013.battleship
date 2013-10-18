@@ -8,18 +8,18 @@ import ch.bfh.bti7301.w2013.battleship.game.Missile;
 public class Connection implements Runnable {
 
 	final static int GAMEPORT = 42423;
-	
+
 	public ConnectionState connectionState;
-	
+
 	private Connection instance;
 	private ServerSocket listener;
 	private String opponentIP;
 	private Socket connection;
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
-	
+
 	private ConnectionHandler handler;
-	
+
 	/**
 	 * 
 	 * @throws IOException
@@ -41,9 +41,9 @@ public class Connection implements Runnable {
 		run();
 	}
 
-/**
- * Try to connect with an opponent.
- */
+	/**
+	 * Try to connect with an opponent.
+	 */
 	public void run() { // run the service
 		try {
 			for (;;) {
@@ -51,22 +51,22 @@ public class Connection implements Runnable {
 					connection = listener.accept();
 					opponentIP = connection.getInetAddress().getHostAddress();
 					connectionState = ConnectionState.LISTENING;
-					
+
 				} else {
-					connection = new Socket(opponentIP,GAMEPORT);
+					connection = new Socket(opponentIP, GAMEPORT);
 				}
-				
+
 				out = new ObjectOutputStream(connection.getOutputStream());
 				in = new ObjectInputStream(connection.getInputStream());
 				handler = new ConnectionHandler(in, instance);
 				connectionState = ConnectionState.CONNECTED;
 				listener.close();
 			}
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 			cleanUp();
-		}	
+		}
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class Connection implements Runnable {
 	public void placeShot(Missile missile) {
 		ConnectionHandler.sendObject(out, missile);
 	}
-	
+
 	/**
 	 * 
 	 * @param ready
@@ -105,6 +105,7 @@ public class Connection implements Runnable {
 		ConnectionHandler.sendObject(out, ready);
 
 	}
+
 	/**
 	 * 
 	 * @param end
@@ -126,39 +127,38 @@ public class Connection implements Runnable {
 	 * 
 	 * @return
 	 */
-	public Object receiveObjectToGame(Object object){
-		
-		//simon: wohin damit?
+	public Object receiveObjectToGame(Object object) {
+
+		// simon: wohin damit?
 		return null;
 	}
-	
+
 	/**
 	 * 
 	 * @return
 	 */
-	public ConnectionState getConnectionState(){
+	public ConnectionState getConnectionState() {
 		return connectionState;
 	}
-	
+
 	/**
 	 * 
 	 */
 	private void cleanUp() {
-	if (connection != null && !connection.isClosed()) {
-        // Make sure that the socket, if any, is closed.
-     try {
-        connection.close();
-     }
-     catch (IOException e) {
-     }
-  }
-	connectionState = ConnectionState.CLOSED;
-	instance = null;
-	listener = null;
-	opponentIP = null;
-	connection = null;
-	in = null;
-	out = null;
-  
+		if (connection != null && !connection.isClosed()) {
+			// Make sure that the socket, if any, is closed.
+			try {
+				connection.close();
+			} catch (IOException e) {
+			}
+		}
+		connectionState = ConnectionState.CLOSED;
+		instance = null;
+		listener = null;
+		opponentIP = null;
+		connection = null;
+		in = null;
+		out = null;
+
 	}
 }

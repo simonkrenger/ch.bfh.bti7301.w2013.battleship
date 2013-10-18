@@ -29,15 +29,13 @@ import ch.bfh.bti7301.w2013.battleship.game.Player;
 
 /**
  * @author simon
- *
+ * 
  */
-public class LocalPlayer extends GenericPlayer implements Player{
+public class LocalPlayer extends GenericPlayer implements Player {
 
 	@Override
 	public Missile placeShot(Missile m) {
-		
 
-		
 		return null;
 	}
 

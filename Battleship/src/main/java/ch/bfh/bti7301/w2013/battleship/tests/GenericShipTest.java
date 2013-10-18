@@ -73,13 +73,12 @@ public class GenericShipTest {
 	@Test
 	public void testGenericShipCoordinatesDirectionInt() {
 		Ship a = new AircraftCarrier(new Coordinates(5, 5), Direction.EAST);
-		
+
 		assertEquals(a.getDirection(), Direction.EAST);
 		assertEquals(a.getSize(), 5);
 		assertEquals(a.getStartCoordinates(), new Coordinates(5, 5));
 		assertEquals(a.getEndCoordinates(), new Coordinates(9, 5));
 	}
-	
 
 	@Test
 	public void testGetStartCoordinates() {
@@ -136,7 +135,7 @@ public class GenericShipTest {
 	@Test
 	public void testGetCoordinatesForShip() {
 		Ship s = new AircraftCarrier(new Coordinates(2, 2), Direction.SOUTH);
-		
+
 		// "Should" values
 		ArrayList<Coordinates> c = new ArrayList<Coordinates>();
 		c.add(new Coordinates(2, 2));
@@ -144,10 +143,10 @@ public class GenericShipTest {
 		c.add(new Coordinates(2, 4));
 		c.add(new Coordinates(2, 5));
 		c.add(new Coordinates(2, 6));
-		
+
 		assertEquals(s.getSize(), s.getCoordinatesForShip().size());
 		assertEquals(s.getCoordinatesForShip(), c);
-		
+
 	}
 
 	@Test

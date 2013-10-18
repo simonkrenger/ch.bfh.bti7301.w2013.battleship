@@ -73,15 +73,15 @@ public class Board {
 
 	public void placeMissile(Missile m) {
 
-		//TODO
-		
-		//TODO: Check if its the players turn?
-		//TODO: Check if coordinates of missile were already used
-		//TODO: Check if there is a ship placed there?
-		//TODO: If there is a ship, get coordinates
-		//TODO: ship.setDamage(m.getCoordinates());
-		//TODO: Observer pattern (Notify all)
-		
+		// TODO
+
+		// TODO: Check if its the players turn?
+		// TODO: Check if coordinates of missile were already used
+		// TODO: Check if there is a ship placed there?
+		// TODO: If there is a ship, get coordinates
+		// TODO: ship.setDamage(m.getCoordinates());
+		// TODO: Observer pattern (Notify all)
+
 		placedMissiles.add(m);
 	}
 
@@ -153,7 +153,7 @@ public class Board {
 			if (y != other.y)
 				return false;
 			return true;
-		}		
+		}
 	}
 
 	public static enum Direction {

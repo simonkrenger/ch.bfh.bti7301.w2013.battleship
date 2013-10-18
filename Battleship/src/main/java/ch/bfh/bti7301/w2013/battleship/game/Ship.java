@@ -90,13 +90,13 @@ public interface Ship {
 	 * @return List of coordinates occupied by this ship
 	 */
 	public ArrayList<Coordinates> getCoordinatesForShip();
-	
+
 	/**
 	 * 
 	 * @return
 	 */
 	public ArrayList<Coordinates> getCoordinatesForDamage();
-	
+
 	/**
 	 * 
 	 * @param c

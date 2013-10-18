@@ -34,14 +34,14 @@ import ch.bfh.bti7301.w2013.battleship.game.ships.Submarine;
 
 /**
  * @author simon
- *
+ * 
  */
 public class GameRule {
 
 	private int boardSize = 10;
 	private int totalTime = 0;
-	private Map <Class<? extends Ship>, Integer> shipList = new HashMap<Class<? extends Ship>, Integer>();
-	
+	private Map<Class<? extends Ship>, Integer> shipList = new HashMap<Class<? extends Ship>, Integer>();
+
 	/**
 	 * Constructor for default rules
 	 */
@@ -52,8 +52,9 @@ public class GameRule {
 		shipList.put(Destroyer.class, 4);
 		shipList.put(PatrolBoat.class, 5);
 	}
-	
-	public GameRule(int boardSize, int time, HashMap<Class<? extends Ship>, Integer> list) {
+
+	public GameRule(int boardSize, int time,
+			HashMap<Class<? extends Ship>, Integer> list) {
 		this.boardSize = boardSize;
 		this.totalTime = time;
 		this.shipList = list;
@@ -82,6 +83,5 @@ public class GameRule {
 	public void setShipList(Map<Class<? extends Ship>, Integer> shipList) {
 		this.shipList = shipList;
 	}
-	
-	
+
 }

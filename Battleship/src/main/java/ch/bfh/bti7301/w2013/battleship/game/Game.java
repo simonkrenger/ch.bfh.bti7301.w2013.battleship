@@ -42,8 +42,8 @@ public class Game {
 	public Game() {
 		this.localPlayer = new LocalPlayer();
 		this.opponentPlayer = new Opponent();
-		
-		//TODO: Fix active player (not local)
+
+		// TODO: Fix active player (not local)
 		this.activePlayer = localPlayer;
 	}
 

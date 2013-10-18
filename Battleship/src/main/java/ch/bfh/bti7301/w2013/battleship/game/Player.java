@@ -27,11 +27,11 @@ import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 
 /**
  * @author simon
- *
+ * 
  */
 public interface Player {
 
 	public Missile placeShot(Missile m);
-	
+
 	public PlayerState getPlayerState();
 }
