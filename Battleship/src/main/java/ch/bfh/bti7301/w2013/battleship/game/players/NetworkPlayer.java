@@ -23,9 +23,12 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game.players;
 
+import java.io.IOException;
+
 import ch.bfh.bti7301.w2013.battleship.game.Board;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Player;
+import ch.bfh.bti7301.w2013.battleship.network.Connection;
 
 /**
  * @author simon
@@ -33,20 +36,51 @@ import ch.bfh.bti7301.w2013.battleship.game.Player;
  */
 public class NetworkPlayer extends GenericPlayer implements Player {
 
-	@Override
-	public Missile placeShot(Missile m) {
-		// TODO CALL NETWORK (FRÄNZI!)
-		return null;
+	private enum NetworkPlayerState {
+		IDLE, SHOT_PLACED, STATE_REQUESTED
+	}
+
+	private Connection networkConnection;
+	
+	private NetworkPlayerState netPlayerState = NetworkPlayerState.IDLE;
+
+	public NetworkPlayer() {
+		super();
+		try {
+			this.networkConnection = Connection.getInstance();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public NetworkPlayer(String name) {
+		super(name);
+		try {
+			this.networkConnection = Connection.getInstance();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public PlayerState getPlayerState() {
-		// TODO CALL NETWORK (FRÄNZI!)
-		return null;
+	public void placeMissile(Missile m) {
+		networkConnection.placeShot(m);
+		this.netPlayerState = NetworkPlayerState.SHOT_PLACED;
 	}
 
-	public Board getBoard() {
-		return this.playerBoard;
+	@Override
+	public void getPlayerState() {
+		// TODO Auto-generated method stub
+		
 	}
+
+	@Override
+	public void sendState(PlayerState status) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

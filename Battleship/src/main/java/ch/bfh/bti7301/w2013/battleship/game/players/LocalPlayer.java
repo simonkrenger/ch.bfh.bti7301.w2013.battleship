@@ -34,17 +34,23 @@ import ch.bfh.bti7301.w2013.battleship.game.Player;
 public class LocalPlayer extends GenericPlayer implements Player {
 
 	@Override
-	public Missile placeShot(Missile m) {
-
-		return null;
+	public void placeMissile(Missile m) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public PlayerState getPlayerState() {
-		return this.status;
+	public void getPlayerState() {
+		// TODO Auto-generated method stub
+		
 	}
 
-	public Board getBoard() {
-		return this.playerBoard;
+	@Override
+	public void sendState(PlayerState status) {
+		// TODO Auto-generated method stub
+		
 	}
+
+
+
 }

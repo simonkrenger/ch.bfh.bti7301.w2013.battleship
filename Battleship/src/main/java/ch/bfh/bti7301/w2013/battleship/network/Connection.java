@@ -11,7 +11,7 @@ public class Connection implements Runnable {
 
 	public ConnectionState connectionState;
 
-	private Connection instance;
+	private static Connection instance;
 	private ServerSocket listener;
 	private String opponentIP;
 	private Socket connection;
@@ -75,16 +75,16 @@ public class Connection implements Runnable {
 	 * @return
 	 * @throws IOException
 	 */
-	public Connection getInstance(String opponentIP) throws IOException {
+	public static Connection getInstance() throws IOException {
 
 		if (instance != null) {
 			return instance;
-		} else if (opponentIP == null) {
+		} else {
 			instance = new Connection();
 			return instance;
-		} else {
-			instance = new Connection(opponentIP);
-			return instance;
+//		} else {
+//			instance = new Connection(opponentIP);
+//			return instance;
 		}
 	}
 
