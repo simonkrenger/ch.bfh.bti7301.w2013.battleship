@@ -1,6 +1,6 @@
+=\=\=\=\=\=\=
+<<<<<<<=HEAD
+>>>>>>>=refs/remotes/origin/gui-sprint1
 eclipse.preferences.version=1
-<<<<<<< HEAD
-encoding//src/main/java/ch/bfh/bti7301/w2013/battleship/game/players/Opponent.java=UTF-8
-=======
+encoding//src/main/java/ch/bfh/bti7301/w2013/battleship/game/players/NetworkPlayer.java=UTF-8
 encoding/<project>=UTF-8
->>>>>>> refs/remotes/origin/gui-sprint1
