@@ -45,22 +45,12 @@ public class NetworkPlayer extends GenericPlayer implements Player {
 
 	public NetworkPlayer() {
 		super();
-		try {
-			this.networkConnection = Connection.getInstance();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.networkConnection = Connection.getInstance();
 	}
 
 	public NetworkPlayer(String name) {
 		super(name);
-		try {
-			this.networkConnection = Connection.getInstance();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.networkConnection = Connection.getInstance();
 	}
 
 	@Override

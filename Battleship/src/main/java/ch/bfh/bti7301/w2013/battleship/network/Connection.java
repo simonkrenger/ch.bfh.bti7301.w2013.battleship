@@ -11,7 +11,7 @@ public class Connection extends Thread {
 
 	private ConnectionState connectionState;
 	private ConnectionStateListener connectionStateListener;
-	private Connection instance;
+	private static Connection instance;
 	
 	private ConnectionHandler handler;
 
@@ -53,7 +53,7 @@ public class Connection extends Thread {
 		}
 	}
 
-	public Connection getInstance() {
+	public static Connection getInstance() {
 		return instance;
 	}
 
