@@ -1,26 +1,34 @@
 package ch.bfh.bti7301.w2013.battleship.network;
 
 import java.io.*;
+import ch.bfh.bti7301.w2013.battleship.*;
 import java.net.*;
 
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 
 public class ConnectionHandler implements Runnable {
 
-	private ObjectInputStream input;
-	private Connection conn;
+		
+	private Socket connectionSocket;
+	private ObjectInputStream in;
+	private ObjectOutputStream out;
 
-	public ConnectionHandler(ObjectInputStream in, Connection connection) {
-		input = in;
-		conn = connection;
+
+	public ConnectionHandler(Connection connection, Socket socket) throws IOException {
+		setConnectionSocket(socket);
+		setIn(new ObjectInputStream(connectionSocket.getInputStream()));
+		setOut(new ObjectOutputStream(connectionSocket.getOutputStream()));
 		run();
+		connection.setConnectionState(ConnectionState.CONNECTED);
+		
 	}
+	
 
 	public void run() {
 
 		while (true) {
 			try {
-				Object inputObject = input.readObject();
+				Object inputObject = in.readObject();
 				receiveObject(inputObject);
 
 			} catch (IOException e) {
@@ -32,9 +40,8 @@ public class ConnectionHandler implements Runnable {
 		}
 	}
 
-	public void sendObject(ObjectOutputStream out, Object outgoingObject) {
+	public void sendObject(Object outgoingObject) {
 		try {
-			// if (Protocoll.checkOutput(outgoingObject)){
 			out.writeObject(outgoingObject);
 
 		} catch (IOException e) {
@@ -45,8 +52,20 @@ public class ConnectionHandler implements Runnable {
 	}
 
 	public Object receiveObject(Object receivedObject) {
-		conn.receiveObjectToGame(receivedObject);
+		//Protocol.checkReceivedObject();
 		return false;
 	}
+	
+	public void setIn(ObjectInputStream in) {
+		this.in = in;
+	}
+	
+	public void setOut(ObjectOutputStream out) {
+		this.out = out;
+	}
+	
 
+	public void setConnectionSocket(Socket connectionSocket) {
+		this.connectionSocket = connectionSocket;
+	}
 }
