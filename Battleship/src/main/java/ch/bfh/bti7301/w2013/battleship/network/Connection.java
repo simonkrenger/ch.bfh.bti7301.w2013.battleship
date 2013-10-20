@@ -121,7 +121,7 @@ public class Connection extends Thread {
 		
 		else  {
 			
-			game.getLocalPlayer().placeShot((Missile)object);
+			game.getLocalPlayer().placeMissile((Missile)object);
 				
 			}
 	}

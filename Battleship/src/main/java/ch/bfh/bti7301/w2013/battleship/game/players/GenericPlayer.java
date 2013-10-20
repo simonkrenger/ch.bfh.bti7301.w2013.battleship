@@ -71,7 +71,7 @@ public class GenericPlayer implements Player {
 	}
 	
 	@Override
-	public void sendState(PlayerState status) {
+	public void setPlayerState(PlayerState status) {
 		throw new RuntimeException("Not implemented");
 	}
 

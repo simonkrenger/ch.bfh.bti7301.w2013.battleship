@@ -35,5 +35,5 @@ public interface Player {
 
 	public PlayerState getPlayerState();
 	
-	public void sendState(PlayerState status);
+	public void setPlayerState(PlayerState status);
 }

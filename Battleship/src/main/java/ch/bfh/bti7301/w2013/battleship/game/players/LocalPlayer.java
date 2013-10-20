@@ -70,7 +70,7 @@ public class LocalPlayer extends GenericPlayer {
 	}
 
 	@Override
-	public void sendState(PlayerState status) {
+	public void setPlayerState(PlayerState status) {
 		// TODO Auto-generated method stub
 
 	}
