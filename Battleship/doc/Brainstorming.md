@@ -301,8 +301,23 @@ Fränzi: Vision
   - Sprint 1 Fertig bis  17.10.2013
   - 
 
+# ----------------------------------------------------------------------------------
+# TeamMeetin 2013-10-18
+# ---------------------------------------------------------------------------------
 
+  - Nächstes Meeting mit Caillot in 2 Wochen
+  - Diskussion zur Kommunikation; Statuse anpassen. 
+  - Interfaces mit State listener für GUI
+ 
+
+# ----------------------------------------------------------------------------------
+# TeamMeetin 2013-10-20
+# ---------------------------------------------------------------------------------
   
+  - wäre es ev. sinnvoll, irgendwo eine zentrale status Prüfung zu machen und
+	eine State Machine? Simon? Ich verstehe das Pattern nicht so recht. 
+
+
   
   
  

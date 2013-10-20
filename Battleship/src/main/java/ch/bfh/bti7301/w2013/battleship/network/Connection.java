@@ -3,7 +3,10 @@ package ch.bfh.bti7301.w2013.battleship.network;
 import java.io.*;
 import java.net.*;
 
+import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
+import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer;
+import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 
 public class Connection extends Thread {
 
@@ -14,12 +17,12 @@ public class Connection extends Thread {
 	private static Connection instance;
 	
 	private ConnectionHandler handler;
+	private static Game game;
 
 
-	private Connection() throws IOException {
+	private Connection(Game game) throws IOException {
 		new ConnectionListener(this).start();
-		setConnectionState(ConnectionState.LISTENING);
-		;
+		setGame(game);
 	}
 
 	public void acceptOpponent(Socket socket) {
@@ -33,7 +36,7 @@ public class Connection extends Thread {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// TODO Set Opponent Status
+		
 	}
 
 	public void connectOpponet(String Ip) {
@@ -45,7 +48,7 @@ public class Connection extends Thread {
 		try {
 			Socket socket = new Socket(Ip, GAMEPORT);
 			handler = new ConnectionHandler(this, socket);
-			// TODO set Opponent State
+			
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -62,26 +65,65 @@ public class Connection extends Thread {
 		handler.sendObject(missile);
 	}
 
-	public void sendReady(String ready) {
-		handler.sendObject(ready);
+	public void sendReady() {
+		if (game.getLocalPlayer().getPlayerState() != GenericPlayer.PlayerState.GAME_STARTED && game.getOpponent().getPlayerState() != GenericPlayer.PlayerState.GAME_STARTED){
+		throw new RuntimeException("Something is out of order here");
+		}
+		
+		handler.sendObject(GenericPlayer.PlayerState.READY);
+		game.getOpponent().setPlayerState(GenericPlayer.PlayerState.WAITING); 
 	}
 
 
-	public void sendEnd(String end) {
+	public void sendEnd(PlayerState end) {
 		handler.sendObject(end);
-
+		cleanUp();
 	}
 
 
-	public void sendStart(String start) {
-		handler.sendObject(start);
+	public void sendStart() {
+		if (game.getLocalPlayer().getPlayerState() != GenericPlayer.PlayerState.GAME_STARTED && game.getOpponent().getPlayerState() != GenericPlayer.PlayerState.READY){
+		throw new RuntimeException("Something is out of order here");
+		}
+		
+		handler.sendObject(GenericPlayer.PlayerState.WAITING);
+		game.getOpponent().setPlayerState(GenericPlayer.PlayerState.PLAYING);
 	}
 
 
-	public Object receiveObjectToGame(Object object) {
+	public static void receiveObjectToGame(Object object) {
 
-		// simon: wohin damit?
-		return null;
+		if (object == GenericPlayer.PlayerState.READY){
+			game.getOpponent().setPlayerState(GenericPlayer.PlayerState.READY);
+			game.getLocalPlayer().setPlayerState(GenericPlayer.PlayerState.WAITING);
+		}
+		
+		else if (object == GenericPlayer.PlayerState.WAITING){
+			game.getOpponent().setPlayerState(GenericPlayer.PlayerState.WAITING);
+			game.getLocalPlayer().setPlayerState(GenericPlayer.PlayerState.PLAYING);
+		}
+		
+		else if (object == GenericPlayer.PlayerState.WAITING){
+			game.getOpponent().setPlayerState(GenericPlayer.PlayerState.WAITING);
+			game.getLocalPlayer().setPlayerState(GenericPlayer.PlayerState.PLAYING);
+		}
+		
+		else if (object == GenericPlayer.PlayerState.GAME_LOST){
+			game.getOpponent().setPlayerState(GenericPlayer.PlayerState.GAME_LOST);
+			game.getLocalPlayer().setPlayerState(GenericPlayer.PlayerState.GAME_WON);
+		}
+		
+		else if (object == GenericPlayer.PlayerState.GAME_WON){
+			game.getOpponent().setPlayerState(GenericPlayer.PlayerState.GAME_WON);
+			game.getLocalPlayer().setPlayerState(GenericPlayer.PlayerState.GAME_LOST);
+		}
+		
+		
+		else  {
+			
+			game.getLocalPlayer().placeShot((Missile)object);
+				
+			}
 	}
 
 
@@ -101,7 +143,12 @@ public class Connection extends Thread {
 		this.connectionStateListener = connectionStateListener;
 	}
 	
+	public void setGame(Game game){
+		this.game = game;
+	}
+	
 	private void cleanUp() {
-		//TODO 
+		handler.cleanUp();
+		setConnectionState(ConnectionState.CLOSED);
 	}
 }

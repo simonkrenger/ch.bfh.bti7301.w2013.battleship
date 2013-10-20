@@ -1,10 +1,8 @@
 package ch.bfh.bti7301.w2013.battleship.network;
 
 import java.io.*;
-import ch.bfh.bti7301.w2013.battleship.*;
 import java.net.*;
 
-import ch.bfh.bti7301.w2013.battleship.game.Missile;
 
 public class ConnectionHandler implements Runnable {
 
@@ -51,9 +49,8 @@ public class ConnectionHandler implements Runnable {
 
 	}
 
-	public Object receiveObject(Object receivedObject) {
-		//Protocol.checkReceivedObject();
-		return false;
+	public void receiveObject(Object receivedObject) {
+		Connection.receiveObjectToGame(receivedObject);	
 	}
 	
 	public void setIn(ObjectInputStream in) {
@@ -67,5 +64,17 @@ public class ConnectionHandler implements Runnable {
 
 	public void setConnectionSocket(Socket connectionSocket) {
 		this.connectionSocket = connectionSocket;
+	}
+	
+	public void cleanUp(){
+		try {
+			in.close();
+			out.close();
+			connectionSocket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 }
