@@ -97,12 +97,11 @@ public class Board {
 				}
 				placedMissiles.add(m);
 				owner.placeMissile(m);
-
 				// TODO: Notify oberserver pattern
 
 			} else {
 				throw new RuntimeException("Player" + owner + " is in state "
-						+ owner.getPlayerState());
+						+ owner.getPlayerState() + ", cannot place missile just yet!");
 			}
 		} else {
 			throw new RuntimeException(

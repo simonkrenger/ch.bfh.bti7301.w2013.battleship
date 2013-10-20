@@ -68,11 +68,4 @@ public class LocalPlayer extends GenericPlayer {
 		m.setMissileState(MissileState.MISS);
 		return m;
 	}
-
-	@Override
-	public void setPlayerState(PlayerState status) {
-		// TODO Auto-generated method stub
-
-	}
-
 }

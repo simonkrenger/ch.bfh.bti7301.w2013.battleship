@@ -23,11 +23,7 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game.players;
 
-import java.io.IOException;
-
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
-import ch.bfh.bti7301.w2013.battleship.game.Player;
-import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 import ch.bfh.bti7301.w2013.battleship.network.Connection;
 
 /**
@@ -36,37 +32,15 @@ import ch.bfh.bti7301.w2013.battleship.network.Connection;
  */
 public class NetworkPlayer extends GenericPlayer {
 
-	private enum NetworkPlayerState {
-		IDLE, SHOT_PLACED, STATE_REQUESTED
-	}
-
-	private Connection networkConnection;
-	
-	private NetworkPlayerState netPlayerState = NetworkPlayerState.IDLE;
-
 	public NetworkPlayer() {
 		super();
-		this.networkConnection = Connection.getInstance();
 	}
 
 	public NetworkPlayer(String name) {
 		super(name);
-		this.networkConnection = Connection.getInstance();
 	}
-
-	@Override
-	public Missile placeMissile(Missile m) {
-		networkConnection.placeShot(m);
-		this.netPlayerState = NetworkPlayerState.SHOT_PLACED;
-		// TODO
-		return null;
+	
+	public void sendMissile(Missile m) {
+		Connection.getInstance().placeShot(m);
 	}
-
-	@Override
-	public void setPlayerState(PlayerState status) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
 }

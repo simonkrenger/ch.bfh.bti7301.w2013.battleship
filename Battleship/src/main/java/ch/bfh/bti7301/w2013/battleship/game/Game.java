@@ -36,8 +36,8 @@ public class Game {
 	
 	private static Game instance = null;
 
-	private LocalPlayer localPlayer;
-	private NetworkPlayer opponentPlayer;
+	private Player localPlayer;
+	private Player opponentPlayer;
 
 	private Player activePlayer;
 
@@ -56,11 +56,11 @@ public class Game {
 		return instance;
 	}
 	
-	public LocalPlayer getLocalPlayer() {
+	public Player getLocalPlayer() {
 		return localPlayer;
 	}
 
-	public NetworkPlayer getOpponent() {
+	public Player getOpponent() {
 		return opponentPlayer;
 	}
 

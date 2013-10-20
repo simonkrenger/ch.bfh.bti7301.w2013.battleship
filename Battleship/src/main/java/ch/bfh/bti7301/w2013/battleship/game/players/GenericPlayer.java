@@ -64,6 +64,10 @@ public class GenericPlayer implements Player {
 	public Missile placeMissile(Missile m) {
 		throw new RuntimeException("Not implemented");
 	}
+	
+	public void sendMissile(Missile m) {
+		throw new RuntimeException("Not implemented");
+	}
 
 	@Override
 	public PlayerState getPlayerState() {
@@ -72,7 +76,7 @@ public class GenericPlayer implements Player {
 	
 	@Override
 	public void setPlayerState(PlayerState status) {
-		throw new RuntimeException("Not implemented");
+		this.status = status;
 	}
 
 
