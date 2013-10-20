@@ -23,33 +23,56 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game.players;
 
+import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
+import ch.bfh.bti7301.w2013.battleship.game.Missile.MissileState;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
-import ch.bfh.bti7301.w2013.battleship.game.Player;
+import ch.bfh.bti7301.w2013.battleship.game.Ship;
 
 /**
  * @author simon
  * 
  */
-public class LocalPlayer extends GenericPlayer implements Player {
+public class LocalPlayer extends GenericPlayer {
 
 	@Override
-	public void placeMissile(Missile m) {
-		// TODO Auto-generated method stub
-		
-	}
+	public Missile placeMissile(Missile m) {
 
-	@Override
-	public void getPlayerState() {
-		// TODO Auto-generated method stub
-		
+		// Do some sanity checks
+		if (!playerBoard.withinBoard(m.getCoordinates())) {
+			throw new RuntimeException(
+					"Coordinates of missile not within board!");
+		}
+
+		if (m.getMissileState() != MissileState.FIRED) {
+			throw new RuntimeException("Missle has state "
+					+ m.getMissileState() + ", needs to be FIRED!");
+		}
+
+		for (Ship s : playerBoard.getPlacedShips()) {
+			for (Coordinates c : s.getCoordinatesForShip()) {
+				if (c.equals(m.getCoordinates())) {
+					// It's a hit!
+					s.setDamage(m.getCoordinates());
+					if (s.isSunk()) {
+						m.setMissileState(MissileState.SUNK);
+						if (playerBoard.checkAllShipsSunk()) {
+							m.setMissileState(MissileState.GAME_WON);
+						}
+					} else {
+						m.setMissileState(MissileState.HIT);
+					}
+					return m;
+				}
+			}
+		}
+		m.setMissileState(MissileState.MISS);
+		return m;
 	}
 
 	@Override
 	public void sendState(PlayerState status) {
 		// TODO Auto-generated method stub
-		
+
 	}
-
-
 
 }

@@ -44,7 +44,7 @@ public class Game {
 	private Game() {
 		this.localPlayer = new LocalPlayer();
 		this.opponentPlayer = new NetworkPlayer();
-
+		
 		// TODO: Fix active player (not local)
 		this.activePlayer = localPlayer;
 	}
