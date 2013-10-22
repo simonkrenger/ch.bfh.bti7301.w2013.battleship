@@ -30,7 +30,11 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
 
+import javafx.animation.ParallelTransitionBuilder;
+import javafx.animation.ScaleTransitionBuilder;
+import javafx.animation.TranslateTransitionBuilder;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
@@ -43,6 +47,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import ch.bfh.bti7301.w2013.battleship.game.Board;
 import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
@@ -52,6 +57,8 @@ import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
 import ch.bfh.bti7301.w2013.battleship.gui.ShipView;
+import ch.bfh.bti7301.w2013.battleship.network.ConnectionState;
+import ch.bfh.bti7301.w2013.battleship.network.ConnectionStateListener;
 import ch.bfh.bti7301.w2013.battleship.network.NetworkInformation;
 
 /**
@@ -68,11 +75,6 @@ public class Battleship extends Application {
 		labels = ResourceBundle.getBundle("translations");
 		game = Game.getInstance();
 		rule = new GameRule();
-
-		game.getOpponent().getBoard()
-				.placeMissile(new Missile(new Coordinates(1, 1)));
-		game.getOpponent().getBoard()
-				.placeMissile(new Missile(new Coordinates(3, 4)));
 	}
 
 	/**
@@ -99,7 +101,7 @@ public class Battleship extends Application {
 		root.getChildren().add(pbv);
 
 		Board opponentBoard = game.getOpponent().getBoard();
-		BoardView obv = new BoardView(opponentBoard);
+		final BoardView obv = new BoardView(opponentBoard);
 		obv.getTransforms().add(new Scale(0.5, 0.5, 0, 0));
 
 		obv.relocate(pbv.getBoundsInParent().getMaxX() + 20, 10);
@@ -163,10 +165,49 @@ public class Battleship extends Application {
 		root.getChildren().add(shipStack);
 
 		// Temporary input field to enter the opponent's
-		HBox ipBox = new HBox();
-		TextField ipAddress = new TextField();
+		final HBox ipBox = new HBox();
+		final TextField ipAddress = new TextField();
 		ipBox.getChildren().add(ipAddress);
-		Button connect = new Button("Connect");
+		final Button connect = new Button("Connect");
+		// TODO: add listener to Connection
+		new ConnectionStateListener() {
+			@Override
+			public void stateChanged(ConnectionState newState) {
+				switch (newState) {
+				case CLOSED:
+				case LISTENING:
+					ipBox.setVisible(true);
+					break;
+				case CONNECTED:
+					ipBox.setVisible(false);
+					break;
+				}
+			}
+		};
+		connect.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				ParallelTransitionBuilder
+						.create()
+						.children(
+								ScaleTransitionBuilder.create().node(pbv)
+										.duration(Duration.seconds(1)).toX(0.5)
+										.toY(0.5).build(),
+								TranslateTransitionBuilder.create().node(pbv)
+										.duration(Duration.seconds(1))
+										.toX(-100).toY(-100).build(),
+								ScaleTransitionBuilder.create().node(obv)
+										.duration(Duration.seconds(1)).toX(2)
+										.toY(2).build(),
+								TranslateTransitionBuilder.create().node(obv)
+										.duration(Duration.seconds(1)).toY(200)
+										.build()//
+						).build().play();
+				// TODO
+				// Connection.getInstance().connectOpponent()
+				System.out.println(ipAddress.getText());
+			}
+		});
 		ipBox.getChildren().add(connect);
 		ipBox.relocate(pbv.getBoundsInParent().getMinX(), pbv
 				.getBoundsInParent().getMaxY() + 20);
