@@ -24,12 +24,14 @@
 package ch.bfh.bti7301.w2013.battleship.game.players;
 
 import ch.bfh.bti7301.w2013.battleship.game.Board;
+import ch.bfh.bti7301.w2013.battleship.game.Missile;
+import ch.bfh.bti7301.w2013.battleship.game.Player;
 
 /**
  * @author simon
  * 
  */
-public class GenericPlayer {
+public class GenericPlayer implements Player {
 
 	private static String DEFAULT_NAME = "Unnamed player";
 
@@ -48,7 +50,7 @@ public class GenericPlayer {
 	public GenericPlayer(String name) {
 		this.name = name;
 		this.status = PlayerState.GAME_STARTED;
-		this.playerBoard = new Board();
+		this.playerBoard = new Board(this);
 	}
 
 	public Board getBoard() {
@@ -58,8 +60,24 @@ public class GenericPlayer {
 	public String getName() {
 		return name;
 	}
-
-	public void setPlayerState(PlayerState ps) {
-		this.status = ps;
+	
+	public Missile placeMissile(Missile m) {
+		throw new RuntimeException("Not implemented");
 	}
+	
+	public void sendMissile(Missile m) {
+		throw new RuntimeException("Not implemented");
+	}
+
+	@Override
+	public PlayerState getPlayerState() {
+		return status;
+	}
+	
+	@Override
+	public void setPlayerState(PlayerState status) {
+		this.status = status;
+	}
+
+
 }

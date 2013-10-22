@@ -23,30 +23,24 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game.players;
 
-import ch.bfh.bti7301.w2013.battleship.game.Board;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
-import ch.bfh.bti7301.w2013.battleship.game.Player;
+import ch.bfh.bti7301.w2013.battleship.network.Connection;
 
 /**
  * @author simon
  * 
  */
-public class Opponent extends GenericPlayer implements Player {
+public class NetworkPlayer extends GenericPlayer {
 
-	@Override
-	public Missile placeShot(Missile m) {
-		// TODO CALL NETWORK (FRÄNZI!)
-		return null;
+	public NetworkPlayer() {
+		super();
 	}
 
-	@Override
-	public PlayerState getPlayerState() {
-		// TODO CALL NETWORK (FRÄNZI!)
-		return null;
+	public NetworkPlayer(String name) {
+		super(name);
 	}
-
-	public Board getBoard() {
-		return this.playerBoard;
+	
+	public void sendMissile(Missile m) {
+		Connection.getInstance().placeShot(m);
 	}
-
 }

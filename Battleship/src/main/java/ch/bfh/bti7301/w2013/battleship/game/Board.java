@@ -25,8 +25,10 @@ package ch.bfh.bti7301.w2013.battleship.game;
 
 import java.util.ArrayList;
 
+import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
+
 /**
- * @author simon
+ * @author Simon Krenger <simon@krenger.ch>
  * 
  */
 public class Board {
@@ -35,17 +37,20 @@ public class Board {
 
 	private int size;
 
+	private Player owner;
+
 	private ArrayList<Ship> placedShips = new ArrayList<Ship>();
 	private ArrayList<Missile> placedMissiles = new ArrayList<Missile>();
 
 	private BoardSetup setup = new BoardSetup();
 
-	public Board() {
-		this(DEFAULT_BOARD_SIZE);
+	public Board(Player p) {
+		this(p, DEFAULT_BOARD_SIZE);
 	}
 
-	public Board(int size) {
+	public Board(Player p, int size) {
 		this.size = size;
+		this.owner = p;
 	}
 
 	public int getBoardSize() {
@@ -53,32 +58,59 @@ public class Board {
 	}
 
 	public void placeShip(Ship s) {
-		placedShips.add(s);
-		// TODO: Do some sanity checks, throw exception if placement is not
-		// possible
 
-		// First, check if ship can be placed (game state)
-		// Check if number of ships is allowed
+		// This can only be done when the player is setting up
+		if (setup == null && owner.getPlayerState() == PlayerState.GAME_STARTED) {
+			throw new RuntimeException("Ships can only be placed during setup!");
+		}
+
+		// Check if number of ships is allowed (needed?)
 
 		// Check boundaries of board
 		if (withinBoard(s.getStartCoordinates())
 				&& withinBoard(s.getEndCoordinates())) {
-
+			placedShips.add(s);
 		} else {
-			// Start or end coordinates are not within board!
+			throw new RuntimeException("Coordinates not within board!");
 		}
-
-		// Check
 	}
 
+	/**
+	 * Function to place a missile on the opponents board
+	 * 
+	 * @param m
+	 */
 	public void placeMissile(Missile m) {
-		//TODO: Check if its the players turn?
-		//TODO: Check if coordinates of missile were already used
-		//TODO: Check if there is a ship placed there?
-		//TODO: If there is a ship, get coordinates
-		//TODO: ship.setDamage(m.getCoordinates());
-		//TODO: Observer pattern (Notify all)
-		placedMissiles.add(m);
+
+		if (owner == Game.getInstance().getOpponent()) {
+			// Check if its the players turn
+			if (owner.getPlayerState() == PlayerState.WAITING) {
+				// PlayerState.WAITING means the player is not active and
+				// therefore waiting for a shot
+
+				// Check if coordinates of missile were already used
+				for (Missile placed : placedMissiles) {
+					if (placed.getCoordinates().equals(m.getCoordinates())) {
+						throw new RuntimeException(
+								"Missile coordinates were already used!");
+					}
+				}
+				placedMissiles.add(m);
+				owner.placeMissile(m);
+				// TODO: Notify oberserver pattern
+
+			} else {
+				throw new RuntimeException("Player" + owner + " is in state "
+						+ owner.getPlayerState() + ", cannot place missile just yet!");
+			}
+		} else {
+			throw new RuntimeException(
+					"placeMissile() can only be called on the opponents board!");
+		}
+	}
+
+	public void updateMissile(Missile m) {
+
 	}
 
 	public ArrayList<Ship> getPlacedShips() {
@@ -91,6 +123,15 @@ public class Board {
 
 	public boolean withinBoard(Coordinates c) {
 		return (c.x <= size) && (c.y <= size);
+	}
+
+	public boolean checkAllShipsSunk() {
+		for (Ship s : getPlacedShips()) {
+			if (!s.isSunk()) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public BoardSetup getBoardSetup() {
@@ -129,7 +170,8 @@ public class Board {
 
 		@Override
 		public String toString() {
-			// http://stackoverflow.com/questions/10813154/converting-number-to-letterhttp://stackoverflow.com/questions/10813154/converting-number-to-letter
+			// Stolen from here:
+			// http://stackoverflow.com/questions/10813154/converting-number-to-letter
 			String alpha = x > 0 && x < 27 ? String
 					.valueOf((char) (x + 'A' - 1)) : null;
 			return alpha + y;

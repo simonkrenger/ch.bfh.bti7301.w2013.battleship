@@ -31,7 +31,11 @@ import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
  */
 public interface Player {
 
-	public Missile placeShot(Missile m);
+	public Missile placeMissile(Missile m);
+	public void sendMissile(Missile m);
 
 	public PlayerState getPlayerState();
+	public void setPlayerState(PlayerState status);
+	
+	public Board getBoard();
 }
