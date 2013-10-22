@@ -195,7 +195,6 @@ public class Battleship extends Application {
 			public void handle(ActionEvent event) {
 				ParallelTransitionBuilder
 						.create()
-						.node(root)
 						.children(
 								ScaleTransitionBuilder.create().node(pbv)
 										.duration(Duration.seconds(1)).toX(0.5)
