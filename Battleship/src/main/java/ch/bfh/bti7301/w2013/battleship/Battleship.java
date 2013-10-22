@@ -53,12 +53,11 @@ import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.GameRule;
-import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
+import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
 import ch.bfh.bti7301.w2013.battleship.gui.ShipView;
-import ch.bfh.bti7301.w2013.battleship.network.ConnectionState;
-import ch.bfh.bti7301.w2013.battleship.network.ConnectionStateListener;
+import ch.bfh.bti7301.w2013.battleship.network.Connection;
 import ch.bfh.bti7301.w2013.battleship.network.NetworkInformation;
 
 /**
@@ -107,6 +106,35 @@ public class Battleship extends Application {
 		obv.relocate(pbv.getBoundsInParent().getMaxX() + 20, 10);
 		root.getChildren().add(obv);
 
+		final Button ready = new Button(labels.getString("ready"));
+		ready.relocate(obv.getBoundsInParent().getMinX(), obv
+				.getBoundsInParent().getMaxY() + 8);
+		ready.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				ParallelTransitionBuilder
+						.create()
+						.children(
+								ScaleTransitionBuilder.create().node(pbv)
+										.duration(Duration.seconds(1)).toX(0.5)
+										.toY(0.5).build(),
+								TranslateTransitionBuilder.create().node(pbv)
+										.duration(Duration.seconds(1))
+										.toX(-100).toY(-100).build(),
+								ScaleTransitionBuilder.create().node(obv)
+										.duration(Duration.seconds(1)).toX(2)
+										.toY(2).build(),
+								TranslateTransitionBuilder.create().node(obv)
+										.duration(Duration.seconds(1)).toY(200)
+										.build()//
+						).build().play();
+				game.getLocalPlayer().setPlayerState(PlayerState.READY);
+				ready.setVisible(false);
+			}
+		});
+		ready.setVisible(false);
+		root.getChildren().add(ready);
+
 		final HBox shipStack = new HBox(-16);
 		// FIXME: this is just for layout debugging
 		shipStack.setStyle("-fx-background-color: #ffc;");
@@ -151,6 +179,10 @@ public class Battleship extends Application {
 						playerBoard.placeShip(ship);
 						// TODO: handle illegal ship placement
 						shipStack.getChildren().remove(sv);
+						if (shipStack.getChildren().isEmpty()) {
+							ready.setVisible(true);
+							shipStack.setVisible(false);
+						}
 						pbv.addShip(ship);
 					} else {
 						// snap back
@@ -168,43 +200,27 @@ public class Battleship extends Application {
 		final HBox ipBox = new HBox();
 		final TextField ipAddress = new TextField();
 		ipBox.getChildren().add(ipAddress);
-		final Button connect = new Button("Connect");
+		final Button connect = new Button(labels.getString("connect"));
 		// TODO: add listener to Connection
-		new ConnectionStateListener() {
-			@Override
-			public void stateChanged(ConnectionState newState) {
-				switch (newState) {
-				case CLOSED:
-				case LISTENING:
-					ipBox.setVisible(true);
-					break;
-				case CONNECTED:
-					ipBox.setVisible(false);
-					break;
-				}
-			}
-		};
+		// Connection.getInstance().setConnectionStateListener(
+		// new ConnectionStateListener() {
+		// @Override
+		// public void stateChanged(ConnectionState newState) {
+		// switch (newState) {
+		// case CLOSED:
+		// case LISTENING:
+		// ipBox.setVisible(true);
+		// break;
+		// case CONNECTED:
+		// ipBox.setVisible(false);
+		// break;
+		// }
+		// }
+		// });
 		connect.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				ParallelTransitionBuilder
-						.create()
-						.children(
-								ScaleTransitionBuilder.create().node(pbv)
-										.duration(Duration.seconds(1)).toX(0.5)
-										.toY(0.5).build(),
-								TranslateTransitionBuilder.create().node(pbv)
-										.duration(Duration.seconds(1))
-										.toX(-100).toY(-100).build(),
-								ScaleTransitionBuilder.create().node(obv)
-										.duration(Duration.seconds(1)).toX(2)
-										.toY(2).build(),
-								TranslateTransitionBuilder.create().node(obv)
-										.duration(Duration.seconds(1)).toY(200)
-										.build()//
-						).build().play();
-				// TODO
-				// Connection.getInstance().connectOpponent()
+				Connection.getInstance().connectOpponet(ipAddress.getText());
 				System.out.println(ipAddress.getText());
 			}
 		});
