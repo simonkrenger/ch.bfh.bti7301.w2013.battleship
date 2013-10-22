@@ -61,29 +61,9 @@ public class Connection extends Thread {
 		handler.sendObject(missile);
 	}
 
-	public void sendReady() {
-		if (game.getLocalPlayer().getPlayerState() != PlayerState.GAME_STARTED
-				&& game.getOpponent().getPlayerState() != PlayerState.GAME_STARTED) {
-			throw new RuntimeException("Something is out of order here");
-		}
-
-		handler.sendObject(PlayerState.READY);
-		game.getOpponent().setPlayerState(PlayerState.WAITING);
-	}
-
-	public void sendEnd(PlayerState end) {
+	public void sendStatus(PlayerState end) {
 		handler.sendObject(end);
 		cleanUp();
-	}
-
-	public void sendStart() {
-		if (game.getLocalPlayer().getPlayerState() != PlayerState.GAME_STARTED
-				&& game.getOpponent().getPlayerState() != PlayerState.READY) {
-			throw new RuntimeException("Something is out of order here");
-		}
-
-		handler.sendObject(PlayerState.WAITING);
-		game.getOpponent().setPlayerState(PlayerState.PLAYING);
 	}
 
 	public static void receiveObjectToGame(Object object) {
@@ -114,9 +94,7 @@ public class Connection extends Thread {
 		}
 
 		else {
-
 			game.getLocalPlayer().placeMissile((Missile) object);
-
 		}
 	}
 
