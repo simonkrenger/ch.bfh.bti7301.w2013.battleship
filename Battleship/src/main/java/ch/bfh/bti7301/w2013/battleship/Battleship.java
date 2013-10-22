@@ -184,7 +184,6 @@ public class Battleship extends Application {
 					ipBox.setVisible(true);
 					break;
 				case CONNECTED:
-				case CONNECTING:
 					ipBox.setVisible(false);
 					break;
 				}
