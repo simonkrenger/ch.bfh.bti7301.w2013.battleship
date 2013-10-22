@@ -48,9 +48,9 @@ public class GameRule {
 	public GameRule() {
 		shipList.put(AircraftCarrier.class, 1);
 		shipList.put(Battleship.class, 2);
-		shipList.put(Submarine.class, 3);
-		shipList.put(Destroyer.class, 4);
-		shipList.put(PatrolBoat.class, 5);
+		shipList.put(Submarine.class, 1);
+		shipList.put(Destroyer.class, 2);
+		shipList.put(PatrolBoat.class, 4);
 	}
 
 	public GameRule(int boardSize, int time,
