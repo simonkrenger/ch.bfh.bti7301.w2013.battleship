@@ -16,11 +16,10 @@ public class Connection extends Thread {
 	private static Connection instance;
 
 	private ConnectionHandler handler;
-	private static Game game;
+	private static Game game = Game.getInstance();
 
-	private Connection(Game game) throws IOException {
+	private Connection() throws IOException {
 		new ConnectionListener(this).start();
-		setGame(game);
 	}
 
 	public void acceptOpponent(Socket socket) {
@@ -54,6 +53,14 @@ public class Connection extends Thread {
 	}
 
 	public static Connection getInstance() {
+		if(instance == null) {
+			try {
+				instance = new Connection();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return instance;
 	}
 
@@ -94,6 +101,7 @@ public class Connection extends Thread {
 		}
 
 		else {
+			// TODO: Return to sender
 			game.getLocalPlayer().placeMissile((Missile) object);
 		}
 	}
@@ -112,10 +120,6 @@ public class Connection extends Thread {
 	public void setConnectionStateListener(
 			ConnectionStateListener connectionStateListener) {
 		this.connectionStateListener = connectionStateListener;
-	}
-
-	public void setGame(Game game) {
-		this.game = game;
 	}
 
 	private void cleanUp() {
