@@ -75,11 +75,6 @@ public class Battleship extends Application {
 		labels = ResourceBundle.getBundle("translations");
 		game = Game.getInstance();
 		rule = new GameRule();
-
-		game.getOpponent().getBoard()
-				.placeMissile(new Missile(new Coordinates(1, 1)));
-		game.getOpponent().getBoard()
-				.placeMissile(new Missile(new Coordinates(3, 4)));
 	}
 
 	/**
