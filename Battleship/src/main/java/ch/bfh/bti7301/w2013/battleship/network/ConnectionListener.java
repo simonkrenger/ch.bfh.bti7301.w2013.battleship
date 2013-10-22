@@ -10,15 +10,14 @@ public class ConnectionListener extends Thread {
 
 	public ConnectionListener(Connection connection) throws IOException {
 		listener = new ServerSocket(Connection.GAMEPORT);
-		// opponentIP = null;
 		this.connection = connection;
-		start();
+		connection.setConnectionState( ConnectionState.LISTENING);
 	}
 
 	public void run() { // run the service
 		try {
 			while (true) {
-				connection.setClientSocket(listener.accept());
+				connection.acceptOpponent(listener.accept());
 				listener.close();
 			}
 

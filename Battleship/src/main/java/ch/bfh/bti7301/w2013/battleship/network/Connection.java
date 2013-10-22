@@ -3,179 +3,152 @@ package ch.bfh.bti7301.w2013.battleship.network;
 import java.io.*;
 import java.net.*;
 
+import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
+import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer;
+import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 
 public class Connection extends Thread {
 
 	final static int GAMEPORT = 42423;
 
-	public ConnectionState connectionState;
-
+	private ConnectionState connectionState;
+	private ConnectionStateListener connectionStateListener;
 	private Connection instance;
-
-	private String opponentIP;
-	private Socket connection;
-	private ObjectInputStream in;
-	private ObjectOutputStream out;
-
 	private ConnectionHandler handler;
+	private static Game game;
 
-	/**
-	 * 
-	 * @throws IOException
-	 */
-	private Connection() throws IOException {
-		// listener = new ServerSocket(GAMEPORT);
-		// opponentIP = null;
-		start();
+
+	private Connection(Game game) throws IOException {
 		new ConnectionListener(this).start();
-		;
+		setGame(game);
 	}
 
-	/**
-	 * 
-	 * @param opponentIP
-	 */
-	// private Connection(String opponentIP) {
-	// listener = null;
-	// this.opponentIP = opponentIP;
-	// start();
-	// }
-	public void setClientSocket(Socket socket) {
-		// TODO
-	}
+	public void acceptOpponent(Socket socket) {
 
-	public String connectOpponet(String Ip) {
-		opponentIP = Ip;
-
-		return Ip;
-
-	}
-
-	/**
-	 * Try to connect with an opponent.
-	 */
-	@Override
-	public void run() { // run the service
+		if (getConnectionState() == ConnectionState.CONNECTED) {
+			throw new RuntimeException("Already connected");
+		}
 		try {
-			while (true) {
-				if (opponentIP == null) {
-					// connection = listener.accept();
-					opponentIP = connection.getInetAddress().getHostAddress();
-					connectionState = ConnectionState.LISTENING;
+			handler = new ConnectionHandler(this, socket);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 
-				} else {
-					connection = new Socket(opponentIP, GAMEPORT);
-				}
+	public void connectOpponet(String Ip) {
 
-				out = new ObjectOutputStream(connection.getOutputStream());
-				in = new ObjectInputStream(connection.getInputStream());
-				handler = new ConnectionHandler(in, instance);
-				connectionState = ConnectionState.CONNECTED;
-				// listener.close();
-			}
+		if (getConnectionState() == ConnectionState.CONNECTED) {
+			throw new RuntimeException("Already connected");
+		}
+
+		try {
+			Socket socket = new Socket(Ip, GAMEPORT);
+			handler = new ConnectionHandler(this, socket);
+			
 
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			cleanUp();
 		}
 	}
 
-	/**
-	 * 
-	 * @param opponentIP
-	 * @return
-	 * @throws IOException
-	 */
-	public Connection getInstance(String opponentIP) throws IOException {
 
-		if (instance != null) {
-			return instance;
-			// } else if (opponentIP == null) {
-			// instance = new Connection();
-			// return instance;
-		} else {
-			// instance = new Connection(opponentIP);
-			return instance;
-		}
+	public Connection getInstance() {
+		return instance;
 	}
 
-	/**
-	 * 
-	 * @param missile
-	 */
+
 	public void placeShot(Missile missile) {
-		handler.sendObject(out, missile);
+		handler.sendObject(missile);
 	}
 
-	/**
-	 * 
-	 * @param ready
-	 */
-
-	public void sendReady(String ready) {
-		handler.sendObject(out, ready);
+	public void sendReady() {
+		if (game.getLocalPlayer().getPlayerState() != GenericPlayer.PlayerState.GAME_STARTED && game.getOpponent().getPlayerState() != GenericPlayer.PlayerState.GAME_STARTED){
+		throw new RuntimeException("Something is out of order here");
+		}
+		
+		handler.sendObject(GenericPlayer.PlayerState.READY);
+		game.getOpponent().setPlayerState(GenericPlayer.PlayerState.WAITING); 
 	}
 
-	/**
-	 * 
-	 * @param end
-	 */
-	public void sendEnd(String end) {
-		handler.sendObject(out, end);
 
+	public void sendEnd(PlayerState end) {
+		handler.sendObject(end);
+		cleanUp();
 	}
 
-	/**
-	 * 
-	 * @param start
-	 */
-	public void sendStart(String start) {
-		handler.sendObject(out, start);
+
+	public void sendStart() {
+		if (game.getLocalPlayer().getPlayerState() != GenericPlayer.PlayerState.GAME_STARTED && game.getOpponent().getPlayerState() != GenericPlayer.PlayerState.READY){
+		throw new RuntimeException("Something is out of order here");
+		}
+		
+		handler.sendObject(GenericPlayer.PlayerState.WAITING);
+		game.getOpponent().setPlayerState(GenericPlayer.PlayerState.PLAYING);
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	public Object receiveObjectToGame(Object object) {
 
-		// simon: wohin damit?
-		return null;
+	public static void receiveObjectToGame(Object object) {
+
+		if (object == GenericPlayer.PlayerState.READY){
+			game.getOpponent().setPlayerState(GenericPlayer.PlayerState.READY);
+			game.getLocalPlayer().setPlayerState(GenericPlayer.PlayerState.WAITING);
+		}
+		
+		else if (object == GenericPlayer.PlayerState.WAITING){
+			game.getOpponent().setPlayerState(GenericPlayer.PlayerState.WAITING);
+			game.getLocalPlayer().setPlayerState(GenericPlayer.PlayerState.PLAYING);
+		}
+		
+		else if (object == GenericPlayer.PlayerState.WAITING){
+			game.getOpponent().setPlayerState(GenericPlayer.PlayerState.WAITING);
+			game.getLocalPlayer().setPlayerState(GenericPlayer.PlayerState.PLAYING);
+		}
+		
+		else if (object == GenericPlayer.PlayerState.GAME_LOST){
+			game.getOpponent().setPlayerState(GenericPlayer.PlayerState.GAME_LOST);
+			game.getLocalPlayer().setPlayerState(GenericPlayer.PlayerState.GAME_WON);
+		}
+		
+		else if (object == GenericPlayer.PlayerState.GAME_WON){
+			game.getOpponent().setPlayerState(GenericPlayer.PlayerState.GAME_WON);
+			game.getLocalPlayer().setPlayerState(GenericPlayer.PlayerState.GAME_LOST);
+		}
+		
+		
+		else  {
+			
+			game.getLocalPlayer().placeShot((Missile)object);
+				
+			}
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
+
 	public ConnectionState getConnectionState() {
 		return connectionState;
 	}
 
 	public void setConnectionState(ConnectionState connectionState) {
 		this.connectionState = connectionState;
-		// if (connectionStateListener!=null){
-		// connectionStateListener.stateChanged(connectionState);
-		// }
+		if (connectionStateListener != null) {
+			connectionStateListener.stateChanged(connectionState);
+		}
 	}
 
-	/**
-	 * 
-	 */
+	public void setConnectionStateListener(
+			ConnectionStateListener connectionStateListener) {
+		this.connectionStateListener = connectionStateListener;
+	}
+	
+	public void setGame(Game game){
+		this.game = game;
+	}
+	
 	private void cleanUp() {
-		if (connection != null && !connection.isClosed()) {
-			// Make sure that the socket, if any, is closed.
-			try {
-				connection.close();
-			} catch (IOException e) {
-			}
-		}
-		connectionState = ConnectionState.CLOSED;
-		instance = null;
-		opponentIP = null;
-		connection = null;
-		in = null;
-		out = null;
-
+		handler.cleanUp();
+		setConnectionState(ConnectionState.CLOSED);
 	}
 }
