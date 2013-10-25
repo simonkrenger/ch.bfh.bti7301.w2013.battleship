@@ -23,13 +23,16 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game;
 
+import java.io.Serializable;
+
 import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
 
 /**
  * @author simon
  * 
  */
-public class Missile {
+public class Missile implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	public enum MissileState {
 		/**

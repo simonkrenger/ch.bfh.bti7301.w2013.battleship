@@ -82,7 +82,7 @@ public class Board {
 				placedMissiles.add(m);
 				owner.sendMissile(m);
 				System.out.println("placeMissile() called with " + m);
-				// TODO: Notify oberserver pattern
+				// TODO: Notify observer pattern
 
 			} else {
 				throw new RuntimeException("Player" + owner + " is in state "
