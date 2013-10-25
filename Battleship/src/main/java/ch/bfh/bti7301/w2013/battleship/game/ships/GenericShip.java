@@ -227,27 +227,20 @@ public class GenericShip implements Ship {
 		}
 		return coords;
 	}
-	
+
 	public ArrayList<Coordinates> getExtrapolatedCoordinates() {
 		ArrayList<Coordinates> extrapolated = new ArrayList<Coordinates>();
 		extrapolated.addAll(getCoordinatesForShip());
-		// TODO: Extrapolate
 		for (Coordinates c : getCoordinatesForShip()) {
-			// Top
-			extrapolated.add(new Coordinates(c.x - 1, c.y - 1));
-			extrapolated.add(new Coordinates(c.x, c.y - 1));
-			extrapolated.add(new Coordinates(c.x + 1, c.y - 1));
-
-			// Same height
-			extrapolated.add(new Coordinates(c.x - 1, c.y));
-			extrapolated.add(new Coordinates(c.x + 1, c.y));
-
-			// Bottom
-			extrapolated.add(new Coordinates(c.x - 1, c.y + 1));
-			extrapolated.add(new Coordinates(c.x, c.y + 1));
-			extrapolated.add(new Coordinates(c.x + 1, c.y + 1));
+			for (int i = -1; i <= 1; i++) {
+				for (int j = -1; j <= 1; j++) {
+					Coordinates temp = new Coordinates(c.x + j, c.y + i);
+					if ((!c.equals(temp)) && (!extrapolated.contains(temp))) {
+						extrapolated.add(temp);
+					}
+				}
+			}
 		}
-
 		return extrapolated;
 	}
 
@@ -266,6 +259,5 @@ public class GenericShip implements Ship {
 				+ getExtrapolatedCoordinates() + ", getCoordinatesForDamage()="
 				+ getCoordinatesForDamage() + "]";
 	}
-	
-	
+
 }
