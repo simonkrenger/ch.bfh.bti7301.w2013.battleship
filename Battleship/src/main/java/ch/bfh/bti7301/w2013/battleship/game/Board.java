@@ -23,6 +23,7 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
@@ -99,8 +100,8 @@ public class Board {
 		for (Missile placed : placedMissiles) {
 			if (placed.getCoordinates().equals(m.getCoordinates())) {
 				placed.setMissileState(m.getMissileState());
-				
-				System.out.println("Missile UPDATED! Missile: "+ m);
+
+				System.out.println("Missile UPDATED! Missile: " + m);
 				// TODO: Notify observer pattern
 				return;
 			}
@@ -148,7 +149,7 @@ public class Board {
 				Coordinates newEndCoordinates) {
 
 		}
-		
+
 		public void placeShip(Ship s) {
 
 			// Check boundaries of board
@@ -185,7 +186,8 @@ public class Board {
 	 * @author simon
 	 * 
 	 */
-	public static class Coordinates {
+	public static class Coordinates implements Serializable {
+		private static final long serialVersionUID = 1L;
 
 		/**
 		 * X coordinates
