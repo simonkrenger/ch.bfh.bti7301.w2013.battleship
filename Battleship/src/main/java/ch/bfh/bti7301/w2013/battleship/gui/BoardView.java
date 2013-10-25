@@ -49,20 +49,28 @@ public class BoardView extends Parent {
 
 	public void addShip(Ship ship) {
 		ShipView sv = new ShipView(ship);
-		sv.relocate(SIZE * ship.getStartCoordinates().x,
-				SIZE * ship.getStartCoordinates().y);
+		sv.relocate(getX(ship.getStartCoordinates()),
+				getY(ship.getStartCoordinates()));
 		getChildren().add(sv);
 	}
 
 	public Coordinates getCoordinates(double x, double y) {
-		return new Coordinates((int) (x / SIZE), (int) (y / SIZE));
+		return new Coordinates((int) (x / SIZE) + 1, (int) (y / SIZE) + 1);
 	}
 
 	private void drawMissile(Missile missile) {
 		MissileView mv = new MissileView(missile);
-		mv.relocate(SIZE * missile.getCoordinates().x,
-				SIZE * missile.getCoordinates().y);
+		mv.relocate(getX(missile.getCoordinates()),
+				getY(missile.getCoordinates()));
 		getChildren().add(mv);
+	}
+
+	private double getX(Coordinates c) {
+		return SIZE * (c.x - 1);
+	}
+
+	private double getY(Coordinates c) {
+		return SIZE * (c.y - 1);
 	}
 
 	private Shape getWater(int rows, int columns) {
