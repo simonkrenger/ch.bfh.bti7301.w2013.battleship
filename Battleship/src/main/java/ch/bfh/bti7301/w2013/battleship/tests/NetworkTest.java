@@ -10,6 +10,13 @@ import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 import ch.bfh.bti7301.w2013.battleship.network.Connection;
 
 public class NetworkTest {
+	/**
+	 * A simple test for the connection, connecting the game to itself (somewhat
+	 * unfortunately) and then testing if the receiving code set the player
+	 * state to {@link PlayerState#READY}.
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testConnection() throws Exception {
 		Connection c = Connection.getInstance();
@@ -19,9 +26,11 @@ public class NetworkTest {
 		assertEquals(PlayerState.GAME_STARTED, opp.getPlayerState());
 		c.sendStatus(PlayerState.READY);
 		long time = System.currentTimeMillis();
+		// Wait until the 'other end' reacted, but no more than 10 seconds
 		while (opp.getPlayerState() == PlayerState.GAME_STARTED
-				&& System.currentTimeMillis() - time < 10000)
+				&& System.currentTimeMillis() - time < 10000) {
 			Thread.sleep(100);
+		}
 		assertEquals(PlayerState.READY, opp.getPlayerState());
 	}
 }
