@@ -176,7 +176,7 @@ public class Battleship extends Application {
 								shipStartY);
 						Ship ship = buildShip(sv.getShipType(), c,
 								Direction.SOUTH);
-						playerBoard.placeShip(ship);
+						playerBoard.getBoardSetup().placeShip(ship);
 						// TODO: handle illegal ship placement
 						shipStack.getChildren().remove(sv);
 						if (shipStack.getChildren().isEmpty()) {

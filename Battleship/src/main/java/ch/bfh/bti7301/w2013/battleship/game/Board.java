@@ -60,36 +60,6 @@ public class Board {
 		return this.size;
 	}
 
-	public void placeShip(Ship s) {
-
-		// This can only be done when the player is setting up
-		if (setup == null && owner.getPlayerState() == PlayerState.GAME_STARTED) {
-			throw new RuntimeException("Ships can only be placed during setup!");
-		}
-
-		// Check boundaries of board
-		if (withinBoard(s.getStartCoordinates())
-				&& withinBoard(s.getEndCoordinates())) {
-
-			// Check if coordinates are already used
-			for (Ship placed : placedShips) {
-				for (Coordinates d : s.getExtrapolatedCoordinates()) {
-					for (Coordinates c : placed.getCoordinatesForShip()) {
-						if (c.equals(d)) {
-							throw new RuntimeException(
-									"Conflicting coordinates for ship "
-											+ placed + " and " + s);
-						}
-					}
-				}
-			}
-
-			placedShips.add(s);
-		} else {
-			throw new RuntimeException("Coordinates not within board!");
-		}
-	}
-
 	/**
 	 * Function to place a missile on the opponents board
 	 * 
@@ -176,6 +146,36 @@ public class Board {
 		public void moveShip(Ship s, Coordinates newStartCoordinates,
 				Coordinates newEndCoordinates) {
 
+		}
+		
+		public void placeShip(Ship s) {
+
+			// This can only be done when the player is setting up
+			if (owner.getPlayerState() == PlayerState.GAME_STARTED) {
+				throw new RuntimeException("Ships can only be placed during setup!");
+			}
+
+			// Check boundaries of board
+			if (withinBoard(s.getStartCoordinates())
+					&& withinBoard(s.getEndCoordinates())) {
+
+				// Check if coordinates are already used
+				for (Ship placed : placedShips) {
+					for (Coordinates d : s.getExtrapolatedCoordinates()) {
+						for (Coordinates c : placed.getCoordinatesForShip()) {
+							if (c.equals(d)) {
+								throw new RuntimeException(
+										"Conflicting coordinates for ship "
+												+ placed + " and " + s);
+							}
+						}
+					}
+				}
+
+				placedShips.add(s);
+			} else {
+				throw new RuntimeException("Coordinates not within board!");
+			}
 		}
 
 		public void done() {
