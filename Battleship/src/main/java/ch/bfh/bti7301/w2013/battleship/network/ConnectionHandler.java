@@ -1,5 +1,6 @@
 package ch.bfh.bti7301.w2013.battleship.network;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -30,7 +31,11 @@ public class ConnectionHandler extends Thread {
 			try {
 				Object inputObject = in.readObject();
 				receiveObject(inputObject);
-
+			} catch (EOFException e) {
+				// opponent disconnected
+				Connection.getInstance().setConnectionState(
+						ConnectionState.CLOSED);
+				break;
 			} catch (IOException e) {
 				e.printStackTrace();
 
