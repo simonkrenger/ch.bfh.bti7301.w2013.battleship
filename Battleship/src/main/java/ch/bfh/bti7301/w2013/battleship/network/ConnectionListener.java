@@ -1,4 +1,4 @@
-package ch.bfh.bti7301.w2013.battleship.network;
+	package ch.bfh.bti7301.w2013.battleship.network;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -22,6 +22,15 @@ public class ConnectionListener extends Thread {
 			}
 
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void closeListener() {
+		try {
+			listener.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

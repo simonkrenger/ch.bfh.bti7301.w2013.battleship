@@ -14,12 +14,14 @@ public class Connection extends Thread {
 	private ConnectionState connectionState;
 	private ConnectionStateListener connectionStateListener;
 	private static Connection instance;
+	private ConnectionListener listener;
 
 	private ConnectionHandler handler;
 	private static Game game = Game.getInstance();
 
 	private Connection() throws IOException {
-		new ConnectionListener(this).start();
+		listener = new ConnectionListener(this);
+		listener.start();
 	}
 
 	public void acceptOpponent(Socket socket) {
@@ -45,6 +47,7 @@ public class Connection extends Thread {
 		try {
 			Socket socket = new Socket(Ip, GAMEPORT);
 			handler = new ConnectionHandler(this, socket);
+			listener.closeListener();
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
