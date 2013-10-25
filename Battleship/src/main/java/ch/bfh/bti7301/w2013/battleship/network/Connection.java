@@ -36,7 +36,7 @@ public class Connection extends Thread {
 
 	}
 
-	public void connectOpponet(String Ip) {
+	public void connectOpponent(String Ip) {
 
 		if (getConnectionState() == ConnectionState.CONNECTED) {
 			throw new RuntimeException("Already connected");

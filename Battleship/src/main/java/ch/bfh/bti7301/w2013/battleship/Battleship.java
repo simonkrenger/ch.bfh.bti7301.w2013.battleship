@@ -47,6 +47,8 @@ import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
 import ch.bfh.bti7301.w2013.battleship.gui.ShipStack;
 import ch.bfh.bti7301.w2013.battleship.network.Connection;
+import ch.bfh.bti7301.w2013.battleship.network.ConnectionState;
+import ch.bfh.bti7301.w2013.battleship.network.ConnectionStateListener;
 import ch.bfh.bti7301.w2013.battleship.network.NetworkInformation;
 
 /**
@@ -109,25 +111,25 @@ public class Battleship extends Application {
 		ipBox.getChildren().add(ipAddress);
 		final Button connect = new Button(labels.getString("connect"));
 		// TODO: add listener to Connection
-		// Connection.getInstance().setConnectionStateListener(
-		// new ConnectionStateListener() {
-		// @Override
-		// public void stateChanged(ConnectionState newState) {
-		// switch (newState) {
-		// case CLOSED:
-		// case LISTENING:
-		// ipBox.setVisible(true);
-		// break;
-		// case CONNECTED:
-		// ipBox.setVisible(false);
-		// break;
-		// }
-		// }
-		// });
+		Connection.getInstance().setConnectionStateListener(
+				new ConnectionStateListener() {
+					@Override
+					public void stateChanged(ConnectionState newState) {
+						switch (newState) {
+						case CLOSED:
+						case LISTENING:
+							ipBox.setVisible(true);
+							break;
+						case CONNECTED:
+							ipBox.setVisible(false);
+							break;
+						}
+					}
+				});
 		connect.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				Connection.getInstance().connectOpponet(ipAddress.getText());
+				Connection.getInstance().connectOpponent(ipAddress.getText());
 				System.out.println(ipAddress.getText());
 			}
 		});

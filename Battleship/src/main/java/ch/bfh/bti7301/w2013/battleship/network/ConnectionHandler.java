@@ -1,26 +1,24 @@
 package ch.bfh.bti7301.w2013.battleship.network;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 
+public class ConnectionHandler extends Thread {
 
-public class ConnectionHandler implements Runnable {
-
-		
 	private Socket connectionSocket;
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
 
-
-	public ConnectionHandler(Connection connection, Socket socket) throws IOException {
+	public ConnectionHandler(Connection connection, Socket socket)
+			throws IOException {
 		setConnectionSocket(socket);
 		setIn(new ObjectInputStream(connectionSocket.getInputStream()));
 		setOut(new ObjectOutputStream(connectionSocket.getOutputStream()));
-		run();
+		start();
 		connection.setConnectionState(ConnectionState.CONNECTED);
-		
 	}
-	
 
 	public void run() {
 
@@ -50,23 +48,22 @@ public class ConnectionHandler implements Runnable {
 	}
 
 	public void receiveObject(Object receivedObject) {
-		Connection.receiveObjectToGame(receivedObject);	
+		Connection.receiveObjectToGame(receivedObject);
 	}
-	
+
 	public void setIn(ObjectInputStream in) {
 		this.in = in;
 	}
-	
+
 	public void setOut(ObjectOutputStream out) {
 		this.out = out;
 	}
-	
 
 	public void setConnectionSocket(Socket connectionSocket) {
 		this.connectionSocket = connectionSocket;
 	}
-	
-	public void cleanUp(){
+
+	public void cleanUp() {
 		try {
 			in.close();
 			out.close();

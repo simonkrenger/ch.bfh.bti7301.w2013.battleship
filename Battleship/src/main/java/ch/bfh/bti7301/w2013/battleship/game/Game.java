@@ -25,6 +25,7 @@ package ch.bfh.bti7301.w2013.battleship.game;
 
 import ch.bfh.bti7301.w2013.battleship.game.players.LocalPlayer;
 import ch.bfh.bti7301.w2013.battleship.game.players.NetworkPlayer;
+import ch.bfh.bti7301.w2013.battleship.network.Connection;
 
 /**
  * @author simon
@@ -33,29 +34,32 @@ import ch.bfh.bti7301.w2013.battleship.game.players.NetworkPlayer;
 public class Game {
 
 	private int gameID;
-	
+
 	private static Game instance = null;
 
 	private Player localPlayer;
 	private Player opponentPlayer;
 
 	private Player activePlayer;
+	private Connection connection;
 
 	private Game() {
 		this.localPlayer = new LocalPlayer();
 		this.opponentPlayer = new NetworkPlayer();
-		
+
 		// TODO: Fix active player (not local)
 		this.activePlayer = localPlayer;
+
+		this.connection = Connection.getInstance();
 	}
 
 	public static Game getInstance() {
-		if(instance == null) {
+		if (instance == null) {
 			instance = new Game();
 		}
 		return instance;
 	}
-	
+
 	public Player getLocalPlayer() {
 		return localPlayer;
 	}
