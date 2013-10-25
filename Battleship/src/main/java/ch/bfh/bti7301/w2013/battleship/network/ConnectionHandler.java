@@ -14,13 +14,17 @@ public class ConnectionHandler extends Thread {
 	public ConnectionHandler(Connection connection, Socket socket)
 			throws IOException {
 		setConnectionSocket(socket);
-		setIn(new ObjectInputStream(connectionSocket.getInputStream()));
 		setOut(new ObjectOutputStream(connectionSocket.getOutputStream()));
 		start();
 		connection.setConnectionState(ConnectionState.CONNECTED);
 	}
 
 	public void run() {
+		try {
+			setIn(new ObjectInputStream(connectionSocket.getInputStream()));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
 		while (true) {
 			try {
