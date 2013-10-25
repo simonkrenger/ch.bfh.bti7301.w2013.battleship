@@ -41,6 +41,6 @@ public class NetworkPlayer extends GenericPlayer {
 	}
 	
 	public void sendMissile(Missile m) {
-		Connection.getInstance().placeShot(m);
+		Connection.getInstance().sendMissile(m);
 	}
 }
