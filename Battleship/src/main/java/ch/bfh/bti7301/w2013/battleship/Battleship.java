@@ -23,11 +23,6 @@
  */
 package ch.bfh.bti7301.w2013.battleship;
 
-import static ch.bfh.bti7301.w2013.battleship.gui.BoardView.SIZE;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map.Entry;
 import java.util.ResourceBundle;
 
 import javafx.animation.ParallelTransitionBuilder;
@@ -36,26 +31,21 @@ import javafx.animation.TranslateTransitionBuilder;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
-import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.GameRule;
-import ch.bfh.bti7301.w2013.battleship.game.Ship;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
-import ch.bfh.bti7301.w2013.battleship.gui.ShipView;
+import ch.bfh.bti7301.w2013.battleship.gui.ShipStack;
 import ch.bfh.bti7301.w2013.battleship.network.Connection;
 import ch.bfh.bti7301.w2013.battleship.network.NetworkInformation;
 
@@ -108,7 +98,7 @@ public class Battleship extends Application {
 				.getBoundsInParent().getMaxY() + 8);
 		root.getChildren().add(ready);
 
-		HBox shipStack = buildShipStack(pbv, ready);
+		ShipStack shipStack = new ShipStack(game, rule, pbv, ready);
 		shipStack.relocate(obv.getBoundsInParent().getMinX(), obv
 				.getBoundsInParent().getMaxY() + 8);
 		root.getChildren().add(shipStack);
@@ -151,20 +141,6 @@ public class Battleship extends Application {
 		primaryStage.show();
 	}
 
-	private List<Ship> getAvailableShips() {
-		List<Ship> availableShips = new LinkedList<>();
-		Coordinates dc = new Coordinates(0, 0);
-		Direction dd = Direction.SOUTH;
-
-		for (Entry<Class<? extends Ship>, Integer> e : rule.getShipList()
-				.entrySet()) {
-			Ship ship = buildShip(e.getKey(), dc, dd);
-			for (int i = 0; i < e.getValue(); i++)
-				availableShips.add(ship);
-		}
-		return availableShips;
-	}
-
 	private Button buildReadyButton(final BoardView pbv, final BoardView obv) {
 		final Button ready = new Button(labels.getString("ready"));
 		ready.setOnAction(new EventHandler<ActionEvent>() {
@@ -193,88 +169,4 @@ public class Battleship extends Application {
 		ready.setVisible(false);
 		return ready;
 	}
-
-	private HBox buildShipStack(final BoardView pbv, final Button ready) {
-		final HBox shipStack = new HBox(-16);
-		// FIXME: this is just for layout debugging
-		shipStack.setStyle("-fx-background-color: #ffc;");
-		shipStack.setMaxHeight(SIZE);
-		for (Ship s : getAvailableShips()) {
-			final ShipView sv = new ShipView(s);
-			shipStack.getChildren().add(sv);
-
-			sv.setOnMousePressed(new EventHandler<MouseEvent>() {
-				@Override
-				public void handle(MouseEvent me) {
-					initX = sv.getTranslateX();
-					initY = sv.getTranslateY();
-					dragAnchor = new Point2D(me.getSceneX(), me.getSceneY());
-				}
-			});
-			sv.setOnMouseDragged(new EventHandler<MouseEvent>() {
-				@Override
-				public void handle(MouseEvent me) {
-					double dragX = me.getSceneX() - dragAnchor.getX();
-					double dragY = me.getSceneY() - dragAnchor.getY();
-					// calculate new position of the circle
-					double newXPosition = initX + dragX;
-					double newYPosition = initY + dragY;
-					sv.setTranslateX(newXPosition);
-					sv.setTranslateY(newYPosition);
-				}
-			});
-			sv.setOnMouseReleased(new EventHandler<MouseEvent>() {
-				@Override
-				public void handle(MouseEvent me) {
-					double shipStartX = me.getSceneX() - me.getX()
-							- pbv.getLayoutX();
-					double shipStartY = me.getSceneY() - me.getY()
-							- pbv.getLayoutY();
-					if (pbv.contains(shipStartX, shipStartY)) {
-						// if on board, snap & add to it
-						Coordinates c = pbv.getCoordinates(shipStartX,
-								shipStartY);
-						Ship ship = buildShip(sv.getShipType(), c,
-								Direction.SOUTH);
-						try {
-							game.getLocalPlayer().getBoard().placeShip(ship);
-						} catch (RuntimeException e) {
-							// snap back
-							// Maybe coloring the ship and leaving it there
-							// would be better?
-							sv.setTranslateX(initX);
-							sv.setTranslateY(initY);
-							return;
-						}
-						shipStack.getChildren().remove(sv);
-						if (shipStack.getChildren().isEmpty()) {
-							ready.setVisible(true);
-							shipStack.setVisible(false);
-						}
-						pbv.addShip(ship);
-					} else {
-						// snap back
-						sv.setTranslateX(initX);
-						sv.setTranslateY(initY);
-					}
-				}
-			});
-		}
-		return shipStack;
-	}
-
-	private Ship buildShip(Class<? extends Ship> type, Coordinates c,
-			Direction d) {
-		try {
-			return type.getConstructor(Coordinates.class, Direction.class)
-					.newInstance(c, d);
-		} catch (Exception e) {
-			throw new RuntimeException(
-					"Error while creating ships through reflection", e);
-		}
-	}
-
-	private double initX;
-	private double initY;
-	private Point2D dragAnchor;
 }
