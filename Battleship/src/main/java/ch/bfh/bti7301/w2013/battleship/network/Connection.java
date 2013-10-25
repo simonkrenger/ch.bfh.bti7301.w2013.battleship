@@ -88,8 +88,13 @@ public class Connection extends Thread {
 			PlayerState received = (PlayerState) object;
 			switch(received) {
 			case READY:
-				game.getOpponent().setPlayerState(PlayerState.READY);
-				game.getLocalPlayer().setPlayerState(PlayerState.WAITING);
+				if(game.getLocalPlayer().getPlayerState() == PlayerState.READY) {
+					game.getLocalPlayer().setPlayerState(PlayerState.PLAYING);
+					game.getOpponent().setPlayerState(PlayerState.WAITING);
+				} else {
+					//TODO: Set button to "Start"
+					game.getOpponent().setPlayerState(PlayerState.READY);
+				}
 				break;
 			case WAITING:
 				game.getOpponent().setPlayerState(PlayerState.WAITING);

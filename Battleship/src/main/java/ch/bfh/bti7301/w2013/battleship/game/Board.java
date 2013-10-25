@@ -70,9 +70,7 @@ public class Board {
 		// This operation can only be made on the opponents board
 		if (owner == Game.getInstance().getOpponent()) {
 			// Check if its the players turn
-			if (owner.getPlayerState() == PlayerState.WAITING) {
-				// PlayerState.WAITING means the player is not active and
-				// therefore waiting for a shot
+			if (Game.getInstance().getLocalPlayer().getPlayerState() == PlayerState.PLAYING) {
 
 				// Check if coordinates of missile were already used
 				for (Missile placed : placedMissiles) {
@@ -83,6 +81,7 @@ public class Board {
 				}
 				placedMissiles.add(m);
 				owner.placeMissile(m);
+				System.out.println("placeMissile() called with " + m);
 				// TODO: Notify oberserver pattern
 
 			} else {
@@ -100,6 +99,8 @@ public class Board {
 		for (Missile placed : placedMissiles) {
 			if (placed.getCoordinates().equals(m.getCoordinates())) {
 				placed.setMissileState(m.getMissileState());
+				
+				System.out.println("Missile UPDATED! Missile: "+ m);
 				// TODO: Notify observer pattern
 				return;
 			}
