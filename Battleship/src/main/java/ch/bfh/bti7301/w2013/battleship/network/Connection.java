@@ -132,6 +132,7 @@ public class Connection extends Thread {
 		case FIRED:
 			Missile feedback = game.getLocalPlayer().placeMissile(missile);
 			sendMissile(feedback);
+			break;
 
 		case MISS:
 			game.getOpponent().setPlayerState(PlayerState.WAITING);
