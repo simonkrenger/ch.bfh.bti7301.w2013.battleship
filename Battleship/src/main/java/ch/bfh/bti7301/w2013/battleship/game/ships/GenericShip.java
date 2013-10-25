@@ -160,7 +160,7 @@ public class GenericShip implements Ship {
 	@Override
 	public void setDamage(Coordinates c) {
 		if (getCoordinatesForShip().contains(c)) {
-			if (damage.contains(c)) {
+			if (!damage.contains(c)) {
 				damage.add(c);
 			} else {
 				throw new RuntimeException("Coordinates " + c
