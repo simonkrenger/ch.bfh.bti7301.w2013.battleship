@@ -150,6 +150,11 @@ public class GenericShipTest {
 	}
 
 	@Test
+	public void testGetExtrapolatedCoordinates() {
+		fail("Not yet implemented"); // TODO
+	}
+	
+	@Test
 	public void testGetCoordinatesForDamage() {
 		fail("Not yet implemented"); // TODO
 	}
