@@ -9,7 +9,7 @@ import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 
 public class Connection extends Thread {
 
-	final static int GAMEPORT = 42423;
+	final static int GAMEPORT = 49153;
 
 	private ConnectionState connectionState;
 	private ConnectionStateListener connectionStateListener;
