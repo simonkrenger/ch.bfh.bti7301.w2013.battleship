@@ -69,7 +69,8 @@ public class ShipStack extends HBox {
 						Ship ship = buildShip(sv.getShipType(), c,
 								Direction.SOUTH);
 						try {
-							game.getLocalPlayer().getBoard().placeShip(ship);
+							game.getLocalPlayer().getBoard().getBoardSetup()
+									.placeShip(ship);
 						} catch (RuntimeException e) {
 							// snap back
 							// Maybe coloring the ship and leaving it there
