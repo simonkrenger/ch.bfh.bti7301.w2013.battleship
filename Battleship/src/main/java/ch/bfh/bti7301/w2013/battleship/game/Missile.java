@@ -32,6 +32,7 @@ import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
  * 
  */
 public class Missile implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
 	public enum MissileState {
@@ -89,5 +90,11 @@ public class Missile implements Serializable {
 
 	public Coordinates getCoordinates() {
 		return this.coordinates;
+	}
+	
+	@Override
+	public String toString() {
+		return "Missile [coordinates=" + coordinates + ", status=" + status
+				+ "]";
 	}
 }
