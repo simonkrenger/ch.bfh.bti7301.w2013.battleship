@@ -133,25 +133,26 @@ public class Connection extends Thread {
 			Missile feedback = game.getLocalPlayer().placeMissile(missile);
 			sendMissile(feedback);
 			break;
-
 		case MISS:
 			game.getOpponent().setPlayerState(PlayerState.WAITING);
 			game.getLocalPlayer().setPlayerState(PlayerState.PLAYING);
+			game.getOpponent().getBoard().updateMissile(missile);
 			break;
 		case HIT:
 			game.getOpponent().setPlayerState(PlayerState.PLAYING);
 			game.getLocalPlayer().setPlayerState(PlayerState.WAITING);
+			game.getOpponent().getBoard().updateMissile(missile);
 			break;
 		case SUNK:
 			game.getOpponent().setPlayerState(PlayerState.PLAYING);
 			game.getLocalPlayer().setPlayerState(PlayerState.WAITING);
+			game.getOpponent().getBoard().updateMissile(missile);
 			break;
 		case GAME_WON:
 			// TODO who wins???????????
 			break;
 
 		}
-		game.getOpponent().getBoard().updateMissile(missile);
 	}
 
 	public ConnectionState getConnectionState() {
@@ -175,6 +176,7 @@ public class Connection extends Thread {
 	}
 
 	private void cleanUp() {
+		//TODO: think about the whole closing game thing
 		handler.cleanUp();
 		setConnectionState(ConnectionState.CLOSED);
 	}
