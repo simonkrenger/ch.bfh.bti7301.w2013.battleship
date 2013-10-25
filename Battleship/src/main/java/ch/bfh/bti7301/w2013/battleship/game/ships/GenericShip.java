@@ -230,12 +230,16 @@ public class GenericShip implements Ship {
 
 	public ArrayList<Coordinates> getExtrapolatedCoordinates() {
 		ArrayList<Coordinates> extrapolated = new ArrayList<Coordinates>();
+		// Add the coordinates for the ship
 		extrapolated.addAll(getCoordinatesForShip());
+		
+		// Calculate border around the ship
 		for (Coordinates c : getCoordinatesForShip()) {
 			for (int i = -1; i <= 1; i++) {
 				for (int j = -1; j <= 1; j++) {
 					Coordinates temp = new Coordinates(c.x + j, c.y + i);
-					if ((!c.equals(temp)) && (!extrapolated.contains(temp))) {
+					// Do not allow duplicates
+					if (!extrapolated.contains(temp)) {
 						extrapolated.add(temp);
 					}
 				}
