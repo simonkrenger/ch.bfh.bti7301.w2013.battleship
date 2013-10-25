@@ -105,6 +105,15 @@ public class Battleship extends Application {
 				.getBoundsInParent().getMaxY() + 8);
 		root.getChildren().add(shipStack);
 
+		HBox ipBox = getIpBox();
+		ipBox.relocate(pbv.getBoundsInParent().getMinX(), pbv
+				.getBoundsInParent().getMaxY() + 20);
+		root.getChildren().add(ipBox);
+
+		primaryStage.show();
+	}
+
+	private HBox getIpBox() {
 		// Temporary input field to enter the opponent's
 		final HBox ipBox = new HBox();
 		final TextField ipAddress = new TextField();
@@ -134,13 +143,9 @@ public class Battleship extends Application {
 			}
 		});
 		ipBox.getChildren().add(connect);
-		ipBox.relocate(pbv.getBoundsInParent().getMinX(), pbv
-				.getBoundsInParent().getMaxY() + 20);
 		ipBox.getChildren().add(
 				new Label(NetworkInformation.getIntAddresses().toString()));
-		root.getChildren().add(ipBox);
-
-		primaryStage.show();
+		return ipBox;
 	}
 
 	private Button buildReadyButton(final BoardView pbv, final BoardView obv) {

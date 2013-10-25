@@ -49,13 +49,12 @@ public class Game {
 
 		// TODO: Fix active player (not local)
 		this.activePlayer = localPlayer;
-
-		this.connection = Connection.getInstance();
 	}
 
 	public static Game getInstance() {
 		if (instance == null) {
 			instance = new Game();
+			instance.connection = Connection.getInstance();
 		}
 		return instance;
 	}
