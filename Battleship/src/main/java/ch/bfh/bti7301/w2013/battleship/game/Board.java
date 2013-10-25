@@ -67,11 +67,23 @@ public class Board {
 			throw new RuntimeException("Ships can only be placed during setup!");
 		}
 
-		// Check if number of ships is allowed (needed?)
-
 		// Check boundaries of board
 		if (withinBoard(s.getStartCoordinates())
 				&& withinBoard(s.getEndCoordinates())) {
+
+			// Check if coordinates are already used
+			for (Ship placed : placedShips) {
+				for (Coordinates c : placed.getCoordinatesForShip()) {
+					for (Coordinates d : s.getCoordinatesForShip()) {
+						if (c.equals(d)) {
+							throw new RuntimeException(
+									"Conflicting coordinates for ship "
+											+ placed + " and " + s);
+						}
+					}
+				}
+			}
+
 			placedShips.add(s);
 		} else {
 			throw new RuntimeException("Coordinates not within board!");
@@ -183,7 +195,7 @@ public class Board {
 		 * X coordinates
 		 */
 		public int x;
-		
+
 		/**
 		 * Y coordinates
 		 */

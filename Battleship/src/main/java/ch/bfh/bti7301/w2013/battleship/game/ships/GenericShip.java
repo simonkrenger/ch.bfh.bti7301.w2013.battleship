@@ -232,4 +232,16 @@ public class GenericShip implements Ship {
 	public ArrayList<Coordinates> getCoordinatesForDamage() {
 		return damage;
 	}
+
+	@Override
+	public String toString() {
+		return "GenericShip [size=" + size + ", damage=" + damage
+				+ ", getName()=" + getName() + ", getDamage()=" + getDamage()
+				+ ", isSunk()=" + isSunk() + ", getDirection()="
+				+ getDirection() + ", getCoordinatesForShip()="
+				+ getCoordinatesForShip() + ", getCoordinatesForDamage()="
+				+ getCoordinatesForDamage() + "]";
+	}
+	
+	
 }
