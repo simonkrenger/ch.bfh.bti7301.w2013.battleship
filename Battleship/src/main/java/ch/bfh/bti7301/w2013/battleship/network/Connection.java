@@ -5,6 +5,7 @@ import java.net.*;
 
 import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
+import ch.bfh.bti7301.w2013.battleship.game.Missile.MissileState;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 
 public class Connection extends Thread {
@@ -84,15 +85,15 @@ public class Connection extends Thread {
 
 	public static void receiveObjectToGame(Object object) {
 
-		if(object instanceof PlayerState) {
+		if (object instanceof PlayerState) {
 			PlayerState received = (PlayerState) object;
-			switch(received) {
+			switch (received) {
 			case READY:
-				if(game.getLocalPlayer().getPlayerState() == PlayerState.READY) {
+				if (game.getLocalPlayer().getPlayerState() == PlayerState.READY) {
 					game.getLocalPlayer().setPlayerState(PlayerState.PLAYING);
 					game.getOpponent().setPlayerState(PlayerState.WAITING);
 				} else {
-					//TODO: Set button to "Start"
+					// TODO: Set button to "Start"
 					game.getOpponent().setPlayerState(PlayerState.READY);
 				}
 				break;
@@ -115,26 +116,41 @@ public class Connection extends Thread {
 				// TODO
 				break;
 			default:
-				throw new RuntimeException("Invalid PlayerState received:" + received);	
+				throw new RuntimeException("Invalid PlayerState received:"
+						+ received);
 			}
-			
-		} else if(object instanceof Missile) {
+
+		} else if (object instanceof Missile) {
 			Missile received = (Missile) object;
 			instance.handleMissile(received);
 		}
 	}
 
 	private void handleMissile(Missile missile) {
-		if (missile.getMissileState() == Missile.MissileState.FIRED) {
 
+		switch (missile.getMissileState()) {
+		case FIRED:
 			Missile feedback = game.getLocalPlayer().placeMissile(missile);
 			sendMissile(feedback);
-		}
 
-		else {
-			game.getOpponent().getBoard().updateMissile(missile);
-		}
+		case MISS:
+			game.getOpponent().setPlayerState(PlayerState.WAITING);
+			game.getLocalPlayer().setPlayerState(PlayerState.PLAYING);
+			break;
+		case HIT:
+			game.getOpponent().setPlayerState(PlayerState.PLAYING);
+			game.getLocalPlayer().setPlayerState(PlayerState.WAITING);
+			break;
+		case SUNK:
+			game.getOpponent().setPlayerState(PlayerState.PLAYING);
+			game.getLocalPlayer().setPlayerState(PlayerState.WAITING);
+			break;
+		case GAME_WON:
+			// TODO who wins???????????
+			break;
 
+		}
+		game.getOpponent().getBoard().updateMissile(missile);
 	}
 
 	public ConnectionState getConnectionState() {
