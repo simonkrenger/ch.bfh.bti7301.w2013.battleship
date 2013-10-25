@@ -134,18 +134,18 @@ public class Connection extends Thread {
 			sendMissile(feedback);
 			break;
 		case MISS:
+			game.getOpponent().setPlayerState(PlayerState.PLAYING);
+			game.getLocalPlayer().setPlayerState(PlayerState.WAITING);
+			game.getOpponent().getBoard().updateMissile(missile);
+			break;
+		case HIT:
 			game.getOpponent().setPlayerState(PlayerState.WAITING);
 			game.getLocalPlayer().setPlayerState(PlayerState.PLAYING);
 			game.getOpponent().getBoard().updateMissile(missile);
 			break;
-		case HIT:
-			game.getOpponent().setPlayerState(PlayerState.PLAYING);
-			game.getLocalPlayer().setPlayerState(PlayerState.WAITING);
-			game.getOpponent().getBoard().updateMissile(missile);
-			break;
 		case SUNK:
-			game.getOpponent().setPlayerState(PlayerState.PLAYING);
-			game.getLocalPlayer().setPlayerState(PlayerState.WAITING);
+			game.getOpponent().setPlayerState(PlayerState.WAITING);
+			game.getLocalPlayer().setPlayerState(PlayerState.PLAYING);
 			game.getOpponent().getBoard().updateMissile(missile);
 			break;
 		case GAME_WON:
