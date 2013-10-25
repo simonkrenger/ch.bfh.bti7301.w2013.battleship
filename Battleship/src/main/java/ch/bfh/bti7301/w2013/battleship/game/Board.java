@@ -73,8 +73,8 @@ public class Board {
 
 			// Check if coordinates are already used
 			for (Ship placed : placedShips) {
-				for (Coordinates c : placed.getCoordinatesForShip()) {
-					for (Coordinates d : s.getCoordinatesForShip()) {
+				for (Coordinates d : s.getExtrapolatedCoordinates()) {
+					for (Coordinates c : placed.getCoordinatesForShip()) {
 						if (c.equals(d)) {
 							throw new RuntimeException(
 									"Conflicting coordinates for ship "
