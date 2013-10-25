@@ -72,7 +72,7 @@ public class LocalPlayer extends GenericPlayer {
 	
 	@Override
 	public void setPlayerState(PlayerState status) {
-		// TODO
+		super.setPlayerState(status);
 		Connection.getInstance().sendStatus(status);
 	}
 }
