@@ -147,7 +147,7 @@ public class Board {
 	}
 
 	public boolean withinBoard(Coordinates c) {
-		return (c.x <= size) && (c.y <= size);
+		return ((c.x <= size) && (c.y <= size)) && ((c.x > 0) && (c.y > 0));
 	}
 
 	public boolean checkAllShipsSunk() {
