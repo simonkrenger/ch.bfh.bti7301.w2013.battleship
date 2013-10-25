@@ -9,7 +9,7 @@ import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 
 public class Connection extends Thread {
 
-	final static int GAMEPORT = 49153;
+	final static int GAMEPORT = 49768;
 
 	private ConnectionState connectionState;
 	private ConnectionStateListener connectionStateListener;
@@ -84,35 +84,38 @@ public class Connection extends Thread {
 
 	public static void receiveObjectToGame(Object object) {
 
-		if (object == PlayerState.READY) {
-			game.getOpponent().setPlayerState(PlayerState.READY);
-			game.getLocalPlayer().setPlayerState(PlayerState.WAITING);
-		}
-
-		else if (object == PlayerState.WAITING) {
-			game.getOpponent().setPlayerState(PlayerState.WAITING);
-			game.getLocalPlayer().setPlayerState(PlayerState.PLAYING);
-		}
-
-		else if (object == PlayerState.WAITING) {
-			game.getOpponent().setPlayerState(PlayerState.WAITING);
-			game.getLocalPlayer().setPlayerState(PlayerState.PLAYING);
-		}
-
-		else if (object == PlayerState.GAME_LOST) {
-			game.getOpponent().setPlayerState(PlayerState.GAME_LOST);
-			game.getLocalPlayer().setPlayerState(PlayerState.GAME_WON);
-		}
-
-		else if (object == PlayerState.GAME_WON) {
-			game.getOpponent().setPlayerState(PlayerState.GAME_WON);
-			game.getLocalPlayer().setPlayerState(PlayerState.GAME_LOST);
-		}
-
-		else {
-
-			instance.handleMissile((Missile) object);
-
+		if(object instanceof PlayerState) {
+			PlayerState received = (PlayerState) object;
+			switch(received) {
+			case READY:
+				game.getOpponent().setPlayerState(PlayerState.READY);
+				game.getLocalPlayer().setPlayerState(PlayerState.WAITING);
+				break;
+			case WAITING:
+				game.getOpponent().setPlayerState(PlayerState.WAITING);
+				game.getLocalPlayer().setPlayerState(PlayerState.PLAYING);
+				break;
+			case GAME_LOST:
+				game.getOpponent().setPlayerState(PlayerState.GAME_LOST);
+				game.getLocalPlayer().setPlayerState(PlayerState.GAME_WON);
+				break;
+			case GAME_WON:
+				game.getOpponent().setPlayerState(PlayerState.GAME_WON);
+				game.getLocalPlayer().setPlayerState(PlayerState.GAME_LOST);
+				break;
+			case GAME_STARTED:
+				// TODO
+				break;
+			case PLAYING:
+				// TODO
+				break;
+			default:
+				throw new RuntimeException("Invalid PlayerState received:" + received);	
+			}
+			
+		} else if(object instanceof Missile) {
+			Missile received = (Missile) object;
+			instance.handleMissile(received);
 		}
 	}
 
