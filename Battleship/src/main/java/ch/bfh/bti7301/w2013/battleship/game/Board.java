@@ -33,6 +33,9 @@ import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
  */
 public class Board {
 
+	/**
+	 * Default board size
+	 */
 	private static int DEFAULT_BOARD_SIZE = 10;
 
 	private int size;
@@ -64,11 +67,23 @@ public class Board {
 			throw new RuntimeException("Ships can only be placed during setup!");
 		}
 
-		// Check if number of ships is allowed (needed?)
-
 		// Check boundaries of board
 		if (withinBoard(s.getStartCoordinates())
 				&& withinBoard(s.getEndCoordinates())) {
+
+			// Check if coordinates are already used
+			for (Ship placed : placedShips) {
+				for (Coordinates d : s.getExtrapolatedCoordinates()) {
+					for (Coordinates c : placed.getCoordinatesForShip()) {
+						if (c.equals(d)) {
+							throw new RuntimeException(
+									"Conflicting coordinates for ship "
+											+ placed + " and " + s);
+						}
+					}
+				}
+			}
+
 			placedShips.add(s);
 		} else {
 			throw new RuntimeException("Coordinates not within board!");
@@ -82,6 +97,7 @@ public class Board {
 	 */
 	public void placeMissile(Missile m) {
 
+		// This operation can only be made on the opponents board
 		if (owner == Game.getInstance().getOpponent()) {
 			// Check if its the players turn
 			if (owner.getPlayerState() == PlayerState.WAITING) {
@@ -101,7 +117,8 @@ public class Board {
 
 			} else {
 				throw new RuntimeException("Player" + owner + " is in state "
-						+ owner.getPlayerState() + ", cannot place missile just yet!");
+						+ owner.getPlayerState()
+						+ ", cannot place missile just yet!");
 			}
 		} else {
 			throw new RuntimeException(
@@ -110,7 +127,15 @@ public class Board {
 	}
 
 	public void updateMissile(Missile m) {
-
+		for (Missile placed : placedMissiles) {
+			if (placed.getCoordinates().equals(m.getCoordinates())) {
+				placed.setMissileState(m.getMissileState());
+				// TODO: Notify observer pattern
+				return;
+			}
+		}
+		throw new RuntimeException("Missile " + m
+				+ " not found on board! placedMissiles: " + placedMissiles);
 	}
 
 	public ArrayList<Ship> getPlacedShips() {
@@ -158,9 +183,22 @@ public class Board {
 		}
 	}
 
+	/**
+	 * Class to store coordinates (X and Y)
+	 * 
+	 * @author simon
+	 * 
+	 */
 	public static class Coordinates {
 
+		/**
+		 * X coordinates
+		 */
 		public int x;
+
+		/**
+		 * Y coordinates
+		 */
 		public int y;
 
 		public Coordinates(int x, int y) {
@@ -194,6 +232,12 @@ public class Board {
 		}
 	}
 
+	/**
+	 * Enumeration for direction. This direction can be used to place ships
+	 * 
+	 * @author simon
+	 * 
+	 */
 	public static enum Direction {
 		NORTH, SOUTH, WEST, EAST
 	}

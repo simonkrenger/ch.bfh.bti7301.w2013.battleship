@@ -227,9 +227,45 @@ public class GenericShip implements Ship {
 		}
 		return coords;
 	}
+	
+	public ArrayList<Coordinates> getExtrapolatedCoordinates() {
+		ArrayList<Coordinates> extrapolated = new ArrayList<Coordinates>();
+		extrapolated.addAll(getCoordinatesForShip());
+		// TODO: Extrapolate
+		for (Coordinates c : getCoordinatesForShip()) {
+			// Top
+			extrapolated.add(new Coordinates(c.x - 1, c.y - 1));
+			extrapolated.add(new Coordinates(c.x, c.y - 1));
+			extrapolated.add(new Coordinates(c.x + 1, c.y - 1));
+
+			// Same height
+			extrapolated.add(new Coordinates(c.x - 1, c.y));
+			extrapolated.add(new Coordinates(c.x + 1, c.y));
+
+			// Bottom
+			extrapolated.add(new Coordinates(c.x - 1, c.y + 1));
+			extrapolated.add(new Coordinates(c.x, c.y + 1));
+			extrapolated.add(new Coordinates(c.x + 1, c.y + 1));
+		}
+
+		return extrapolated;
+	}
 
 	@Override
 	public ArrayList<Coordinates> getCoordinatesForDamage() {
 		return damage;
 	}
+
+	@Override
+	public String toString() {
+		return "GenericShip [size=" + size + ", damage=" + damage
+				+ ", getName()=" + getName() + ", getDamage()=" + getDamage()
+				+ ", isSunk()=" + isSunk() + ", getDirection()="
+				+ getDirection() + ", getCoordinatesForShip()="
+				+ getCoordinatesForShip() + ", getExtrapolatedCoordinates()="
+				+ getExtrapolatedCoordinates() + ", getCoordinatesForDamage()="
+				+ getCoordinatesForDamage() + "]";
+	}
+	
+	
 }

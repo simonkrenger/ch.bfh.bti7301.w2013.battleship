@@ -97,6 +97,8 @@ public interface Ship {
 	 */
 	public ArrayList<Coordinates> getCoordinatesForDamage();
 
+	public ArrayList<Coordinates> getExtrapolatedCoordinates();
+	
 	/**
 	 * 
 	 * @param c
