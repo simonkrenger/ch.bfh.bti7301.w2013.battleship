@@ -80,7 +80,7 @@ public class Board {
 					}
 				}
 				placedMissiles.add(m);
-				owner.placeMissile(m);
+				owner.sendMissile(m);
 				System.out.println("placeMissile() called with " + m);
 				// TODO: Notify oberserver pattern
 
