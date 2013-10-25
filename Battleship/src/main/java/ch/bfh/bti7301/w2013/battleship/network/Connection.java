@@ -53,7 +53,7 @@ public class Connection extends Thread {
 	}
 
 	public static Connection getInstance() {
-		if(instance == null) {
+		if (instance == null) {
 			try {
 				instance = new Connection();
 			} catch (IOException e) {
@@ -64,13 +64,19 @@ public class Connection extends Thread {
 		return instance;
 	}
 
-	public void placeShot(Missile missile) {
+	public void sendMissile(Missile missile) {
+		if (instance.connectionState != ConnectionState.CONNECTED) {
+			throw new RuntimeException("Cannot shoot an imaginary Opponent");
+		}
 		handler.sendObject(missile);
 	}
 
-	public void sendStatus(PlayerState end) {
-		handler.sendObject(end);
-		cleanUp();
+	public void sendStatus(PlayerState state) {
+
+		if (instance.connectionState != ConnectionState.CONNECTED) {
+			throw new RuntimeException("No Conncetion yet");
+		}
+		handler.sendObject(state);
 	}
 
 	public static void receiveObjectToGame(Object object) {
@@ -101,9 +107,23 @@ public class Connection extends Thread {
 		}
 
 		else {
-			// TODO: Return to sender
-			game.getLocalPlayer().placeMissile((Missile) object);
+
+			instance.handleMissile((Missile) object);
+
 		}
+	}
+
+	private void handleMissile(Missile missile) {
+		if (missile.getMissileState() == Missile.MissileState.FIRED) {
+
+			Missile feedback = game.getLocalPlayer().placeMissile(missile);
+			sendMissile(feedback);
+		}
+
+		else {
+			game.getOpponent().getBoard().updateMissile(missile);
+		}
+
 	}
 
 	public ConnectionState getConnectionState() {
@@ -120,6 +140,10 @@ public class Connection extends Thread {
 	public void setConnectionStateListener(
 			ConnectionStateListener connectionStateListener) {
 		this.connectionStateListener = connectionStateListener;
+	}
+
+	public void closeConnection() {
+		instance.cleanUp();
 	}
 
 	private void cleanUp() {
