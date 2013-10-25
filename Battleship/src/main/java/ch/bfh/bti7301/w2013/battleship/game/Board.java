@@ -150,11 +150,6 @@ public class Board {
 		
 		public void placeShip(Ship s) {
 
-			// This can only be done when the player is setting up
-			if (owner.getPlayerState() == PlayerState.GAME_STARTED) {
-				throw new RuntimeException("Ships can only be placed during setup!");
-			}
-
 			// Check boundaries of board
 			if (withinBoard(s.getStartCoordinates())
 					&& withinBoard(s.getEndCoordinates())) {

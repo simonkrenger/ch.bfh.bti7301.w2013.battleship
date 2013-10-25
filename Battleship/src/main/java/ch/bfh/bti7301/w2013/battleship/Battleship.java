@@ -240,6 +240,7 @@ public class Battleship extends Application {
 						try {
 							game.getLocalPlayer().getBoard().getBoardSetup().placeShip(ship);
 						} catch (RuntimeException e) {
+							System.err.println(e);
 							// snap back
 							// Maybe coloring the ship and leaving it there
 							// would be better?
