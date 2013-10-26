@@ -25,6 +25,7 @@ package ch.bfh.bti7301.w2013.battleship.game;
 
 import ch.bfh.bti7301.w2013.battleship.game.players.LocalPlayer;
 import ch.bfh.bti7301.w2013.battleship.game.players.NetworkPlayer;
+import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 import ch.bfh.bti7301.w2013.battleship.network.Connection;
 
 /**
@@ -40,15 +41,11 @@ public class Game {
 	private Player localPlayer;
 	private Player opponentPlayer;
 
-	private Player activePlayer;
 	private Connection connection;
 
 	private Game() {
 		this.localPlayer = new LocalPlayer();
 		this.opponentPlayer = new NetworkPlayer();
-
-		// TODO: Fix active player (not local)
-		this.activePlayer = localPlayer;
 	}
 
 	public static Game getInstance() {
@@ -67,8 +64,21 @@ public class Game {
 		return opponentPlayer;
 	}
 
+	/**
+	 * Returns the active player. Note that this method may return NULL if no
+	 * player is currently active.
+	 * 
+	 * @return The player that has the State "PLAYING". May return NULL if the game is not running!
+	 */
 	public Player getActivePlayer() {
-		return activePlayer;
+		if (localPlayer.getPlayerState() == PlayerState.PLAYING
+				&& opponentPlayer.getPlayerState() == PlayerState.WAITING) {
+			return localPlayer;
+		} else if (opponentPlayer.getPlayerState() == PlayerState.PLAYING
+				&& localPlayer.getPlayerState() == PlayerState.WAITING) {
+			return opponentPlayer;
+		}
+		return null;
 	}
 
 	public int getGameID() {
@@ -81,6 +91,6 @@ public class Game {
 
 	public void updatePlayerStates() {
 		// TODO Auto-generated method stub hopp simon :-)
-		
+
 	}
 }

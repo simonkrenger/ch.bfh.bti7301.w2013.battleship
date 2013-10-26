@@ -39,15 +39,33 @@ public class Board {
 	 */
 	private static int DEFAULT_BOARD_SIZE = 10;
 
+	/**
+	 * Size of the board (n*n)
+	 */
 	private int size;
 
+	/**
+	 * Player this board belongs to
+	 */
 	private Player owner;
 
+	/**
+	 * List of placed ships on this board
+	 */
 	private ArrayList<Ship> placedShips = new ArrayList<Ship>();
+	
+	/**
+	 * List of placed missiles on this board
+	 */
 	private ArrayList<Missile> placedMissiles = new ArrayList<Missile>();
 
+	/**
+	 * Setup object. Needed for Board setup
+	 */
 	private BoardSetup setup = new BoardSetup();
 
+	private ArrayList<BoardListener> listeners = new ArrayList<BoardListener>();
+	
 	public Board(Player p) {
 		this(p, DEFAULT_BOARD_SIZE);
 	}
@@ -82,8 +100,11 @@ public class Board {
 				}
 				placedMissiles.add(m);
 				owner.sendMissile(m);
-				System.out.println("placeMissile() called with " + m);
-				// TODO: Notify observer pattern
+				
+				// Notify listeners
+				for(BoardListener l : listeners) {
+					l.stateChanged(m);
+				}
 
 			} else {
 				throw new RuntimeException("Player" + owner + " is in state "
@@ -101,8 +122,10 @@ public class Board {
 			if (placed.getCoordinates().equals(m.getCoordinates())) {
 				placed.setMissileState(m.getMissileState());
 
-				System.out.println("Missile UPDATED! Missile: " + m);
-				// TODO: Notify observer pattern
+				// Notify listeners
+				for(BoardListener l : listeners) {
+					l.stateChanged(m);
+				}
 				return;
 			}
 		}
@@ -178,6 +201,10 @@ public class Board {
 		public void done() {
 			setup = null;
 		}
+	}
+	
+	public void addBoardListener(BoardListener bl) {
+		listeners.add(bl);
 	}
 
 	/**
