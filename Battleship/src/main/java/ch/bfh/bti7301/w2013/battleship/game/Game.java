@@ -41,7 +41,10 @@ public class Game {
 	private Player localPlayer;
 	private Player opponentPlayer;
 
+	@SuppressWarnings("unused")
 	private Connection connection;
+	
+
 
 	private Game() {
 		this.localPlayer = new LocalPlayer();
@@ -87,10 +90,5 @@ public class Game {
 
 	public void setGameID(int gameID) {
 		this.gameID = gameID;
-	}
-
-	public void updatePlayerStates() {
-		// TODO Auto-generated method stub hopp simon :-)
-
 	}
 }
