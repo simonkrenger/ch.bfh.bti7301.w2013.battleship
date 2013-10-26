@@ -21,6 +21,15 @@ public class Coordinates implements Serializable {
 	 */
 	public int y;
 
+	/**
+	 * Constructor for the class, takes the X and Y coordinates as arguments.
+	 * Note that the coordinates begin at (1,1) and NOT at (0,0)!
+	 * 
+	 * @param x
+	 *            X coordinates (a value of 1 means leftmost coordinates)
+	 * @param y
+	 *            Y coordinates (a value of 1 means topmost coordinates)
+	 */
 	public Coordinates(int x, int y) {
 		this.x = x;
 		this.y = y;
@@ -30,8 +39,8 @@ public class Coordinates implements Serializable {
 	public String toString() {
 		// Stolen from here:
 		// http://stackoverflow.com/questions/10813154/converting-number-to-letter
-		String alpha = x > 0 && x < 27 ? String
-				.valueOf((char) (x + 'A' - 1)) : null;
+		String alpha = x > 0 && x < 27 ? String.valueOf((char) (x + 'A' - 1))
+				: null;
 		return alpha + y;
 	}
 

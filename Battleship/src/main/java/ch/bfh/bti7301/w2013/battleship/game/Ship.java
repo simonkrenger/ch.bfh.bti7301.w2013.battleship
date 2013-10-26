@@ -28,7 +28,7 @@ import java.util.ArrayList;
 /**
  * 
  * @author simon
- * 
+ *
  */
 public interface Ship {
 
