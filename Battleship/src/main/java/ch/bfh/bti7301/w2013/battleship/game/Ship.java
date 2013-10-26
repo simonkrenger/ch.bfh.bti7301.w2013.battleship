@@ -25,8 +25,6 @@ package ch.bfh.bti7301.w2013.battleship.game;
 
 import java.util.ArrayList;
 
-import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
-
 /**
  * 
  * @author simon
@@ -39,14 +37,14 @@ public interface Ship {
 	 * 
 	 * @return Returns the starting coordinates of the ship
 	 */
-	public Board.Coordinates getStartCoordinates();
+	public Coordinates getStartCoordinates();
 
 	/**
 	 * Get the end coordinates for the ship
 	 * 
 	 * @return Returns the end coordinates of the ship
 	 */
-	public Board.Coordinates getEndCoordinates();
+	public Coordinates getEndCoordinates();
 
 	/**
 	 * Get the direction for the ship

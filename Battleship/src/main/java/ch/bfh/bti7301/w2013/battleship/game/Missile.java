@@ -25,8 +25,6 @@ package ch.bfh.bti7301.w2013.battleship.game;
 
 import java.io.Serializable;
 
-import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
-
 /**
  * @author simon
  * 
