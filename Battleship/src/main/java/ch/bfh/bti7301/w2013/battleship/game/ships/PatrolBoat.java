@@ -23,9 +23,8 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game.ships;
 
-import ch.bfh.bti7301.w2013.battleship.game.Board;
+import ch.bfh.bti7301.w2013.battleship.game.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
-import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
 
 /**
@@ -41,7 +40,7 @@ public class PatrolBoat extends GenericShip implements Ship {
 		return "Patrol boat";
 	}
 
-	public PatrolBoat(Board.Coordinates start, Board.Coordinates end) {
+	public PatrolBoat(Coordinates start, Coordinates end) {
 		super(start, end, SHIP_SIZE);
 	}
 

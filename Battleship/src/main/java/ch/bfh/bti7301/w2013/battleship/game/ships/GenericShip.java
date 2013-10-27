@@ -25,9 +25,8 @@ package ch.bfh.bti7301.w2013.battleship.game.ships;
 
 import java.util.ArrayList;
 
-import ch.bfh.bti7301.w2013.battleship.game.Board;
-import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
+import ch.bfh.bti7301.w2013.battleship.game.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
 
 /**
@@ -39,12 +38,12 @@ public class GenericShip implements Ship {
 	/**
 	 * Start coordinates for the ship
 	 */
-	protected Board.Coordinates startCoordinates;
+	protected Coordinates startCoordinates;
 
 	/**
 	 * End coordinates for the ship
 	 */
-	protected Board.Coordinates endCoordinates;
+	protected Coordinates endCoordinates;
 
 	/**
 	 * Size of the ship
@@ -56,7 +55,7 @@ public class GenericShip implements Ship {
 	 */
 	protected ArrayList<Coordinates> damage = new ArrayList<Coordinates>();
 
-	protected GenericShip(Board.Coordinates start, Board.Coordinates end,
+	protected GenericShip(Coordinates start, Coordinates end,
 			int size) {
 		this.startCoordinates = start;
 		this.endCoordinates = end;
@@ -66,7 +65,7 @@ public class GenericShip implements Ship {
 		checkSize();
 	}
 
-	protected GenericShip(Board.Coordinates start, Direction direction, int size) {
+	protected GenericShip(Coordinates start, Direction direction, int size) {
 		this.startCoordinates = start;
 		this.size = size;
 

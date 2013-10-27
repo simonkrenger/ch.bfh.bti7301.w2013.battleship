@@ -23,8 +23,8 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game.ships;
 
+import ch.bfh.bti7301.w2013.battleship.game.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
-import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
 
 /**

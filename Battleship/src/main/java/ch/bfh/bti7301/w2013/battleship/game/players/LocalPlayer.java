@@ -23,7 +23,7 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game.players;
 
-import ch.bfh.bti7301.w2013.battleship.game.Board.Coordinates;
+import ch.bfh.bti7301.w2013.battleship.game.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Missile.MissileState;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
