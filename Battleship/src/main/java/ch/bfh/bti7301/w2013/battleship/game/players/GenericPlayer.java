@@ -90,7 +90,8 @@ public class GenericPlayer implements Player {
 			psl.stateChanged(p, p.getPlayerState());
 		}
 	}
-	
+
+	@Override
 	public void addPlayerStateListener(PlayerStateListener p) {
 		pStateListener.add(p);
 	}

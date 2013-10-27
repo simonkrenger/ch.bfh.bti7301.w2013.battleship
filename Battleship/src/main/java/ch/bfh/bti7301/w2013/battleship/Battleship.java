@@ -24,6 +24,8 @@
 package ch.bfh.bti7301.w2013.battleship;
 
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javafx.animation.ParallelTransitionBuilder;
 import javafx.animation.ScaleTransitionBuilder;
@@ -36,6 +38,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.SepiaTone;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
@@ -43,6 +46,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.GameRule;
+import ch.bfh.bti7301.w2013.battleship.game.Player;
+import ch.bfh.bti7301.w2013.battleship.game.PlayerStateListener;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
 import ch.bfh.bti7301.w2013.battleship.gui.ShipStack;
@@ -63,8 +68,8 @@ public class Battleship extends Application {
 
 	public Battleship() {
 		labels = ResourceBundle.getBundle("translations");
-		game = Game.getInstance();
 		rule = new GameRule();
+		game = Game.getInstance();
 	}
 
 	/**
@@ -100,6 +105,29 @@ public class Battleship extends Application {
 				.getBoundsInParent().getMaxY() + 8);
 		root.getChildren().add(ready);
 
+		game.getOpponent().addPlayerStateListener(new PlayerStateListener() {
+			@Override
+			public void stateChanged(Player p, PlayerState s) {
+				switch (s) {
+				case READY:
+					ready.setText(labels.getString("start"));
+					break;
+				case PLAYING:
+					obv.setEffect(new SepiaTone());
+					break;
+				}
+			}
+		});
+		game.getLocalPlayer().addPlayerStateListener(new PlayerStateListener() {
+			@Override
+			public void stateChanged(Player p, PlayerState s) {
+				switch (s) {
+				case PLAYING:
+					obv.setEffect(null);
+				}
+			}
+		});
+
 		ShipStack shipStack = new ShipStack(game, rule, pbv, ready);
 		shipStack.relocate(obv.getBoundsInParent().getMinX(), obv
 				.getBoundsInParent().getMaxY() + 8);
@@ -117,9 +145,14 @@ public class Battleship extends Application {
 		// Temporary input field to enter the opponent's
 		final HBox ipBox = new HBox();
 		final TextField ipAddress = new TextField();
+
+		Matcher m = Pattern.compile("\\d+\\.\\d+\\.\\d+\\.").matcher(
+				NetworkInformation.getIntAddresses().toString());
+		if (m.find())
+			ipAddress.setText(m.group());
+
 		ipBox.getChildren().add(ipAddress);
 		final Button connect = new Button(labels.getString("connect"));
-		// TODO: add listener to Connection
 		Connection.getInstance().setConnectionStateListener(
 				new ConnectionStateListener() {
 					@Override
