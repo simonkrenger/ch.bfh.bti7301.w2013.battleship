@@ -25,6 +25,9 @@ package ch.bfh.bti7301.w2013.battleship.game;
 
 import java.util.ArrayList;
 
+import ch.bfh.bti7301.w2013.battleship.game.Board.BoardSetup;
+import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
+
 /**
  * 
  * @author simon
@@ -46,6 +49,10 @@ public interface Ship {
 	 */
 	public Coordinates getEndCoordinates();
 
+	public void setCoordinates(BoardSetup b, Coordinates start, Direction d);
+	
+	public void setCoordinates(BoardSetup b, Coordinates start, Coordinates end);
+	
 	/**
 	 * Get the direction for the ship
 	 * 
