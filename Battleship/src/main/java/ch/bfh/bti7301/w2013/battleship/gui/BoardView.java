@@ -3,8 +3,10 @@ package ch.bfh.bti7301.w2013.battleship.gui;
 import java.util.HashMap;
 import java.util.Map;
 
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
+import javafx.scene.effect.SepiaTone;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -58,12 +60,18 @@ public class BoardView extends Parent {
 
 		board.addBoardListener(new BoardListener() {
 			@Override
-			public void stateChanged(Missile m) {
-				MissileView mv = missileViews.get(m.getCoordinates());
-				if (mv != null)
-					mv.update(m);
-				else
-					drawMissile(m);
+			public void stateChanged(final Missile m) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						// javaFX operations should go here
+						MissileView mv = missileViews.get(m.getCoordinates());
+						if (mv != null)
+							mv.update(m);
+						else
+							drawMissile(m);
+					}
+				});
 			}
 		});
 	}
