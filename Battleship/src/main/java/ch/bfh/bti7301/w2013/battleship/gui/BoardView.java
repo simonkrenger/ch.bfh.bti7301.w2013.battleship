@@ -1,5 +1,8 @@
 package ch.bfh.bti7301.w2013.battleship.gui;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
@@ -8,12 +11,15 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import ch.bfh.bti7301.w2013.battleship.game.Board;
+import ch.bfh.bti7301.w2013.battleship.game.BoardListener;
 import ch.bfh.bti7301.w2013.battleship.game.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
 
 public class BoardView extends Parent {
 	public static final int SIZE = 40;
+
+	private Map<Coordinates, MissileView> missileViews = new HashMap<>();
 
 	public BoardView(final Board board) {
 		final int rows, columns;
@@ -41,8 +47,23 @@ public class BoardView extends Parent {
 			@Override
 			public void handle(MouseEvent e) {
 				Missile m = new Missile(getCoordinates(e.getX(), e.getY()));
-				board.placeMissile(m);
 				drawMissile(m);
+				try {
+					board.placeMissile(m);
+				} catch (RuntimeException r) {
+					missileViews.get(m.getCoordinates()).setVisible(false);
+				}
+			}
+		});
+
+		board.addBoardListener(new BoardListener() {
+			@Override
+			public void stateChanged(Missile m) {
+				MissileView mv = missileViews.get(m.getCoordinates());
+				if (mv != null)
+					mv.update(m);
+				else
+					drawMissile(m);
 			}
 		});
 	}
@@ -63,6 +84,7 @@ public class BoardView extends Parent {
 		mv.relocate(getX(missile.getCoordinates()),
 				getY(missile.getCoordinates()));
 		getChildren().add(mv);
+		missileViews.put(missile.getCoordinates(), mv);
 	}
 
 	private double getX(Coordinates c) {

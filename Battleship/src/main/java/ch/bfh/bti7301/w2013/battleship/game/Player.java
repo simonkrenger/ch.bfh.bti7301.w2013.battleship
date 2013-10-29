@@ -39,4 +39,6 @@ public interface Player {
 	public void addPlayerStateListener(PlayerStateListener p);
 	
 	public Board getBoard();
+
+	void addPlayerStateListener(PlayerStateListener p);
 }
