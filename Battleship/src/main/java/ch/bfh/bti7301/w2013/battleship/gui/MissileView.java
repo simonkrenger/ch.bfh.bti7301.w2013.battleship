@@ -17,9 +17,11 @@ public class MissileView extends Parent {
 	public void update(Missile missile) {
 		switch (missile.getMissileState()) {
 		case HIT:
+			shape.setFill(Color.RED);
+			break;
 		case SUNK:
 		case GAME_WON:
-			shape.setFill(Color.RED);
+			shape.setFill(Color.DARKRED);
 			break;
 		case MISS:
 			shape.setFill(Color.BLUE);

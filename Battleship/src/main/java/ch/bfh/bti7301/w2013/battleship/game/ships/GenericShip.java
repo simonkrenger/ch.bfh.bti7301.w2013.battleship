@@ -25,6 +25,7 @@ package ch.bfh.bti7301.w2013.battleship.game.ships;
 
 import java.util.ArrayList;
 
+import ch.bfh.bti7301.w2013.battleship.game.Board.BoardSetup;
 import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
 import ch.bfh.bti7301.w2013.battleship.game.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
@@ -139,6 +140,43 @@ public class GenericShip implements Ship {
 	@Override
 	public Coordinates getEndCoordinates() {
 		return endCoordinates;
+	}
+	
+	@Override
+	public void setCoordinates(BoardSetup b, Coordinates start, Direction d) {
+		if(b == null) {
+			throw new RuntimeException("BoardSetup not valid (was null)!");
+		}
+		
+		this.startCoordinates = start;
+		
+		switch (d) {
+		case NORTH:
+			this.endCoordinates = new Coordinates(start.x, start.y - (size - 1));
+			break;
+		case SOUTH:
+			this.endCoordinates = new Coordinates(start.x, start.y + (size - 1));
+			break;
+		case WEST:
+			this.endCoordinates = new Coordinates(start.x - (size - 1), start.y);
+			break;
+		case EAST:
+			this.endCoordinates = new Coordinates(start.x + (size - 1), start.y);
+			break;
+		}
+		checkSize();
+	}
+
+	@Override
+	public void setCoordinates(BoardSetup b, Coordinates start, Coordinates end) {
+		if(b == null) {
+			throw new RuntimeException("BoardSetup not valid (was null)!");
+		}
+		
+		this.startCoordinates = start;
+		this.endCoordinates = end;
+		
+		checkSize();
 	}
 
 	@Override
