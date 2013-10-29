@@ -63,11 +63,13 @@ public class LocalPlayer extends GenericPlayer {
 					} else {
 						m.setMissileState(MissileState.HIT);
 					}
+					getBoard().placeMissile(m);
 					return m;
 				}
 			}
 		}
 		m.setMissileState(MissileState.MISS);
+		getBoard().placeMissile(m);
 		return m;
 	}
 
