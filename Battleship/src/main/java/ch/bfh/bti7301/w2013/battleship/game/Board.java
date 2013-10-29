@@ -23,7 +23,6 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
@@ -39,15 +38,33 @@ public class Board {
 	 */
 	private static int DEFAULT_BOARD_SIZE = 10;
 
+	/**
+	 * Size of the board (n*n)
+	 */
 	private int size;
 
+	/**
+	 * Player this board belongs to
+	 */
 	private Player owner;
 
+	/**
+	 * List of placed ships on this board
+	 */
 	private ArrayList<Ship> placedShips = new ArrayList<Ship>();
+	
+	/**
+	 * List of placed missiles on this board
+	 */
 	private ArrayList<Missile> placedMissiles = new ArrayList<Missile>();
 
+	/**
+	 * Setup object. Needed for Board setup
+	 */
 	private BoardSetup setup = new BoardSetup();
 
+	private ArrayList<BoardListener> listeners = new ArrayList<BoardListener>();
+	
 	public Board(Player p) {
 		this(p, DEFAULT_BOARD_SIZE);
 	}
@@ -82,8 +99,11 @@ public class Board {
 				}
 				placedMissiles.add(m);
 				owner.sendMissile(m);
-				System.out.println("placeMissile() called with " + m);
-				// TODO: Notify observer pattern
+				
+				// Notify listeners
+				for(BoardListener l : listeners) {
+					l.stateChanged(m);
+				}
 
 			} else {
 				throw new RuntimeException("Player" + owner + " is in state "
@@ -101,8 +121,10 @@ public class Board {
 			if (placed.getCoordinates().equals(m.getCoordinates())) {
 				placed.setMissileState(m.getMissileState());
 
-				System.out.println("Missile UPDATED! Missile: " + m);
-				// TODO: Notify observer pattern
+				// Notify listeners
+				for(BoardListener l : listeners) {
+					l.stateChanged(m);
+				}
 				return;
 			}
 		}
@@ -179,55 +201,9 @@ public class Board {
 			setup = null;
 		}
 	}
-
-	/**
-	 * Class to store coordinates (X and Y)
-	 * 
-	 * @author simon
-	 * 
-	 */
-	public static class Coordinates implements Serializable {
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * X coordinates
-		 */
-		public int x;
-
-		/**
-		 * Y coordinates
-		 */
-		public int y;
-
-		public Coordinates(int x, int y) {
-			this.x = x;
-			this.y = y;
-		}
-
-		@Override
-		public String toString() {
-			// Stolen from here:
-			// http://stackoverflow.com/questions/10813154/converting-number-to-letter
-			String alpha = x > 0 && x < 27 ? String
-					.valueOf((char) (x + 'A' - 1)) : null;
-			return alpha + y;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			Coordinates other = (Coordinates) obj;
-			if (x != other.x)
-				return false;
-			if (y != other.y)
-				return false;
-			return true;
-		}
+	
+	public void addBoardListener(BoardListener bl) {
+		listeners.add(bl);
 	}
 
 	/**

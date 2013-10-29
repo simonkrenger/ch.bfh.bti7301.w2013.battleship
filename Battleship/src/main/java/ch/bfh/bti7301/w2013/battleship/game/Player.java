@@ -38,4 +38,6 @@ public interface Player {
 	public void setPlayerState(PlayerState status);
 	
 	public Board getBoard();
+
+	void addPlayerStateListener(PlayerStateListener p);
 }

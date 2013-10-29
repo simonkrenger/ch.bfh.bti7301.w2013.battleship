@@ -23,9 +23,12 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game.players;
 
+import java.util.ArrayList;
+
 import ch.bfh.bti7301.w2013.battleship.game.Board;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Player;
+import ch.bfh.bti7301.w2013.battleship.game.PlayerStateListener;
 
 /**
  * @author simon
@@ -38,6 +41,8 @@ public class GenericPlayer implements Player {
 	private String name;
 	protected PlayerState status;
 	protected Board playerBoard;
+	
+	private ArrayList<PlayerStateListener> pStateListener = new ArrayList<PlayerStateListener>();
 
 	public enum PlayerState {
 		GAME_STARTED, READY, WAITING, PLAYING, GAME_WON, GAME_LOST
@@ -77,7 +82,17 @@ public class GenericPlayer implements Player {
 	@Override
 	public void setPlayerState(PlayerState status) {
 		this.status = status;
+		updatePlayerState(this);
 	}
 
+	private void updatePlayerState(Player p) {
+		for(PlayerStateListener psl : pStateListener) {
+			psl.stateChanged(p, p.getPlayerState());
+		}
+	}
 
+	@Override
+	public void addPlayerStateListener(PlayerStateListener p) {
+		pStateListener.add(p);
+	}
 }

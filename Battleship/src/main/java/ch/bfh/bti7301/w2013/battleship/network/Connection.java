@@ -5,7 +5,6 @@ import java.net.*;
 
 import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
-import ch.bfh.bti7301.w2013.battleship.game.Missile.MissileState;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 
 public class Connection extends Thread {
@@ -104,27 +103,22 @@ public class Connection extends Thread {
 				if (game.getLocalPlayer().getPlayerState() == PlayerState.READY) {
 					game.getLocalPlayer().setPlayerState(PlayerState.PLAYING);
 					game.getOpponent().setPlayerState(PlayerState.WAITING);
-					game.updatePlayerStates();
 				} else {
 					// TODO: Set button to "Start"
 					game.getOpponent().setPlayerState(PlayerState.READY);
-					game.updatePlayerStates();
 				}
 				break;
 			case WAITING:
 				game.getOpponent().setPlayerState(PlayerState.WAITING);
 				game.getLocalPlayer().setPlayerState(PlayerState.PLAYING);
-				game.updatePlayerStates();
 				break;
 			case GAME_LOST:
 				game.getOpponent().setPlayerState(PlayerState.GAME_LOST);
 				game.getLocalPlayer().setPlayerState(PlayerState.GAME_WON);
-				game.updatePlayerStates();
 				break;
 			case GAME_WON:
 				game.getOpponent().setPlayerState(PlayerState.GAME_WON);
 				game.getLocalPlayer().setPlayerState(PlayerState.GAME_LOST);
-				game.updatePlayerStates();
 				break;
 			case GAME_STARTED:
 				// TODO
@@ -154,19 +148,16 @@ public class Connection extends Thread {
 			game.getOpponent().setPlayerState(PlayerState.PLAYING);
 			game.getLocalPlayer().setPlayerState(PlayerState.WAITING);
 			game.getOpponent().getBoard().updateMissile(missile);
-			game.updatePlayerStates();
 			break;
 		case HIT:
 			game.getOpponent().setPlayerState(PlayerState.WAITING);
 			game.getLocalPlayer().setPlayerState(PlayerState.PLAYING);
 			game.getOpponent().getBoard().updateMissile(missile);
-			game.updatePlayerStates();
 			break;
 		case SUNK:
 			game.getOpponent().setPlayerState(PlayerState.WAITING);
 			game.getLocalPlayer().setPlayerState(PlayerState.PLAYING);
 			game.getOpponent().getBoard().updateMissile(missile);
-			game.updatePlayerStates();
 			break;
 		case GAME_WON:
 			//TODO:
