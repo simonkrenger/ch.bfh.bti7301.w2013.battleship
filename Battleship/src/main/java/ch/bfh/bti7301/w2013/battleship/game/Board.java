@@ -99,20 +99,15 @@ public class Board {
 				}
 				placedMissiles.add(m);
 				owner.sendMissile(m);
-
-				// Notify listeners
-				for (BoardListener l : listeners) {
-					l.stateChanged(m);
-				}
-
 			} else {
 				throw new RuntimeException("Player" + owner + " is in state "
 						+ owner.getPlayerState()
 						+ ", cannot place missile just yet!");
 			}
-		} else {
-			throw new RuntimeException(
-					"placeMissile() can only be called on the opponents board!");
+		}
+		// Notify listeners
+		for (BoardListener l : listeners) {
+			l.stateChanged(m);
 		}
 	}
 
