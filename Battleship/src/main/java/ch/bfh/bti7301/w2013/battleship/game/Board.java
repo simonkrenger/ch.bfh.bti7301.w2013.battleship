@@ -163,12 +163,17 @@ public class Board {
 
 		public void moveShip(Ship s, Coordinates newStartCoordinates,
 				Direction d) {
-			s.setCoordinates(this, newStartCoordinates, d);
+			if (withinBoard(newStartCoordinates)) {
+				s.setCoordinates(this, newStartCoordinates, d);
+			}
 		}
 
 		public void moveShip(Ship s, Coordinates newStartCoordinates,
 				Coordinates newEndCoordinates) {
-			s.setCoordinates(this, newStartCoordinates, newEndCoordinates);
+			if (withinBoard(newStartCoordinates)
+					&& withinBoard(newEndCoordinates)) {
+				s.setCoordinates(this, newStartCoordinates, newEndCoordinates);
+			}
 		}
 
 		public void placeShip(Ship s) {
@@ -203,6 +208,14 @@ public class Board {
 
 	public void addBoardListener(BoardListener bl) {
 		listeners.add(bl);
+	}
+
+	@Override
+	public String toString() {
+		return "Board [size=" + size + ", owner=" + owner + ", setup=" + setup
+				+ ", getPlacedShips()=" + getPlacedShips()
+				+ ", getPlacedMissiles()=" + getPlacedMissiles()
+				+ ", checkAllShipsSunk()=" + checkAllShipsSunk() + "]";
 	}
 
 	/**

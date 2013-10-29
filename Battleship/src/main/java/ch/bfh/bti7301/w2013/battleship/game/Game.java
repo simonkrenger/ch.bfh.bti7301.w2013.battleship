@@ -35,7 +35,8 @@ import ch.bfh.bti7301.w2013.battleship.network.Connection;
 public class Game {
 
 	/**
-	 * GameID, a unique identifier for the current game
+	 * GameID, a unique identifier for the current game TODO: Implement method
+	 * to set the same game ID for both players
 	 */
 	private int gameID;
 
@@ -78,10 +79,20 @@ public class Game {
 		return instance;
 	}
 
+	/**
+	 * Returns the local player (human)
+	 * 
+	 * @return A Player object representing the local human player
+	 */
 	public Player getLocalPlayer() {
 		return localPlayer;
 	}
 
+	/**
+	 * Gets the opponent player (connected via network)
+	 * 
+	 * @return A Player object representing the opponent
+	 */
 	public Player getOpponent() {
 		return opponentPlayer;
 	}
@@ -104,10 +115,21 @@ public class Game {
 		return null;
 	}
 
+	/**
+	 * Method to get the ID of this game
+	 * 
+	 * @return Returns the unique ID of this game
+	 */
 	public int getGameID() {
 		return gameID;
 	}
 
+	/**
+	 * Method to set the game ID for this game
+	 * 
+	 * @param gameID
+	 *            The new unique ID to set for this game
+	 */
 	public void setGameID(int gameID) {
 		this.gameID = gameID;
 	}
