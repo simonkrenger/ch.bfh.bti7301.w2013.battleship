@@ -31,6 +31,7 @@ import javafx.animation.ParallelTransitionBuilder;
 import javafx.animation.ScaleTransitionBuilder;
 import javafx.animation.TranslateTransitionBuilder;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -107,15 +108,21 @@ public class Battleship extends Application {
 
 		game.getOpponent().addPlayerStateListener(new PlayerStateListener() {
 			@Override
-			public void stateChanged(Player p, PlayerState s) {
-				switch (s) {
-				case READY:
-					ready.setText(labels.getString("start"));
-					break;
-				case PLAYING:
-					obv.setEffect(new SepiaTone());
-					break;
-				}
+			public void stateChanged(Player p, final PlayerState s) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						// javaFX operations should go here
+						switch (s) {
+						case READY:
+							ready.setText(labels.getString("start"));
+							break;
+						case PLAYING:
+							obv.setEffect(new SepiaTone());
+							break;
+						}
+					}
+				});
 			}
 		});
 		game.getLocalPlayer().addPlayerStateListener(new PlayerStateListener() {
