@@ -104,11 +104,10 @@ public class Board {
 						+ owner.getPlayerState()
 						+ ", cannot place missile just yet!");
 			}
-		} else {
-			// Notify listeners
-			for (BoardListener l : listeners) {
-				l.stateChanged(m);
-			}
+		}
+		// Notify listeners
+		for (BoardListener l : listeners) {
+			l.stateChanged(m);
 		}
 	}
 

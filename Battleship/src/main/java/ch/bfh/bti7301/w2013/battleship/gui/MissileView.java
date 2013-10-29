@@ -11,6 +11,7 @@ public class MissileView extends Parent {
 
 	public MissileView(Missile missile) {
 		shape = new Ellipse(BoardView.SIZE / 2, BoardView.SIZE / 2);
+		update(missile);
 		getChildren().add(shape);
 	}
 
