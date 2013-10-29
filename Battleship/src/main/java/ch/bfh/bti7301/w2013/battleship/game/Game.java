@@ -34,23 +34,42 @@ import ch.bfh.bti7301.w2013.battleship.network.Connection;
  */
 public class Game {
 
+	/**
+	 * GameID, a unique identifier for the current game
+	 */
 	private int gameID;
 
+	/**
+	 * Singleton pattern
+	 */
 	private static Game instance = null;
 
+	/**
+	 * The local player
+	 */
 	private Player localPlayer;
+
+	/**
+	 * The opponent player
+	 */
 	private Player opponentPlayer;
 
 	@SuppressWarnings("unused")
 	private Connection connection;
-	
 
-
+	/**
+	 * Private constructor for the Singleton pattern
+	 */
 	private Game() {
 		this.localPlayer = new LocalPlayer();
 		this.opponentPlayer = new NetworkPlayer();
 	}
 
+	/**
+	 * Singleton pattern, returns the only instance of the Game class.
+	 * 
+	 * @return The only instance of this Singleton
+	 */
 	public static Game getInstance() {
 		if (instance == null) {
 			instance = new Game();
@@ -71,7 +90,8 @@ public class Game {
 	 * Returns the active player. Note that this method may return NULL if no
 	 * player is currently active.
 	 * 
-	 * @return The player that has the State "PLAYING". May return NULL if the game is not running!
+	 * @return The player that has the State "PLAYING". May return NULL if the
+	 *         game is not running!
 	 */
 	public Player getActivePlayer() {
 		if (localPlayer.getPlayerState() == PlayerState.PLAYING

@@ -52,7 +52,7 @@ public class Board {
 	 * List of placed ships on this board
 	 */
 	private ArrayList<Ship> placedShips = new ArrayList<Ship>();
-	
+
 	/**
 	 * List of placed missiles on this board
 	 */
@@ -64,7 +64,7 @@ public class Board {
 	private BoardSetup setup = new BoardSetup();
 
 	private ArrayList<BoardListener> listeners = new ArrayList<BoardListener>();
-	
+
 	public Board(Player p) {
 		this(p, DEFAULT_BOARD_SIZE);
 	}
@@ -99,9 +99,9 @@ public class Board {
 				}
 				placedMissiles.add(m);
 				owner.sendMissile(m);
-				
+
 				// Notify listeners
-				for(BoardListener l : listeners) {
+				for (BoardListener l : listeners) {
 					l.stateChanged(m);
 				}
 
@@ -122,7 +122,7 @@ public class Board {
 				placed.setMissileState(m.getMissileState());
 
 				// Notify listeners
-				for(BoardListener l : listeners) {
+				for (BoardListener l : listeners) {
 					l.stateChanged(m);
 				}
 				return;
@@ -154,6 +154,10 @@ public class Board {
 	}
 
 	public BoardSetup getBoardSetup() {
+		if (this.setup == null) {
+			throw new RuntimeException(
+					"You called done(), so no more BoardSetup for you!");
+		}
 		return this.setup;
 	}
 
@@ -164,12 +168,12 @@ public class Board {
 
 		public void moveShip(Ship s, Coordinates newStartCoordinates,
 				Direction d) {
-
+			s.setCoordinates(this, newStartCoordinates, d);
 		}
 
 		public void moveShip(Ship s, Coordinates newStartCoordinates,
 				Coordinates newEndCoordinates) {
-
+			s.setCoordinates(this, newStartCoordinates, newEndCoordinates);
 		}
 
 		public void placeShip(Ship s) {
@@ -201,7 +205,7 @@ public class Board {
 			setup = null;
 		}
 	}
-	
+
 	public void addBoardListener(BoardListener bl) {
 		listeners.add(bl);
 	}
