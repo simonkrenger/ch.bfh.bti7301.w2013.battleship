@@ -34,14 +34,20 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.effect.SepiaTone;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -127,11 +133,24 @@ public class Battleship extends Application {
 		});
 		game.getLocalPlayer().addPlayerStateListener(new PlayerStateListener() {
 			@Override
-			public void stateChanged(Player p, PlayerState s) {
-				switch (s) {
-				case PLAYING:
-					obv.setEffect(null);
-				}
+			public void stateChanged(Player p, final PlayerState s) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						switch (s) {
+						case PLAYING:
+							obv.setEffect(null);
+							break;
+						case GAME_WON:
+						case GAME_LOST:
+							pbv.setDisable(true);
+							obv.setDisable(true);
+							displayEnd(root, s);
+							break;
+						}
+					}
+				});
+
 			}
 		});
 
@@ -146,6 +165,40 @@ public class Battleship extends Application {
 		root.getChildren().add(ipBox);
 
 		primaryStage.show();
+	}
+
+	@SuppressWarnings("incomplete-switch")
+	private void displayEnd(Group root, PlayerState state) {
+		Label t = new Label();
+		t.setWrapText(true);
+		t.setTextAlignment(TextAlignment.CENTER);
+
+		InnerShadow is = new InnerShadow();
+		switch (state) {
+		case GAME_WON:
+			t.setText(labels.getString("game.won"));
+			t.setTextFill(Color.ALICEBLUE);
+			is.setColor(Color.AQUA);
+			break;
+		case GAME_LOST:
+			t.setText(labels.getString("game.lost"));
+			t.setTextFill(Color.DEEPPINK);
+			is.setColor(Color.DARKRED);
+			break;
+		}
+		t.setFont(Font.font("Verdana", FontWeight.BOLD, 40));
+
+		DropShadow ds = new DropShadow();
+		ds.setInput(is);
+		ds.setOffsetY(5.0);
+		ds.setOffsetX(5.0);
+		ds.setColor(Color.GREY);
+
+		t.setEffect(ds);
+
+		Bounds rootBounds = root.getBoundsInLocal();
+		t.setMaxSize(rootBounds.getWidth(), rootBounds.getHeight());
+		root.getChildren().add(t);
 	}
 
 	private HBox getIpBox() {

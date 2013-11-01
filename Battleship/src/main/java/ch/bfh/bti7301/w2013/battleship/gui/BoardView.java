@@ -6,7 +6,6 @@ import java.util.Map;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
-import javafx.scene.effect.SepiaTone;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;

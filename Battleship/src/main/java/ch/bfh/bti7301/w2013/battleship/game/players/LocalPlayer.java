@@ -75,14 +75,20 @@ public class LocalPlayer extends GenericPlayer {
 
 	@Override
 	public void setPlayerState(PlayerState status) {
-		
+		// Prevent infinite loops:
+		if (status == getPlayerState()
+				// Also, for test cases where we connect the client to itself:
+				|| (status == PlayerState.GAME_WON && getPlayerState() == PlayerState.GAME_LOST)
+				|| (status == PlayerState.GAME_LOST && getPlayerState() == PlayerState.GAME_WON))
+			return;
+
 		if (status == PlayerState.READY
 				&& Game.getInstance().getOpponent().getPlayerState() == PlayerState.READY) {
 			status = PlayerState.WAITING;
 			Game.getInstance().getOpponent()
 					.setPlayerState(PlayerState.PLAYING);
 		}
-		
+
 		super.setPlayerState(status);
 		Connection.getInstance().sendStatus(status);
 	}

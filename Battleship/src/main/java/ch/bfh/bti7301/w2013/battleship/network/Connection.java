@@ -149,8 +149,8 @@ public class Connection extends Thread {
 			break;
 		case GAME_WON:
 			//TODO:
-			//game.getOpponent().setPlayerState(PlayerState.GAME_WON);
-			//game.getLocalPlayer().setPlayerState(PlayerState;
+			game.getOpponent().setPlayerState(PlayerState.GAME_WON);
+			game.getLocalPlayer().setPlayerState(PlayerState.GAME_LOST);
 			game.getOpponent().getBoard().updateMissile(missile);
 			break;
 
