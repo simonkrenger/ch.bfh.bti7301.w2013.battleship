@@ -189,7 +189,6 @@ public class Battleship extends Application {
 			t.setTextFill(Color.ALICEBLUE);
 			is.setColor(Color.AQUA);
 			f = getFont("fonts/overhaul.ttf", 40);
-			f = getFont("fonts/thin-pencil-handwriting.ttf", 40);
 			break;
 		case GAME_LOST:
 			t.setText(labels.getString("game.lost"));
