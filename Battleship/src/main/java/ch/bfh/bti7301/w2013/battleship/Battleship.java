@@ -35,6 +35,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -200,7 +201,6 @@ public class Battleship extends Application {
 		}
 		t.setFont(f);
 		t.setWrapText(true);
-		t.setTextAlignment(TextAlignment.CENTER);
 
 		DropShadow ds = new DropShadow();
 		ds.setInput(is);
@@ -211,8 +211,11 @@ public class Battleship extends Application {
 		t.setEffect(ds);
 
 		Bounds rootBounds = root.getBoundsInLocal();
+		t.setMinWidth(rootBounds.getWidth());
 		t.setMaxWidth(rootBounds.getWidth());
-		t.relocate(0, (rootBounds.getHeight() - t.getBoundsInLocal()
+		t.setAlignment(Pos.CENTER);
+		t.setTextAlignment(TextAlignment.CENTER);
+		t.relocate(0, (rootBounds.getHeight() - t.getBoundsInParent()
 				.getHeight()) / 2);
 		root.getChildren().add(t);
 	}
