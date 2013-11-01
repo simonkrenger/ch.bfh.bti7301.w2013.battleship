@@ -46,7 +46,6 @@ import javafx.scene.effect.InnerShadow;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
@@ -181,25 +180,28 @@ public class Battleship extends Application {
 
 	private void displayEnd(Group root, PlayerState state) {
 		Label t = new Label();
-		t.setWrapText(true);
-		t.setTextAlignment(TextAlignment.CENTER);
 
 		InnerShadow is = new InnerShadow();
+		Font f = new Font(40);
 		switch (state) {
 		case GAME_WON:
 			t.setText(labels.getString("game.won"));
 			t.setTextFill(Color.ALICEBLUE);
 			is.setColor(Color.AQUA);
+			f = getFont("fonts/overhaul.ttf", 40);
+			f = getFont("fonts/thin-pencil-handwriting.ttf", 40);
 			break;
 		case GAME_LOST:
 			t.setText(labels.getString("game.lost"));
 			t.setTextFill(Color.DEEPPINK);
 			is.setColor(Color.DARKRED);
-			break;
+			f = getFont("fonts/thin-pencil-handwriting.ttf", 40);
 		default:
 			break;
 		}
-		t.setFont(Font.font("Verdana", FontWeight.BOLD, 40));
+		t.setFont(f);
+		t.setWrapText(true);
+		t.setTextAlignment(TextAlignment.CENTER);
 
 		DropShadow ds = new DropShadow();
 		ds.setInput(is);
@@ -210,8 +212,15 @@ public class Battleship extends Application {
 		t.setEffect(ds);
 
 		Bounds rootBounds = root.getBoundsInLocal();
-		t.setMaxSize(rootBounds.getWidth(), rootBounds.getHeight());
+		t.setMaxWidth(rootBounds.getWidth());
+		t.relocate(0, (rootBounds.getHeight() - t.getBoundsInLocal()
+				.getHeight()) / 2);
 		root.getChildren().add(t);
+	}
+
+	private Font getFont(String res, double size) {
+		return Font.loadFont(
+				getClass().getClassLoader().getResourceAsStream(res), size);
 	}
 
 	private HBox getIpBox() {
