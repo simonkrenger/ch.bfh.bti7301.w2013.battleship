@@ -10,6 +10,7 @@ import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 public class Connection extends Thread {
 
 	final static int GAMEPORT = 49768;
+	final static String localhost = "127.0.0.1";
 
 	private ConnectionState connectionState;
 	private ConnectionStateListener connectionStateListener;
@@ -20,8 +21,18 @@ public class Connection extends Thread {
 	private static Game game = Game.getInstance();
 
 	private Connection() throws IOException {
+		
+		// try catch nur für test!
+		try {
+
 		listener = new ConnectionListener(this);
 		listener.start();
+		}
+		catch (IOException e){
+		listener = null;
+			
+		}
+		
 	}
 
 	public void acceptOpponent(Socket socket) {
@@ -39,13 +50,14 @@ public class Connection extends Thread {
 	}
 
 	public void connectOpponent(String Ip) {
-
+		// for test only
+		
 		if (getConnectionState() == ConnectionState.CONNECTED) {
 			throw new RuntimeException("Already connected");
 		}
 
 		try {
-			Socket socket = new Socket(Ip, GAMEPORT);
+			Socket socket = new Socket(localhost, GAMEPORT);
 			handler = new ConnectionHandler(this, socket);
 			listener.closeListener();
 
