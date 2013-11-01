@@ -164,6 +164,8 @@ public class GenericShip implements Ship {
 			this.endCoordinates = new Coordinates(start.x + (size - 1), start.y);
 			break;
 		}
+		
+		// TODO: If this throws an exception, we have an undefined state!
 		checkSize();
 	}
 
@@ -176,6 +178,7 @@ public class GenericShip implements Ship {
 		this.startCoordinates = start;
 		this.endCoordinates = end;
 		
+		// TODO: If this throws an exception, we have an undefined state!
 		checkSize();
 	}
 

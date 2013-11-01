@@ -31,7 +31,7 @@ import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
 /**
  * 
  * @author simon
- *
+ * 
  */
 public interface Ship {
 
@@ -49,10 +49,21 @@ public interface Ship {
 	 */
 	public Coordinates getEndCoordinates();
 
+	/**
+	 * Method to set the coordinates of the ship to new values
+	 * 
+	 * @param b
+	 *            BoardSetup required to move the ship. THe ship cannot be moved
+	 *            without a valid BoardSetup
+	 * @param start
+	 *            New start coordinates
+	 * @param d
+	 *            New direction
+	 */
 	public void setCoordinates(BoardSetup b, Coordinates start, Direction d);
-	
+
 	public void setCoordinates(BoardSetup b, Coordinates start, Coordinates end);
-	
+
 	/**
 	 * Get the direction for the ship
 	 * 
@@ -103,7 +114,7 @@ public interface Ship {
 	public ArrayList<Coordinates> getCoordinatesForDamage();
 
 	public ArrayList<Coordinates> getExtrapolatedCoordinates();
-	
+
 	/**
 	 * 
 	 * @param c
