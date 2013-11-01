@@ -53,7 +53,6 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
-import ch.bfh.bti7301.w2013.battleship.game.GameRule;
 import ch.bfh.bti7301.w2013.battleship.game.Player;
 import ch.bfh.bti7301.w2013.battleship.game.PlayerStateListener;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
@@ -72,11 +71,9 @@ public class Battleship extends Application {
 	private ResourceBundle labels;
 
 	private Game game;
-	private GameRule rule;
 
 	public Battleship() {
 		labels = ResourceBundle.getBundle("translations");
-		rule = new GameRule();
 		game = Game.getInstance();
 	}
 
@@ -129,6 +126,8 @@ public class Battleship extends Application {
 							ca.setSaturation(-0.7);
 							obv.setEffect(ca);
 							break;
+						default:
+							break;
 						}
 					}
 				});
@@ -150,6 +149,8 @@ public class Battleship extends Application {
 							obv.setDisable(true);
 							displayEnd(root, s);
 							break;
+						default:
+							break;
 						}
 					}
 				});
@@ -157,7 +158,7 @@ public class Battleship extends Application {
 			}
 		});
 
-		ShipStack shipStack = new ShipStack(game, rule, pbv, ready);
+		ShipStack shipStack = new ShipStack(game, pbv, ready);
 		shipStack.relocate(obv.getBoundsInParent().getMinX(), obv
 				.getBoundsInParent().getMaxY() + 8);
 		root.getChildren().add(shipStack);
@@ -178,7 +179,6 @@ public class Battleship extends Application {
 		primaryStage.show();
 	}
 
-	@SuppressWarnings("incomplete-switch")
 	private void displayEnd(Group root, PlayerState state) {
 		Label t = new Label();
 		t.setWrapText(true);
@@ -195,6 +195,8 @@ public class Battleship extends Application {
 			t.setText(labels.getString("game.lost"));
 			t.setTextFill(Color.DEEPPINK);
 			is.setColor(Color.DARKRED);
+			break;
+		default:
 			break;
 		}
 		t.setFont(Font.font("Verdana", FontWeight.BOLD, 40));
