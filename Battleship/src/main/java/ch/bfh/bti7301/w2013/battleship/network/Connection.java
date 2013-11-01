@@ -150,22 +150,16 @@ public class Connection extends Thread {
 			game.getOpponent().getBoard().updateMissile(missile);
 			break;
 		case HIT:
-			game.getOpponent().setPlayerState(PlayerState.WAITING);
-			game.getLocalPlayer().setPlayerState(PlayerState.PLAYING);
-			game.getOpponent().getBoard().updateMissile(missile);
-			break;
 		case SUNK:
 			game.getOpponent().setPlayerState(PlayerState.WAITING);
 			game.getLocalPlayer().setPlayerState(PlayerState.PLAYING);
 			game.getOpponent().getBoard().updateMissile(missile);
 			break;
 		case GAME_WON:
-			//TODO:
-			//game.getOpponent().setPlayerState(PlayerState.GAME_WON);
-			//game.getLocalPlayer().setPlayerState(PlayerState;
+			game.getOpponent().setPlayerState(PlayerState.GAME_LOST);
+			game.getLocalPlayer().setPlayerState(PlayerState.GAME_WON);
 			game.getOpponent().getBoard().updateMissile(missile);
 			break;
-
 		}
 	}
 
