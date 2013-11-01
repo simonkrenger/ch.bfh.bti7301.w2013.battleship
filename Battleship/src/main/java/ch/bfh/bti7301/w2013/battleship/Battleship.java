@@ -50,6 +50,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.GameRule;
@@ -164,6 +165,14 @@ public class Battleship extends Application {
 				.getBoundsInParent().getMaxY() + 20);
 		root.getChildren().add(ipBox);
 
+		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			@Override
+			public void handle(WindowEvent event) {
+				// There will be something more to do, but this should fix the
+				// problem that the program doesn't quit properly.
+				System.exit(0);
+			}
+		});
 		primaryStage.show();
 	}
 
