@@ -40,9 +40,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.InnerShadow;
-import javafx.scene.effect.SepiaTone;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -125,7 +125,9 @@ public class Battleship extends Application {
 							ready.setText(labels.getString("start"));
 							break;
 						case PLAYING:
-							obv.setEffect(new SepiaTone());
+							ColorAdjust ca = new ColorAdjust();
+							ca.setSaturation(-0.7);
+							obv.setEffect(ca);
 							break;
 						}
 					}
