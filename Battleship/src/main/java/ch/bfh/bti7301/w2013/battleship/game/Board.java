@@ -44,11 +44,6 @@ public class Board {
 	private int size;
 
 	/**
-	 * Player this board belongs to
-	 */
-	private Player owner;
-
-	/**
 	 * List of placed ships on this board
 	 */
 	private ArrayList<Ship> placedShips = new ArrayList<Ship>();
@@ -65,13 +60,12 @@ public class Board {
 
 	private ArrayList<BoardListener> listeners = new ArrayList<BoardListener>();
 
-	public Board(Player p) {
-		this(p, DEFAULT_BOARD_SIZE);
+	public Board() {
+		this(DEFAULT_BOARD_SIZE);
 	}
 
-	public Board(Player p, int size) {
+	public Board(int size) {
 		this.size = size;
-		this.owner = p;
 	}
 
 	public int getBoardSize() {
@@ -86,9 +80,11 @@ public class Board {
 	public void placeMissile(Missile m) {
 
 		// This operation can only be made on the opponents board
-		if (owner == Game.getInstance().getOpponent()) {
+		if (Game.getInstance().getOpponent().getBoard() == this) {
 			// Check if its the players turn
-			if (Game.getInstance().getLocalPlayer().getPlayerState() == PlayerState.PLAYING) {
+			PlayerState playerState = Game.getInstance().getLocalPlayer()
+					.getPlayerState();
+			if (playerState == PlayerState.PLAYING) {
 
 				// Check if coordinates of missile were already used
 				for (Missile placed : placedMissiles) {
@@ -98,11 +94,10 @@ public class Board {
 					}
 				}
 				placedMissiles.add(m);
-				owner.sendMissile(m);
+				Game.getInstance().getOpponent().sendMissile(m);
 			} else {
-				throw new RuntimeException("Player" + owner + " is in state "
-						+ owner.getPlayerState()
-						+ ", cannot place missile just yet!");
+				throw new RuntimeException("Local player is in state "
+						+ playerState + ", cannot place missile just yet!");
 			}
 		}
 		// Notify listeners
@@ -212,7 +207,7 @@ public class Board {
 
 	@Override
 	public String toString() {
-		return "Board [size=" + size + ", owner=" + owner + ", setup=" + setup
+		return "Board [size=" + size + ", setup=" + setup
 				+ ", getPlacedShips()=" + getPlacedShips()
 				+ ", getPlacedMissiles()=" + getPlacedMissiles()
 				+ ", checkAllShipsSunk()=" + checkAllShipsSunk() + "]";

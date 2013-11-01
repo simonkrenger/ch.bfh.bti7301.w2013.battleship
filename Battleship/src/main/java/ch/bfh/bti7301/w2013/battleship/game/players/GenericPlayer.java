@@ -55,7 +55,7 @@ public class GenericPlayer implements Player {
 	public GenericPlayer(String name) {
 		this.name = name;
 		this.status = PlayerState.GAME_STARTED;
-		this.playerBoard = new Board(this);
+		this.playerBoard = new Board();
 	}
 
 	public Board getBoard() {
