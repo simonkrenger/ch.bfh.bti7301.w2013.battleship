@@ -35,6 +35,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -46,14 +47,12 @@ import javafx.scene.effect.InnerShadow;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
-import ch.bfh.bti7301.w2013.battleship.game.GameRule;
 import ch.bfh.bti7301.w2013.battleship.game.Player;
 import ch.bfh.bti7301.w2013.battleship.game.PlayerStateListener;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
@@ -72,11 +71,9 @@ public class Battleship extends Application {
 	private ResourceBundle labels;
 
 	private Game game;
-	private GameRule rule;
 
 	public Battleship() {
 		labels = ResourceBundle.getBundle("translations");
-		rule = new GameRule();
 		game = Game.getInstance();
 	}
 
@@ -129,6 +126,8 @@ public class Battleship extends Application {
 							ca.setSaturation(-0.7);
 							obv.setEffect(ca);
 							break;
+						default:
+							break;
 						}
 					}
 				});
@@ -150,6 +149,8 @@ public class Battleship extends Application {
 							obv.setDisable(true);
 							displayEnd(root, s);
 							break;
+						default:
+							break;
 						}
 					}
 				});
@@ -157,7 +158,7 @@ public class Battleship extends Application {
 			}
 		});
 
-		ShipStack shipStack = new ShipStack(game, rule, pbv, ready);
+		ShipStack shipStack = new ShipStack(game, pbv, ready);
 		shipStack.relocate(obv.getBoundsInParent().getMinX(), obv
 				.getBoundsInParent().getMaxY() + 8);
 		root.getChildren().add(shipStack);
@@ -178,26 +179,28 @@ public class Battleship extends Application {
 		primaryStage.show();
 	}
 
-	@SuppressWarnings("incomplete-switch")
 	private void displayEnd(Group root, PlayerState state) {
 		Label t = new Label();
-		t.setWrapText(true);
-		t.setTextAlignment(TextAlignment.CENTER);
 
 		InnerShadow is = new InnerShadow();
+		Font f = new Font(40);
 		switch (state) {
 		case GAME_WON:
 			t.setText(labels.getString("game.won"));
 			t.setTextFill(Color.ALICEBLUE);
 			is.setColor(Color.AQUA);
+			f = getFont("fonts/overhaul.ttf", 40);
 			break;
 		case GAME_LOST:
 			t.setText(labels.getString("game.lost"));
 			t.setTextFill(Color.DEEPPINK);
 			is.setColor(Color.DARKRED);
+			f = getFont("fonts/thin-pencil-handwriting.ttf", 40);
+		default:
 			break;
 		}
-		t.setFont(Font.font("Verdana", FontWeight.BOLD, 40));
+		t.setFont(f);
+		t.setWrapText(true);
 
 		DropShadow ds = new DropShadow();
 		ds.setInput(is);
@@ -208,8 +211,18 @@ public class Battleship extends Application {
 		t.setEffect(ds);
 
 		Bounds rootBounds = root.getBoundsInLocal();
-		t.setMaxSize(rootBounds.getWidth(), rootBounds.getHeight());
+		t.setMinWidth(rootBounds.getWidth());
+		t.setMaxWidth(rootBounds.getWidth());
+		t.setAlignment(Pos.CENTER);
+		t.setTextAlignment(TextAlignment.CENTER);
+		t.relocate(0, (rootBounds.getHeight() - t.getBoundsInParent()
+				.getHeight()) / 2);
 		root.getChildren().add(t);
+	}
+
+	private Font getFont(String res, double size) {
+		return Font.loadFont(
+				getClass().getClassLoader().getResourceAsStream(res), size);
 	}
 
 	private HBox getIpBox() {

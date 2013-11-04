@@ -32,12 +32,6 @@ import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
  * 
  */
 public class Board {
-
-	/**
-	 * Default board size
-	 */
-	private static int DEFAULT_BOARD_SIZE = 10;
-
 	/**
 	 * Size of the board (n*n)
 	 */
@@ -59,10 +53,6 @@ public class Board {
 	private BoardSetup setup = new BoardSetup();
 
 	private ArrayList<BoardListener> listeners = new ArrayList<BoardListener>();
-
-	public Board() {
-		this(DEFAULT_BOARD_SIZE);
-	}
 
 	public Board(int size) {
 		this.size = size;
