@@ -38,7 +38,7 @@ import ch.bfh.bti7301.w2013.battleship.game.ships.Submarine;
  */
 public class GameRule {
 
-	private int boardSize = 15;
+	private int boardSize = 10;
 	private int totalTime = 0;
 	private Map<Class<? extends Ship>, Integer> shipList = new HashMap<Class<? extends Ship>, Integer>();
 
