@@ -39,10 +39,25 @@ public class GenericPlayer implements Player {
 
 	private static String DEFAULT_NAME = "Unnamed player";
 
+	/**
+	 * String to hold the name of the player
+	 */
 	private String name;
+
+	/**
+	 * State of the player
+	 */
 	protected PlayerState status;
+
+	/**
+	 * Board belonging to the player
+	 */
 	protected Board playerBoard;
 
+	/**
+	 * List of PlayerStateListeners. These listeners will be updated when the
+	 * state of the player changes.
+	 */
 	private ArrayList<PlayerStateListener> pStateListener = new ArrayList<PlayerStateListener>();
 
 	public enum PlayerState {
