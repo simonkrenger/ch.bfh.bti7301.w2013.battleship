@@ -142,7 +142,7 @@ public class GenericShip implements Ship {
 	 *            Direction to use
 	 * @return The newly calculated end coordinates
 	 */
-	private Coordinates getEndCoordinatesForShip(Coordinates start, Direction d) {
+	public Coordinates getEndCoordinatesForShip(Coordinates start, Direction d) {
 		Coordinates newEndCoordinates = null;
 
 		switch (d) {

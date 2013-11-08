@@ -106,6 +106,14 @@ public interface Ship {
 	 * @return List of coordinates occupied by this ship
 	 */
 	public ArrayList<Coordinates> getCoordinatesForShip();
+	
+	/**
+	 * 
+	 * @param start
+	 * @param d
+	 * @return
+	 */
+	public Coordinates getEndCoordinatesForShip(Coordinates start, Direction d);
 
 	/**
 	 * 
