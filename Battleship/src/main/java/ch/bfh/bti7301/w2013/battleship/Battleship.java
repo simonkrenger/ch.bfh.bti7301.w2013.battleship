@@ -282,14 +282,19 @@ public class Battleship extends Application {
 										.create()
 										.node(pbv)
 										.duration(Duration.seconds(1))
-										.toX(-100)
-										.toY(-100).build(),
+										.toX(-pbv.getBoundsInParent()
+												.getWidth() / 4)
+										.toY(-pbv.getBoundsInParent()
+												.getHeight() / 4).build(),
 								ScaleTransitionBuilder.create().node(obv)
 										.duration(Duration.seconds(1)).toX(2)
 										.toY(2).build(),
-								TranslateTransitionBuilder.create().node(obv)
-										.duration(Duration.seconds(1)).toY(200)
-										.build()//
+								TranslateTransitionBuilder
+										.create()
+										.node(obv)
+										.duration(Duration.seconds(1))
+										.toY(obv.getBoundsInParent()
+												.getHeight()).build()//
 						).build().play();
 				ready.setVisible(false);
 			}

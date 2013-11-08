@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javafx.application.Platform;
 import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -21,7 +20,6 @@ import ch.bfh.bti7301.w2013.battleship.game.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
-import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
 
 public class BoardView extends Parent {
 	public static final int SIZE = 40;
@@ -94,9 +92,6 @@ public class BoardView extends Parent {
 									- getLayoutY());
 
 							Ship s = sv.getShip();
-							System.out.println("old coordinates: "
-									+ s.getStartCoordinates());
-							System.out.println("new coordinates: " + c);
 							try {
 								if (c.equals(s.getStartCoordinates())) {
 									// this one was just a click
@@ -120,8 +115,6 @@ public class BoardView extends Parent {
 							sv.update();
 							sv.relocate(getX(s.getStartCoordinates()),
 									getY(s.getStartCoordinates()));
-							System.out.println("final coordinates: "
-									+ s.getStartCoordinates());
 							sv.setOnMouseDragged(null);
 							sv.setOnMouseReleased(null);
 						}
