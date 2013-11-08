@@ -330,11 +330,13 @@ public class GenericShip implements Ship {
 
 	@Override
 	public String toString() {
-		return "GenericShip [startCoordinates=" + startCoordinates
+		return getName() + " [startCoordinates=" + startCoordinates
 				+ ", endCoordinates=" + endCoordinates + ", size=" + size
-				+ ", damage=" + damage + ", checkSize()=" + checkSize()
-				+ ", getName()=" + getName() + ", isSunk()=" + isSunk()
+				+ ", getDamage()=" + getDamage() + ", isSunk()=" + isSunk()
 				+ ", getDirection()=" + getDirection()
-				+ ", getCoordinatesForShip()=" + getCoordinatesForShip() + "]";
+				+ ", getCoordinatesForShip()=" + getCoordinatesForShip()
+				+ ", getExtrapolatedCoordinates()="
+				+ getExtrapolatedCoordinates() + ", getCoordinatesForDamage()="
+				+ getCoordinatesForDamage() + "]";
 	}
 }
