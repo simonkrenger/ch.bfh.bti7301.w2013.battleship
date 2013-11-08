@@ -29,6 +29,25 @@ package ch.bfh.bti7301.w2013.battleship.network;
  */
 public enum ConnectionState {
 
-	LISTENING, CONNECTED, CLOSED
+	//Status when listening on TCP Socket
+	LISTENING,
+	
+	//Status when connection fully established
+	CONNECTED, 
+	
+	//Status when connection Closed
+	CLOSED,
+	
+	//Status when listener returns an Error
+	LISTENERERROR,
+	
+	//Status when Input stream failed: no objects from opponent are received
+	INPUTERROR,
+	
+	//Status when Output stream failed: no objects can be sent to opponent
+	OUTPUTEROR,
+	
+	// Connection interrupted
+	CONNECTIONERROR
 
 }
