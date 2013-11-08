@@ -185,7 +185,9 @@ public class Board {
 
 		public void moveShip(Ship s, Coordinates newStartCoordinates,
 				Direction d) {
-			if (withinBoard(newStartCoordinates)) {
+			if (withinBoard(newStartCoordinates)
+					&& withinBoard(s.getEndCoordinatesForShip(
+							newStartCoordinates, d))) {
 				s.setCoordinates(this, newStartCoordinates, d);
 			}
 		}
