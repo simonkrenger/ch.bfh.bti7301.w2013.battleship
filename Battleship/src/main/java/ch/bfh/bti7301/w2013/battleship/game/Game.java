@@ -45,6 +45,8 @@ public class Game {
 	 */
 	private static Game instance = null;
 
+	private GameRule rule = new GameRule();
+
 	/**
 	 * The local player
 	 */
@@ -62,8 +64,7 @@ public class Game {
 	 * Private constructor for the Singleton pattern
 	 */
 	private Game() {
-		this.localPlayer = new LocalPlayer();
-		this.opponentPlayer = new NetworkPlayer();
+		// private
 	}
 
 	/**
@@ -74,6 +75,8 @@ public class Game {
 	public static Game getInstance() {
 		if (instance == null) {
 			instance = new Game();
+			instance.localPlayer = new LocalPlayer();
+			instance.opponentPlayer = new NetworkPlayer();
 			instance.connection = Connection.getInstance();
 		}
 		return instance;
@@ -113,6 +116,10 @@ public class Game {
 			return opponentPlayer;
 		}
 		return null;
+	}
+
+	public GameRule getRule() {
+		return rule;
 	}
 
 	/**

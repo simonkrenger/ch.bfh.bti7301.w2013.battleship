@@ -28,25 +28,17 @@ import java.util.ArrayList;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 
 /**
+ * Class to represent a gameboard. Features methods to place and update
+ * missiles, to validate coordinates and generally keep the game together.
+ * 
  * @author Simon Krenger <simon@krenger.ch>
  * 
  */
 public class Board {
-
-	/**
-	 * Default board size
-	 */
-	private static int DEFAULT_BOARD_SIZE = 10;
-
 	/**
 	 * Size of the board (n*n)
 	 */
 	private int size;
-
-	/**
-	 * Player this board belongs to
-	 */
-	private Player owner;
 
 	/**
 	 * List of placed ships on this board
@@ -63,32 +55,52 @@ public class Board {
 	 */
 	private BoardSetup setup = new BoardSetup();
 
+	/**
+	 * List of BoardListeners to notify when a missile is newly placed or has
+	 * its status updated.
+	 */
 	private ArrayList<BoardListener> listeners = new ArrayList<BoardListener>();
 
-	public Board(Player p) {
-		this(p, DEFAULT_BOARD_SIZE);
-	}
-
-	public Board(Player p, int size) {
+	/**
+	 * Constructor for the class, takes the board size n as an argument, where
+	 * (n * n) is then the size of the board.
+	 * 
+	 * @param size
+	 *            Size of one side of the rectangle
+	 */
+	public Board(int size) {
 		this.size = size;
-		this.owner = p;
 	}
 
+	/**
+	 * Get the size of one side of the board
+	 * 
+	 * @return Board size
+	 */
 	public int getBoardSize() {
 		return this.size;
 	}
 
 	/**
-	 * Function to place a missile on the opponents board
+	 * Function to place a missile on the opponents board. This method can only
+	 * be called on the opponents board and only if the local player has the
+	 * state "PLAYING". This method then triggers a call to the opponents board
+	 * and calls the method "sendMissile()" on the opponent.
+	 * 
+	 * All BoardListeners registered to this board will be notified of the
+	 * change.
 	 * 
 	 * @param m
+	 *            Missile to be placed on the opponents board
 	 */
 	public void placeMissile(Missile m) {
 
 		// This operation can only be made on the opponents board
-		if (owner == Game.getInstance().getOpponent()) {
+		if (Game.getInstance().getOpponent().getBoard() == this) {
 			// Check if its the players turn
-			if (Game.getInstance().getLocalPlayer().getPlayerState() == PlayerState.PLAYING) {
+			PlayerState playerState = Game.getInstance().getLocalPlayer()
+					.getPlayerState();
+			if (playerState == PlayerState.PLAYING) {
 
 				// Check if coordinates of missile were already used
 				for (Missile placed : placedMissiles) {
@@ -98,11 +110,10 @@ public class Board {
 					}
 				}
 				placedMissiles.add(m);
-				owner.sendMissile(m);
+				Game.getInstance().getOpponent().sendMissile(m);
 			} else {
-				throw new RuntimeException("Player" + owner + " is in state "
-						+ owner.getPlayerState()
-						+ ", cannot place missile just yet!");
+				throw new RuntimeException("Local player is in state "
+						+ playerState + ", cannot place missile just yet!");
 			}
 		}
 		// Notify listeners
@@ -111,6 +122,17 @@ public class Board {
 		}
 	}
 
+	/**
+	 * Update an already placed missile on this board. This method examines the
+	 * coordinates of the Missile provided and updates the missile found at the
+	 * coordinates examined with the new status of the provided missile.
+	 * 
+	 * All BoardListeners registered to this board will be notified of the
+	 * change.
+	 * 
+	 * @param m
+	 *            The missile to be updated
+	 */
 	public void updateMissile(Missile m) {
 		for (Missile placed : placedMissiles) {
 			if (placed.getCoordinates().equals(m.getCoordinates())) {
@@ -212,7 +234,7 @@ public class Board {
 
 	@Override
 	public String toString() {
-		return "Board [size=" + size + ", owner=" + owner + ", setup=" + setup
+		return "Board [size=" + size + ", setup=" + setup
 				+ ", getPlacedShips()=" + getPlacedShips()
 				+ ", getPlacedMissiles()=" + getPlacedMissiles()
 				+ ", checkAllShipsSunk()=" + checkAllShipsSunk() + "]";
@@ -221,7 +243,7 @@ public class Board {
 	/**
 	 * Enumeration for direction. This direction can be used to place ships
 	 * 
-	 * @author simon
+	 * @author Simon Krenger <simon@krenger.ch>
 	 * 
 	 */
 	public static enum Direction {

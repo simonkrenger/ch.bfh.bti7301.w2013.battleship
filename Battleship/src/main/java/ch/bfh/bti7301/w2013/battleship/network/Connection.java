@@ -21,18 +21,13 @@ public class Connection extends Thread {
 	private static Game game = Game.getInstance();
 
 	private Connection() throws IOException {
-		
 		// try catch nur für test!
 		try {
-
-		listener = new ConnectionListener(this);
-		listener.start();
+			listener = new ConnectionListener(this);
+			listener.start();
+		} catch (IOException e) {
+			listener = null;
 		}
-		catch (IOException e){
-		listener = null;
-			
-		}
-		
 	}
 
 	public void acceptOpponent(Socket socket) {
@@ -51,13 +46,13 @@ public class Connection extends Thread {
 
 	public void connectOpponent(String Ip) {
 		// for test only
-		
+
 		if (getConnectionState() == ConnectionState.CONNECTED) {
 			throw new RuntimeException("Already connected");
 		}
 
 		try {
-			Socket socket = new Socket(localhost, GAMEPORT);
+			Socket socket = new Socket(Ip, GAMEPORT);
 			handler = new ConnectionHandler(this, socket);
 			listener.closeListener();
 
@@ -184,7 +179,7 @@ public class Connection extends Thread {
 	}
 
 	private void cleanUp() {
-		//TODO: think about the whole closing game thing
+		// TODO: think about the whole closing game thing
 		handler.cleanUp();
 		setConnectionState(ConnectionState.CLOSED);
 	}

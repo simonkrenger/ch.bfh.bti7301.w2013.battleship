@@ -26,6 +26,7 @@ package ch.bfh.bti7301.w2013.battleship.game.players;
 import java.util.ArrayList;
 
 import ch.bfh.bti7301.w2013.battleship.game.Board;
+import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Player;
 import ch.bfh.bti7301.w2013.battleship.game.PlayerStateListener;
@@ -38,10 +39,25 @@ public class GenericPlayer implements Player {
 
 	private static String DEFAULT_NAME = "Unnamed player";
 
+	/**
+	 * String to hold the name of the player
+	 */
 	private String name;
+
+	/**
+	 * State of the player
+	 */
 	protected PlayerState status;
+
+	/**
+	 * Board belonging to the player
+	 */
 	protected Board playerBoard;
-	
+
+	/**
+	 * List of PlayerStateListeners. These listeners will be updated when the
+	 * state of the player changes.
+	 */
 	private ArrayList<PlayerStateListener> pStateListener = new ArrayList<PlayerStateListener>();
 
 	public enum PlayerState {
@@ -55,7 +71,8 @@ public class GenericPlayer implements Player {
 	public GenericPlayer(String name) {
 		this.name = name;
 		this.status = PlayerState.GAME_STARTED;
-		this.playerBoard = new Board(this);
+		this.playerBoard = new Board(Game.getInstance().getRule()
+				.getBoardSize());
 	}
 
 	public Board getBoard() {
@@ -65,11 +82,11 @@ public class GenericPlayer implements Player {
 	public String getName() {
 		return name;
 	}
-	
+
 	public Missile placeMissile(Missile m) {
 		throw new RuntimeException("Not implemented");
 	}
-	
+
 	public void sendMissile(Missile m) {
 		throw new RuntimeException("Not implemented");
 	}
@@ -78,7 +95,7 @@ public class GenericPlayer implements Player {
 	public PlayerState getPlayerState() {
 		return status;
 	}
-	
+
 	@Override
 	public void setPlayerState(PlayerState status) {
 		this.status = status;
@@ -86,7 +103,7 @@ public class GenericPlayer implements Player {
 	}
 
 	private void updatePlayerState(Player p) {
-		for(PlayerStateListener psl : pStateListener) {
+		for (PlayerStateListener psl : pStateListener) {
 			psl.stateChanged(p, p.getPlayerState());
 		}
 	}

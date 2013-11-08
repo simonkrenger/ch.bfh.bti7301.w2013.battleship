@@ -38,8 +38,9 @@ import ch.bfh.bti7301.w2013.battleship.game.ships.Submarine;
  */
 public class GameRule {
 
-	private int boardSize = 10;
+	private int boardSize = 12;
 	private int totalTime = 0;
+	private GameType gameType = GameType.DEFAULT;
 	private Map<Class<? extends Ship>, Integer> shipList = new HashMap<Class<? extends Ship>, Integer>();
 
 	/**
@@ -68,6 +69,14 @@ public class GameRule {
 		this.boardSize = boardSize;
 	}
 
+	public GameType getGameType() {
+		return gameType;
+	}
+
+	public void setGameType(GameType gameType) {
+		this.gameType = gameType;
+	}
+
 	public int getTotalTime() {
 		return totalTime;
 	}
@@ -84,4 +93,10 @@ public class GameRule {
 		this.shipList = shipList;
 	}
 
+	public static enum GameType {
+		/**
+		 * Default rule: player can shoot again when hit, not time limit.
+		 */
+		DEFAULT;
+	}
 }

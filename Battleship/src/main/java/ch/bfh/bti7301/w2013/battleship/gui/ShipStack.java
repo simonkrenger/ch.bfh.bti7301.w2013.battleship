@@ -24,10 +24,9 @@ public class ShipStack extends HBox {
 	private double initY;
 	private Point2D dragAnchor;
 
-	public ShipStack(final Game game, final GameRule rule, final BoardView pbv,
-			final Button ready) {
+	public ShipStack(final Game game, final BoardView pbv, final Button ready) {
 		super(-16);
-		this.rule = rule;
+		this.rule = game.getRule();
 		// FIXME: this is just for layout debugging
 		setStyle("-fx-background-color: #ffc;");
 		setMaxHeight(SIZE);

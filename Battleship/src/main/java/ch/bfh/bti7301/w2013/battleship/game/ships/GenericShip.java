@@ -31,7 +31,9 @@ import ch.bfh.bti7301.w2013.battleship.game.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
 
 /**
- * @author simon
+ * @author Simon Krenger <simon@krenger.ch>
+ * 
+ *         Generic class to represent a ship.
  * 
  */
 public class GenericShip implements Ship {
@@ -56,45 +58,43 @@ public class GenericShip implements Ship {
 	 */
 	protected ArrayList<Coordinates> damage = new ArrayList<Coordinates>();
 
-	protected GenericShip(Coordinates start, Coordinates end,
-			int size) {
+	protected GenericShip(Coordinates start, Coordinates end, int size) {
 		this.startCoordinates = start;
 		this.endCoordinates = end;
 		this.size = size;
 
 		// Now we've set the private variables, cross-check them
-		checkSize();
+		// If there is an error, an Exception will be thrown (this kills the
+		// constructor)
+		if (!checkSize()) {
+			throw new RuntimeException("Coordinates and size do not match!");
+		}
 	}
 
 	protected GenericShip(Coordinates start, Direction direction, int size) {
-		this.startCoordinates = start;
+
 		this.size = size;
 
-		switch (direction) {
-		case NORTH:
-			this.endCoordinates = new Coordinates(start.x, start.y - (size - 1));
-			break;
-		case SOUTH:
-			this.endCoordinates = new Coordinates(start.x, start.y + (size - 1));
-			break;
-		case WEST:
-			this.endCoordinates = new Coordinates(start.x - (size - 1), start.y);
-			break;
-		case EAST:
-			this.endCoordinates = new Coordinates(start.x + (size - 1), start.y);
-			break;
+		this.startCoordinates = start;
+		this.endCoordinates = getEndCoordinatesForShip(start, direction);
+
+		// Now we've set the private variables, cross-check them
+		// If there is an error, an Exception will be thrown (this kills the
+		// constructor)
+		if (!checkSize()) {
+			throw new RuntimeException("Coordinates and size do not match!");
 		}
-		checkSize();
 	}
 
 	/**
 	 * Method to perform a crosscheck of the coordinates and the size of the
 	 * ship. This method checks if the ship was placed horizontally or
-	 * vertically (and not diagonally)
+	 * vertically (and not diagonally) and if the size and coordinates match.
 	 * 
-	 * @throws RuntimeException
+	 * @return Returns 'true' if the size and coordinates are valid and 'false'
+	 *         if there was a mismatch
 	 */
-	private void checkSize() throws RuntimeException {
+	private boolean checkSize() {
 		// Note that this method indirectly checks for invalid coordinates such
 		// as ([2,2],[2,2]), where the ship would have size of 0
 
@@ -102,34 +102,64 @@ public class GenericShip implements Ship {
 			if (startCoordinates.y > endCoordinates.y) {
 				// Ship faces north
 				if (!((startCoordinates.y - endCoordinates.y + 1) == size)) {
-					throw new RuntimeException(
-							"Coordinates and size do not match!");
+					return false;
 				}
+				return true;
 			} else {
 				// Ship faces south
 				if (!((endCoordinates.y - startCoordinates.y + 1) == size)) {
-					throw new RuntimeException(
-							"Coordinates and size do not match!");
+					return false;
 				}
+				return true;
 			}
 		} else if (startCoordinates.y == endCoordinates.y) {
 			if (startCoordinates.x > endCoordinates.x) {
 				// Ship faces west
 				if (!((startCoordinates.x - endCoordinates.x + 1) == size)) {
-					throw new RuntimeException(
-							"Coordinates and size do not match!");
+					return false;
 				}
+				return true;
 			} else {
 				// Ship faces east
 				if (!((endCoordinates.x - startCoordinates.x + 1) == size)) {
-					throw new RuntimeException(
-							"Coordinates and size do not match!");
+					return false;
 				}
+				return true;
 			}
 		} else {
 			// Diagonal, throw exception!
-			throw new RuntimeException("Diagonal ships not allowed!");
+			return false;
 		}
+	}
+
+	/**
+	 * Helper method to calculate the end coordinates for given start
+	 * coordinates and a direction
+	 * 
+	 * @param start
+	 *            Start coordinates to use
+	 * @param d
+	 *            Direction to use
+	 * @return The newly calculated end coordinates
+	 */
+	private Coordinates getEndCoordinatesForShip(Coordinates start, Direction d) {
+		Coordinates newEndCoordinates = null;
+
+		switch (d) {
+		case NORTH:
+			newEndCoordinates = new Coordinates(start.x, start.y - (size - 1));
+			break;
+		case SOUTH:
+			newEndCoordinates = new Coordinates(start.x, start.y + (size - 1));
+			break;
+		case WEST:
+			newEndCoordinates = new Coordinates(start.x - (size - 1), start.y);
+			break;
+		case EAST:
+			newEndCoordinates = new Coordinates(start.x + (size - 1), start.y);
+			break;
+		}
+		return newEndCoordinates;
 	}
 
 	@Override
@@ -141,45 +171,49 @@ public class GenericShip implements Ship {
 	public Coordinates getEndCoordinates() {
 		return endCoordinates;
 	}
-	
+
 	@Override
 	public void setCoordinates(BoardSetup b, Coordinates start, Direction d) {
-		if(b == null) {
+		if (b == null) {
 			throw new RuntimeException("BoardSetup not valid (was null)!");
 		}
-		
+
+		Coordinates oldStartCoordinates = getStartCoordinates();
+		Coordinates oldEndCoordinates = getEndCoordinates();
+
 		this.startCoordinates = start;
-		
-		switch (d) {
-		case NORTH:
-			this.endCoordinates = new Coordinates(start.x, start.y - (size - 1));
-			break;
-		case SOUTH:
-			this.endCoordinates = new Coordinates(start.x, start.y + (size - 1));
-			break;
-		case WEST:
-			this.endCoordinates = new Coordinates(start.x - (size - 1), start.y);
-			break;
-		case EAST:
-			this.endCoordinates = new Coordinates(start.x + (size - 1), start.y);
-			break;
+		this.endCoordinates = getEndCoordinatesForShip(start, d);
+
+		if (!checkSize()) {
+			// Roll back changes
+			this.startCoordinates = oldStartCoordinates;
+			this.endCoordinates = oldEndCoordinates;
+
+			throw new RuntimeException(
+					"setCoordinates(): New coordinates not valid!");
 		}
-		
-		// TODO: If this throws an exception, we have an undefined state!
-		checkSize();
 	}
 
 	@Override
 	public void setCoordinates(BoardSetup b, Coordinates start, Coordinates end) {
-		if(b == null) {
+		if (b == null) {
 			throw new RuntimeException("BoardSetup not valid (was null)!");
 		}
-		
+
+		Coordinates oldStartCoordinates = getStartCoordinates();
+		Coordinates oldEndCoordinates = getEndCoordinates();
+
 		this.startCoordinates = start;
 		this.endCoordinates = end;
-		
-		// TODO: If this throws an exception, we have an undefined state!
-		checkSize();
+
+		if (!checkSize()) {
+			// Roll back changes
+			this.startCoordinates = oldStartCoordinates;
+			this.endCoordinates = oldEndCoordinates;
+
+			throw new RuntimeException(
+					"setCoordinates(): New coordinates not valid!");
+		}
 	}
 
 	@Override
@@ -268,12 +302,13 @@ public class GenericShip implements Ship {
 		return coords;
 	}
 
+	@Override
 	public ArrayList<Coordinates> getExtrapolatedCoordinates() {
 		ArrayList<Coordinates> extrapolated = new ArrayList<Coordinates>();
-		// Add the coordinates for the ship
+		// Add the coordinates for the ship itself
 		extrapolated.addAll(getCoordinatesForShip());
-		
-		// Calculate border around the ship
+
+		// Calculate border of 1 around the ship
 		for (Coordinates c : getCoordinatesForShip()) {
 			for (int i = -1; i <= 1; i++) {
 				for (int j = -1; j <= 1; j++) {
@@ -295,13 +330,11 @@ public class GenericShip implements Ship {
 
 	@Override
 	public String toString() {
-		return "GenericShip [size=" + size + ", damage=" + damage
-				+ ", getName()=" + getName() + ", getDamage()=" + getDamage()
-				+ ", isSunk()=" + isSunk() + ", getDirection()="
-				+ getDirection() + ", getCoordinatesForShip()="
-				+ getCoordinatesForShip() + ", getExtrapolatedCoordinates()="
-				+ getExtrapolatedCoordinates() + ", getCoordinatesForDamage()="
-				+ getCoordinatesForDamage() + "]";
+		return "GenericShip [startCoordinates=" + startCoordinates
+				+ ", endCoordinates=" + endCoordinates + ", size=" + size
+				+ ", damage=" + damage + ", checkSize()=" + checkSize()
+				+ ", getName()=" + getName() + ", isSunk()=" + isSunk()
+				+ ", getDirection()=" + getDirection()
+				+ ", getCoordinatesForShip()=" + getCoordinatesForShip() + "]";
 	}
-
 }

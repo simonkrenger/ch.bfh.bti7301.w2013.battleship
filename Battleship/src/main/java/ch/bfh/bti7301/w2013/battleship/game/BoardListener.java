@@ -1,9 +1,11 @@
 package ch.bfh.bti7301.w2013.battleship.game;
 
 /**
+ * Class to implement a listener in the observer pattern to listen for changes
+ * on the baord.
  * 
- * @author simon
- *
+ * @author Simon Krenger <simon@krenger.ch>
+ * 
  */
 public interface BoardListener {
 

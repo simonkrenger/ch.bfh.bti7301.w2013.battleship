@@ -113,6 +113,10 @@ public interface Ship {
 	 */
 	public ArrayList<Coordinates> getCoordinatesForDamage();
 
+	/**
+	 * 
+	 * @return
+	 */
 	public ArrayList<Coordinates> getExtrapolatedCoordinates();
 
 	/**

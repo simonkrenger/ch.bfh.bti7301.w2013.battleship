@@ -3,9 +3,10 @@ package ch.bfh.bti7301.w2013.battleship.game;
 import java.io.Serializable;
 
 /**
- * Class to store coordinates (X and Y)
+ * Class to store coordinates (X and Y). Note that coordinates in this
+ * implementation begin at (1,1).
  * 
- * @author simon
+ * @author Simon Krenger <simon@krenger.ch>
  * 
  */
 public class Coordinates implements Serializable {
