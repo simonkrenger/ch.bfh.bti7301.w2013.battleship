@@ -94,6 +94,9 @@ public class BoardView extends Parent {
 									- getLayoutY());
 
 							Ship s = sv.getShip();
+							System.out.println("old coordinates: "
+									+ s.getStartCoordinates());
+							System.out.println("new coordinates: " + c);
 							if (c.equals(s.getStartCoordinates())) {
 								// this one was just a click
 								if (me.getButton() == MouseButton.PRIMARY)
@@ -104,15 +107,16 @@ public class BoardView extends Parent {
 									board.getBoardSetup().moveShip(s,
 											s.getStartCoordinates(),
 											s.getDirection().rotateCW());
-								sv.update();
 							} else {
 								// this was an actual move
 								board.getBoardSetup().moveShip(s, c,
 										s.getDirection());
-
-								sv.relocate(getX(s.getStartCoordinates()),
-										getY(s.getStartCoordinates()));
 							}
+							sv.update();
+							sv.relocate(getX(s.getStartCoordinates()),
+									getY(s.getStartCoordinates()));
+							System.out.println("final coordinates: "
+									+ s.getStartCoordinates());
 							sv.setOnMouseDragged(null);
 							sv.setOnMouseReleased(null);
 						}
