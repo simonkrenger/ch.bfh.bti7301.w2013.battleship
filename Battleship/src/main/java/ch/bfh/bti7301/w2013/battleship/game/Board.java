@@ -183,18 +183,21 @@ public class Board {
 
 		}
 
-		private boolean checkCollisions(Ship s) {
+		private void checkForCollisions(Ship s) {
 
 			for (Ship placed : placedShips) {
 				for (Coordinates d : placed.getExtrapolatedCoordinates()) {
 					for (Coordinates c : s.getCoordinatesForShip()) {
-						if (c.equals(d)) {
-							return false;
+						// Check if coordinates match
+						// Also check if we do not check on ourself
+						if (c.equals(d) && s != placed) {
+							throw new RuntimeException("Collision detected at "
+									+ d + ", between ships '" + s.getName()
+									+ "' and '" + placed.getName() + "' (there may be other collisions)");
 						}
 					}
 				}
 			}
-			return true;
 		}
 
 		public void moveShip(Ship s, Coordinates newStartCoordinates,
@@ -208,14 +211,17 @@ public class Board {
 
 				s.setCoordinates(this, newStartCoordinates, d);
 
-				if (!checkCollisions(s)) {
+				try {
+					checkForCollisions(s);
+				} catch (RuntimeException ex) {
 					// Collision with other ships, roll back changes!
 					s.setCoordinates(this, oldStartCoordinates,
 							oldEndCoordinates);
-
-					throw new RuntimeException(
-							"Collision with an already placed ship!");
+					throw ex;
 				}
+			} else {
+				throw new RuntimeException(
+						"moveShip: New coordinates not within board!");
 			}
 		}
 
@@ -223,20 +229,23 @@ public class Board {
 				Coordinates newEndCoordinates) {
 			if (withinBoard(newStartCoordinates)
 					&& withinBoard(newEndCoordinates)) {
-				
+
 				Coordinates oldStartCoordinates = s.getStartCoordinates();
 				Coordinates oldEndCoordinates = s.getEndCoordinates();
 
 				s.setCoordinates(this, newStartCoordinates, newEndCoordinates);
 
-				if (!checkCollisions(s)) {
+				try {
+					checkForCollisions(s);
+				} catch (RuntimeException ex) {
 					// Collision with other ships, roll back changes!
 					s.setCoordinates(this, oldStartCoordinates,
 							oldEndCoordinates);
-
-					throw new RuntimeException(
-							"Collision with an already placed ship!");
+					throw ex;
 				}
+			} else {
+				throw new RuntimeException(
+						"moveShip: New coordinates not within board!");
 			}
 		}
 
@@ -246,14 +255,16 @@ public class Board {
 			if (withinBoard(s.getStartCoordinates())
 					&& withinBoard(s.getEndCoordinates())) {
 
-				if (checkCollisions(s)) {
+				try {
+					checkForCollisions(s);
 					placedShips.add(s);
-				} else {
-					throw new RuntimeException(
-							"Collision with an already placed ship!");
+				} catch (RuntimeException ex) {
+					// Nothing to rollback, throw it further
+					throw ex;
 				}
 			} else {
-				throw new RuntimeException("Coordinates not within board!");
+				throw new RuntimeException(
+						"placeShip: Coordinates of ship not within board!");
 			}
 		}
 
