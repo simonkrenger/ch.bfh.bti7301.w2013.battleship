@@ -247,6 +247,44 @@ public class Board {
 	 * 
 	 */
 	public static enum Direction {
-		NORTH, SOUTH, WEST, EAST
+		NORTH, SOUTH, WEST, EAST;
+
+		/**
+		 * Rotate clockwise
+		 * 
+		 * @return
+		 */
+		public Direction rotateCW() {
+			switch (this) {
+			case NORTH:
+				return EAST;
+			case WEST:
+				return NORTH;
+			case SOUTH:
+				return WEST;
+			case EAST:
+				return SOUTH;
+			}
+			throw new RuntimeException();
+		}
+
+		/**
+		 * Rotate counter-clockwise
+		 * 
+		 * @return
+		 */
+		public Direction rotateCCW() {
+			switch (this) {
+			case NORTH:
+				return WEST;
+			case WEST:
+				return SOUTH;
+			case SOUTH:
+				return EAST;
+			case EAST:
+				return NORTH;
+			}
+			throw new RuntimeException();
+		}
 	}
 }

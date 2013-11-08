@@ -58,6 +58,7 @@ import ch.bfh.bti7301.w2013.battleship.game.PlayerStateListener;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
 import ch.bfh.bti7301.w2013.battleship.gui.ShipStack;
+import ch.bfh.bti7301.w2013.battleship.gui.BoardView.BoardType;
 import ch.bfh.bti7301.w2013.battleship.network.Connection;
 import ch.bfh.bti7301.w2013.battleship.network.ConnectionState;
 import ch.bfh.bti7301.w2013.battleship.network.ConnectionStateListener;
@@ -95,11 +96,11 @@ public class Battleship extends Application {
 		final Scene scene = new Scene(root, 800, 600, Color.WHITE);
 		primaryStage.setScene(scene);
 
-		final BoardView pbv = new BoardView(game.getLocalPlayer().getBoard());
+		final BoardView pbv = new BoardView(game, BoardType.LOCAL);
 		pbv.relocate(10, 10);
 		root.getChildren().add(pbv);
 
-		final BoardView obv = new BoardView(game.getOpponent().getBoard());
+		final BoardView obv = new BoardView(game, BoardType.OPPONENT);
 		obv.getTransforms().add(new Scale(0.5, 0.5, 0, 0));
 
 		obv.relocate(pbv.getBoundsInParent().getMaxX() + 20, 10);
