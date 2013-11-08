@@ -278,9 +278,12 @@ public class Battleship extends Application {
 								ScaleTransitionBuilder.create().node(pbv)
 										.duration(Duration.seconds(1)).toX(0.5)
 										.toY(0.5).build(),
-								TranslateTransitionBuilder.create().node(pbv)
+								TranslateTransitionBuilder
+										.create()
+										.node(pbv)
 										.duration(Duration.seconds(1))
-										.toX(-100).toY(-100).build(),
+										.toX(-100)
+										.toY(-100).build(),
 								ScaleTransitionBuilder.create().node(obv)
 										.duration(Duration.seconds(1)).toX(2)
 										.toY(2).build(),

@@ -97,20 +97,25 @@ public class BoardView extends Parent {
 							System.out.println("old coordinates: "
 									+ s.getStartCoordinates());
 							System.out.println("new coordinates: " + c);
-							if (c.equals(s.getStartCoordinates())) {
-								// this one was just a click
-								if (me.getButton() == MouseButton.PRIMARY)
-									board.getBoardSetup().moveShip(s,
-											s.getStartCoordinates(),
-											s.getDirection().rotateCCW());
-								else
-									board.getBoardSetup().moveShip(s,
-											s.getStartCoordinates(),
-											s.getDirection().rotateCW());
-							} else {
-								// this was an actual move
-								board.getBoardSetup().moveShip(s, c,
-										s.getDirection());
+							try {
+								if (c.equals(s.getStartCoordinates())) {
+									// this one was just a click
+									if (me.getButton() == MouseButton.PRIMARY)
+										board.getBoardSetup().moveShip(s,
+												s.getStartCoordinates(),
+												s.getDirection().rotateCCW());
+									else
+										board.getBoardSetup().moveShip(s,
+												s.getStartCoordinates(),
+												s.getDirection().rotateCW());
+								} else {
+									// this was an actual move
+									board.getBoardSetup().moveShip(s, c,
+											s.getDirection());
+								}
+							} catch (RuntimeException ignore) {
+								// The ship will be reset
+								ignore.printStackTrace();
 							}
 							sv.update();
 							sv.relocate(getX(s.getStartCoordinates()),
