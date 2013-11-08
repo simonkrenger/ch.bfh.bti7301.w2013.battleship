@@ -186,7 +186,7 @@ public class Board {
 		private boolean checkCollisions(Ship s) {
 
 			for (Ship placed : placedShips) {
-				for (Coordinates d : placed.getExtrapolatedCoordinates()) {
+				for (Coordinates d : s.getExtrapolatedCoordinates()) {
 					for (Coordinates c : placed.getCoordinatesForShip()) {
 						if (c.equals(d)) {
 							return false;
