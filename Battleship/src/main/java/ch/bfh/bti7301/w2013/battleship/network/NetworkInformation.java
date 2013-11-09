@@ -106,7 +106,10 @@ public class NetworkInformation {
 		ArrayList<InetAddress> broadcastAddresses = new ArrayList<InetAddress>();
 		
 		for (InterfaceAddress broadcast : getIpAddresses()){
-			broadcastAddresses.add(broadcast.getBroadcast());
+			InetAddress bc = broadcast.getBroadcast();
+			if (bc != null ){
+			broadcastAddresses.add(bc);
+			}
 		}
 
 		return broadcastAddresses;

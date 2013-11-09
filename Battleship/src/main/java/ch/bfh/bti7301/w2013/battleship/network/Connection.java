@@ -21,7 +21,6 @@ public class Connection extends Thread {
 	private static Game game = Game.getInstance();
 
 	private Connection() throws IOException {
-		// try catch nur für test!
 		try {
 			listener = new ConnectionListener(this);
 			listener.start();
@@ -40,6 +39,7 @@ public class Connection extends Thread {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.err.println("");
 		}
 
 	}
