@@ -327,6 +327,5 @@ Fränzi: Vision
   - Fränzi fehlerhandling netzunterbruch Couneter sent, reveived
   - NetzworkInfo class refactor
 
-
   
  
