@@ -193,7 +193,8 @@ public class Board {
 						if (c.equals(d) && s != placed) {
 							throw new RuntimeException("Collision detected at "
 									+ d + ", between ships '" + s.getName()
-									+ "' and '" + placed.getName() + "' (there may be other collisions)");
+									+ "' and '" + placed.getName()
+									+ "' (there may be other collisions)");
 						}
 					}
 				}
@@ -328,6 +329,25 @@ public class Board {
 				return EAST;
 			case EAST:
 				return NORTH;
+			}
+			throw new RuntimeException();
+		}
+
+		/**
+		 * Opposite direction
+		 * 
+		 * @return
+		 */
+		public Direction getOpposite() {
+			switch (this) {
+			case NORTH:
+				return SOUTH;
+			case WEST:
+				return EAST;
+			case SOUTH:
+				return NORTH;
+			case EAST:
+				return WEST;
 			}
 			throw new RuntimeException();
 		}

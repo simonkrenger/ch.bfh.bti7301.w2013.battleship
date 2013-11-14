@@ -2,6 +2,8 @@ package ch.bfh.bti7301.w2013.battleship.game;
 
 import java.io.Serializable;
 
+import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
+
 /**
  * Class to store coordinates (X and Y). Note that coordinates in this
  * implementation begin at (1,1).
@@ -34,6 +36,21 @@ public class Coordinates implements Serializable {
 	public Coordinates(int x, int y) {
 		this.x = x;
 		this.y = y;
+	}
+
+	public Coordinates getNext(Direction d) {
+		switch (d) {
+		case NORTH:
+			return new Coordinates(x, y - 1);
+		case EAST:
+			return new Coordinates(x + 1, y);
+		case SOUTH:
+			return new Coordinates(x, y + 1);
+		case WEST:
+			return new Coordinates(x - 1, y);
+		default:
+			throw new RuntimeException("Illegal direction: " + d);
+		}
 	}
 
 	@Override

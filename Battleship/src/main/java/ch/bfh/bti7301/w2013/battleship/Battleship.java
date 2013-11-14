@@ -23,6 +23,11 @@
  */
 package ch.bfh.bti7301.w2013.battleship;
 
+import static ch.bfh.bti7301.w2013.battleship.utils.GameUtils.getAvailableShips;
+import static ch.bfh.bti7301.w2013.battleship.utils.GameUtils.rnd;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -52,12 +57,15 @@ import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
+import ch.bfh.bti7301.w2013.battleship.game.Board.BoardSetup;
+import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
+import ch.bfh.bti7301.w2013.battleship.game.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Player;
 import ch.bfh.bti7301.w2013.battleship.game.PlayerStateListener;
+import ch.bfh.bti7301.w2013.battleship.game.Ship;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
-import ch.bfh.bti7301.w2013.battleship.gui.ShipStack;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView.BoardType;
 import ch.bfh.bti7301.w2013.battleship.network.Connection;
 import ch.bfh.bti7301.w2013.battleship.network.ConnectionState;
@@ -91,6 +99,9 @@ public class Battleship extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		primaryStage.setTitle(labels.getString("title"));
+
+		randomPlacement(getAvailableShips(game.getRule()), game
+				.getLocalPlayer().getBoard().getBoardSetup());
 
 		final Group root = new Group();
 		final Scene scene = new Scene(root, 800, 600, Color.WHITE);
@@ -159,11 +170,6 @@ public class Battleship extends Application {
 			}
 		});
 
-		ShipStack shipStack = new ShipStack(game, pbv, ready);
-		shipStack.relocate(obv.getBoundsInParent().getMinX(), obv
-				.getBoundsInParent().getMaxY() + 8);
-		root.getChildren().add(shipStack);
-
 		HBox ipBox = getIpBox();
 		ipBox.relocate(pbv.getBoundsInParent().getMinX(), pbv
 				.getBoundsInParent().getMaxY() + 20);
@@ -177,6 +183,7 @@ public class Battleship extends Application {
 				System.exit(0);
 			}
 		});
+
 		primaryStage.show();
 	}
 
@@ -299,7 +306,53 @@ public class Battleship extends Application {
 				ready.setVisible(false);
 			}
 		});
-		ready.setVisible(false);
+		// ready.setVisible(false);
 		return ready;
+	}
+
+	private void randomPlacement(List<Ship> ships, BoardSetup setup) {
+		long time = System.currentTimeMillis();
+		int size = game.getRule().getBoardSize();
+		List<Coordinates> free = new ArrayList<>(size * size);
+
+		for (int i = 1; i <= size; i++)
+			for (int j = 1; j <= size; j++)
+				free.add(new Coordinates(i, j));
+
+		for (Ship ship : ships) {
+			boolean successful = false;
+			Coordinates c;
+			Direction d = rnd(Direction.values());
+			do {
+				c = rnd(free);
+				for (int i = 0; i < Direction.values().length; i++) {
+					try {
+						ship.setCoordinates(setup, c, d);
+						setup.placeShip(ship);
+						successful = true;
+						break;
+					} catch (RuntimeException ignore) {
+						d = d.rotateCW();
+					}
+				}
+				if (System.currentTimeMillis() - time > 1000) {
+					throw new RuntimeException(
+							"Random placement took too long!");
+				}
+			} while (!successful);
+
+			Coordinates c1 = ship.getStartCoordinates().getNext(
+					ship.getDirection().getOpposite());
+			Coordinates c2 = c1.getNext(ship.getDirection().rotateCW());
+			Coordinates c3 = c1.getNext(ship.getDirection().rotateCCW());
+			for (int i = 0; i < ship.getSize() + 2; i++) {
+				free.remove(c1);
+				free.remove(c2);
+				free.remove(c3);
+				c1 = c1.getNext(ship.getDirection());
+				c2 = c2.getNext(ship.getDirection());
+				c3 = c3.getNext(ship.getDirection());
+			}
+		}
 	}
 }
