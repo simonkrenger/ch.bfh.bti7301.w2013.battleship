@@ -52,7 +52,7 @@ public class ConnectionHandler extends Thread {
 			out.writeObject(outgoingObject);
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// TODO Auto-generated catch block todo
 			e.printStackTrace();
 		}
 
