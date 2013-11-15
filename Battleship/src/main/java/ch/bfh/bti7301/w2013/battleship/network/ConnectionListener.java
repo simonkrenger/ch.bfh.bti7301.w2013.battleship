@@ -3,6 +3,7 @@ package ch.bfh.bti7301.w2013.battleship.network;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class ConnectionListener extends Thread {
 
@@ -31,6 +32,8 @@ public class ConnectionListener extends Thread {
 				listener.close();
 			}
 
+		} catch (SocketException ignore) {
+			// Ugly hack right here!
 		} catch (IOException e) {
 
 			e.printStackTrace();
