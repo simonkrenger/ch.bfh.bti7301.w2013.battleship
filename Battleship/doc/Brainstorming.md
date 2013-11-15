@@ -324,8 +324,9 @@ Fränzi: Vision
 # ---------------------------------------------------------------------------------
   
   - Fränzi Fehlerhandling (Status update für Gui)
-  - Fränzi fehlerhandling netzunterbruch Couneter sent, reveived
-  - NetzworkInfo class refactor
+  - Fränzi fehlerhandling netzunterbruch Couneter sent, reveived 
+  - NetworkInfo class refactor 
+  - Netzwerk discovery
 
   
  
