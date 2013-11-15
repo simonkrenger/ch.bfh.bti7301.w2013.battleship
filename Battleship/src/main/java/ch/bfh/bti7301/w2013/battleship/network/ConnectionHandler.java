@@ -17,7 +17,7 @@ public class ConnectionHandler extends Thread {
 		setConnectionSocket(socket);
 		setOut(new ObjectOutputStream(connectionSocket.getOutputStream()));
 		start();
-		connection.setConnectionState(ConnectionState.CONNECTED);
+		connection.setConnectionState(ConnectionState.CONNECTED, "connetcion established");
 	}
 
 	public void run() {
@@ -34,8 +34,10 @@ public class ConnectionHandler extends Thread {
 			} catch (EOFException e) {
 				// opponent disconnected
 				Connection.getInstance().setConnectionState(
-						ConnectionState.CLOSED);
+						ConnectionState.INPUTERROR, "an input error ocured while sending ");
+				
 				break;
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 
@@ -50,7 +52,7 @@ public class ConnectionHandler extends Thread {
 			out.writeObject(outgoingObject);
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// TODO Auto-generated catch block todo
 			e.printStackTrace();
 		}
 

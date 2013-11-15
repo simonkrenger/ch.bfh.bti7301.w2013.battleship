@@ -14,54 +14,62 @@ import java.io.*;
 public class NetworkInformation {
 
 	/**
-	 * Method to get all IP Addresses of Up IPv4, non Loopback and non virtual
+	 * Method to get all IP Addresses of Up IPv4, non loopback and non virtual
 	 * interfaces. uses getUpInterfaces() to find all UP Interfaces.
 	 * 
 	 * @return An Array List With the Interfaces names and Ip Addresses.
 	 */
 
+	public static ArrayList<InterfaceAddress> getIpAddresses() {
+
+		ArrayList<InterfaceAddress> ipAddresses = new ArrayList<InterfaceAddress>();
+		for (NetworkInterface adapter : getUpInterfaces()) {
+			for (InterfaceAddress interfaceAddress : adapter
+					.getInterfaceAddresses()) {
+				ipAddresses.add(interfaceAddress);
+
+			}
+
+		}
+
+		return ipAddresses;
+	}
+
 	public static ArrayList<String> getIntAddresses() {
 
 		ArrayList<String> ipv4Interfaces = new ArrayList<String>();
-
-		/** Get all Network interface information */
-		Enumeration<NetworkInterface> allInterfaces = null;
-		try {
-			allInterfaces = NetworkInterface.getNetworkInterfaces();
-		} catch (SocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 		/**
 		 * From each element in the allInterfaces Enum (has to be changed to
 		 * list to iterate) get "UP" interfaces with IPv4 Addresses
 		 */
-		for (NetworkInterface interfaces : getUpInterfaces()) {
 
-			ipv4Interfaces.add("Interface:" + interfaces.getDisplayName());
+		for (InterfaceAddress address : getIpAddresses()) {
 
-			Enumeration<InetAddress> inetAddresses = interfaces
-					.getInetAddresses();
-
-			for (InetAddress ifAddress : Collections.list(inetAddresses)) {
-
-				// hier vergleich für 0-255 , Byte vergleichen mit dezimalzahl.
-				if (ifAddress.getAddress().length == 4) {
-					ipv4Interfaces.add(" IP:" + ifAddress.getHostAddress()
-							+ " ");
-				}
+			// hier vergleich für 0-255 , Byte vergleichen mit dezimalzahl.
+			if (address.getAddress().getAddress().length == 4) {
+				ipv4Interfaces.add(address.getAddress().getHostAddress());
 			}
+
 		}
 
 		return ipv4Interfaces;
 	}
 
+	/**
+	 * Check if there are any Network interfaces that are up.
+	 * 
+	 * @return
+	 */
 	public static boolean hasRunningInterface() {
 
 		return !getUpInterfaces().isEmpty();
 	}
 
+	/**
+	 * Returns an ArrayList with all the Interfaces that are up.
+	 * @return
+	 */
 	private static ArrayList<NetworkInterface> getUpInterfaces() {
 
 		ArrayList<NetworkInterface> upIpv4Interfaces = new ArrayList<NetworkInterface>();
@@ -93,12 +101,30 @@ public class NetworkInformation {
 		return upIpv4Interfaces;
 	}
 
+	public static ArrayList<InetAddress> getBroadcastAddresses() {
+		
+		ArrayList<InetAddress> broadcastAddresses = new ArrayList<InetAddress>();
+		
+		for (InterfaceAddress broadcast : getIpAddresses()){
+			InetAddress bc = broadcast.getBroadcast();
+			if (bc != null ){
+			broadcastAddresses.add(bc);
+			}
+		}
+
+		return broadcastAddresses;
+
+	}
+
 	/**
 	 * FOR TEST ONLY!!!
 	 */
 	public static void main(String[] args) {
 
-		System.out.println(hasRunningInterface());
 		System.out.println(getIntAddresses());
+		System.out.println(getIpAddresses());
+		System.out.println(getBroadcastAddresses());
+
 	}
+
 }

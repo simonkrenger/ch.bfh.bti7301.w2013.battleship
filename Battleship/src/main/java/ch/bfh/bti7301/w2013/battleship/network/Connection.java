@@ -2,6 +2,7 @@ package ch.bfh.bti7301.w2013.battleship.network;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
 import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
@@ -10,6 +11,7 @@ import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 public class Connection extends Thread {
 
 	final static int GAMEPORT = 49768;
+	final static int SCANPORT = 49769;
 	final static String localhost = "127.0.0.1";
 
 	private ConnectionState connectionState;
@@ -20,14 +22,9 @@ public class Connection extends Thread {
 	private ConnectionHandler handler;
 	private static Game game = Game.getInstance();
 
-	private Connection() throws IOException {
-		// try catch nur für test!
-		try {
-			listener = new ConnectionListener(this);
-			listener.start();
-		} catch (IOException e) {
-			listener = null;
-		}
+	private Connection() {
+		listener = new ConnectionListener(this);
+		listener.start();
 	}
 
 	public void acceptOpponent(Socket socket) {
@@ -40,6 +37,7 @@ public class Connection extends Thread {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.err.println("");
 		}
 
 	}
@@ -64,12 +62,7 @@ public class Connection extends Thread {
 
 	public static Connection getInstance() {
 		if (instance == null) {
-			try {
-				instance = new Connection();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			instance = new Connection();
 		}
 		return instance;
 	}
@@ -162,10 +155,10 @@ public class Connection extends Thread {
 		return connectionState;
 	}
 
-	public void setConnectionState(ConnectionState connectionState) {
+	public void setConnectionState(ConnectionState connectionState, String msg) {
 		this.connectionState = connectionState;
 		if (connectionStateListener != null) {
-			connectionStateListener.stateChanged(connectionState);
+			connectionStateListener.stateChanged(connectionState, msg );
 		}
 	}
 
@@ -177,10 +170,25 @@ public class Connection extends Thread {
 	public void closeConnection() {
 		instance.cleanUp();
 	}
+	
+	private void reestablishConnection(ConnectionState local, ConnectionState opponent, Object lastSent, Object lastReceived){
+		this.instance.cleanUp();
+		this.instance = null;
+		Connection.getInstance();
+		
+
+	}
+	
+	public ArrayList<String> findOpponents(){
+		
+		
+		return null;
+		
+	}
 
 	private void cleanUp() {
 		// TODO: think about the whole closing game thing
 		handler.cleanUp();
-		setConnectionState(ConnectionState.CLOSED);
+		setConnectionState(ConnectionState.CLOSED, "the connection was closed");
 	}
 }

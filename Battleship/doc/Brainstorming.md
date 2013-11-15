@@ -319,5 +319,13 @@ Fränzi: Vision
 
 
   
+# ----------------------------------------------------------------------------------
+# TeamMeetin 2013-11-01
+# ---------------------------------------------------------------------------------
+  
+  - Fränzi Fehlerhandling (Status update für Gui)
+  - Fränzi fehlerhandling netzunterbruch Couneter sent, reveived
+  - NetzworkInfo class refactor
+
   
  

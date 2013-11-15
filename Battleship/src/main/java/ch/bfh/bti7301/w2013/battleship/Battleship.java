@@ -248,14 +248,25 @@ public class Battleship extends Application {
 		Connection.getInstance().setConnectionStateListener(
 				new ConnectionStateListener() {
 					@Override
-					public void stateChanged(ConnectionState newState) {
+					public void stateChanged(ConnectionState newState, String mgs) {
 						switch (newState) {
 						case CLOSED:
+							break;
 						case LISTENING:
 							ipBox.setVisible(true);
 							break;
 						case CONNECTED:
 							ipBox.setVisible(false);
+							break;
+						case CONNECTIONERROR:
+							break;
+						case INPUTERROR:
+							break;
+						case LISTENERERROR:
+							break;
+						case OUTPUTEROR:
+							break;
+						default:
 							break;
 						}
 					}
