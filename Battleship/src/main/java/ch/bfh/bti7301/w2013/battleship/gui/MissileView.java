@@ -1,34 +1,41 @@
 package ch.bfh.bti7301.w2013.battleship.gui;
 
+import static ch.bfh.bti7301.w2013.battleship.gui.BoardView.SIZE;
 import javafx.scene.Parent;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.Shape;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.transform.Scale;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 
 public class MissileView extends Parent {
-	private Shape shape;
+	private ImageView image;
 
 	public MissileView(Missile missile) {
-		shape = new Ellipse(BoardView.SIZE / 2, BoardView.SIZE / 2);
+		image = new ImageView(new Image(getClass().getClassLoader()
+				.getResourceAsStream("Fire.png")));
+		image.getTransforms().add(new Scale(SIZE / 200.0, SIZE / 200.0));
 		update(missile);
-		getChildren().add(shape);
+		getChildren().add(image);
 	}
 
 	public void update(Missile missile) {
 		switch (missile.getMissileState()) {
 		case HIT:
-			shape.setFill(Color.RED);
+			image.setImage(new Image(getClass().getClassLoader()
+					.getResourceAsStream("Fire.png")));
 			break;
 		case SUNK:
 		case GAME_WON:
-			shape.setFill(Color.DARKRED);
+			image.setImage(new Image(getClass().getClassLoader()
+					.getResourceAsStream("Fire.png")));
 			break;
 		case MISS:
-			shape.setFill(Color.BLUE);
+			image.setImage(new Image(getClass().getClassLoader()
+					.getResourceAsStream("Splash.png")));
 			break;
 		case FIRED:
-			shape.setFill(new Color(0, 0, 1, 0.1));
+			image.setImage(new Image(getClass().getClassLoader()
+					.getResourceAsStream("Incoming.png")));
 			break;
 		}
 	}
