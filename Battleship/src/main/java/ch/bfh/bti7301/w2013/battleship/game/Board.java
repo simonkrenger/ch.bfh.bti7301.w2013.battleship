@@ -183,17 +183,29 @@ public class Board {
 
 		}
 
-		private void checkForCollisions(Ship s) {
+		/**
+		 * Method to perform a collision detection between a given ship and all
+		 * already placed ships.
+		 * 
+		 * @param s
+		 *            This ship is newly placed and needs to be checked for
+		 *            collisions
+		 * @throws RuntimeException
+		 *             Throws an exception when there is a collision with an
+		 *             already placed ship
+		 */
+		private void checkForCollisions(Ship s) throws RuntimeException {
 
 			for (Ship placed : placedShips) {
-				for (Coordinates d : placed.getExtrapolatedCoordinates()) {
-					for (Coordinates c : s.getCoordinatesForShip()) {
+				for (Coordinates c : s.getCoordinatesForShip()) {
+					for (Coordinates d : placed.getExtrapolatedCoordinates()) {
 						// Check if coordinates match
 						// Also check if we do not check on ourself
 						if (c.equals(d) && s != placed) {
 							throw new RuntimeException("Collision detected at "
 									+ d + ", between ships '" + s.getName()
-									+ "' and '" + placed.getName() + "' (there may be other collisions)");
+									+ "' and '" + placed.getName()
+									+ "' (there may be other collisions)");
 						}
 					}
 				}
@@ -206,6 +218,7 @@ public class Board {
 					&& withinBoard(s.getEndCoordinatesForShip(
 							newStartCoordinates, d))) {
 
+				// Save old values for rollback if necessary
 				Coordinates oldStartCoordinates = s.getStartCoordinates();
 				Coordinates oldEndCoordinates = s.getEndCoordinates();
 
@@ -230,6 +243,7 @@ public class Board {
 			if (withinBoard(newStartCoordinates)
 					&& withinBoard(newEndCoordinates)) {
 
+				// Save old values for rollback if necessary
 				Coordinates oldStartCoordinates = s.getStartCoordinates();
 				Coordinates oldEndCoordinates = s.getEndCoordinates();
 
