@@ -2,12 +2,14 @@ package ch.bfh.bti7301.w2013.battleship.network;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
+
+
 
 public class ConnectionListener extends Thread {
 
 	private ServerSocket listener;
 	private Connection connection;
+	private boolean isClosed = false;
 
 	public ConnectionListener(Connection connection) {
 		try {
@@ -32,7 +34,7 @@ public class ConnectionListener extends Thread {
 			}
 
 		} catch (IOException e) {
-
+			if (isClosed){return;}
 			e.printStackTrace();
 			connection.setConnectionState(ConnectionState.LISTENERERROR,
 					"opponent could not be accepted");
@@ -41,6 +43,7 @@ public class ConnectionListener extends Thread {
 
 	public void closeListener() {
 		try {
+			isClosed = true;
 			listener.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
