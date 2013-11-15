@@ -159,4 +159,20 @@ public class GenericShipTest {
 		fail("Not yet implemented"); // TODO
 	}
 
+	@Test
+	public final void testGetDamage() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	@Test
+	public final void testSetDamage() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	@Test
+	public final void testIsSunk() {
+		fail("Not yet implemented"); // TODO
+	}
+
+
 }

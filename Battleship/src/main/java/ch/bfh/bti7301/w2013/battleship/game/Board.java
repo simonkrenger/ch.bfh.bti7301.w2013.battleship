@@ -183,10 +183,58 @@ public class Board {
 
 		}
 
+		/**
+		 * Method to perform a collision detection between a given ship and all
+		 * already placed ships.
+		 * 
+		 * @param s
+		 *            This ship is newly placed and needs to be checked for
+		 *            collisions
+		 * @throws RuntimeException
+		 *             Throws an exception when there is a collision with an
+		 *             already placed ship
+		 */
+		private void checkForCollisions(Ship s) throws RuntimeException {
+
+			for (Ship placed : placedShips) {
+				for (Coordinates c : s.getCoordinatesForShip()) {
+					for (Coordinates d : placed.getExtrapolatedCoordinates()) {
+						// Check if coordinates match
+						// Also check if we do not check on ourself
+						if (c.equals(d) && s != placed) {
+							throw new RuntimeException("Collision detected at "
+									+ d + ", between ships '" + s.getName()
+									+ "' and '" + placed.getName()
+									+ "' (there may be other collisions)");
+						}
+					}
+				}
+			}
+		}
+
 		public void moveShip(Ship s, Coordinates newStartCoordinates,
 				Direction d) {
-			if (withinBoard(newStartCoordinates)) {
+			if (withinBoard(newStartCoordinates)
+					&& withinBoard(s.getEndCoordinatesForShip(
+							newStartCoordinates, d))) {
+
+				// Save old values for rollback if necessary
+				Coordinates oldStartCoordinates = s.getStartCoordinates();
+				Coordinates oldEndCoordinates = s.getEndCoordinates();
+
 				s.setCoordinates(this, newStartCoordinates, d);
+
+				try {
+					checkForCollisions(s);
+				} catch (RuntimeException ex) {
+					// Collision with other ships, roll back changes!
+					s.setCoordinates(this, oldStartCoordinates,
+							oldEndCoordinates);
+					throw ex;
+				}
+			} else {
+				throw new RuntimeException(
+						"moveShip: New coordinates not within board!");
 			}
 		}
 
@@ -194,7 +242,24 @@ public class Board {
 				Coordinates newEndCoordinates) {
 			if (withinBoard(newStartCoordinates)
 					&& withinBoard(newEndCoordinates)) {
+
+				// Save old values for rollback if necessary
+				Coordinates oldStartCoordinates = s.getStartCoordinates();
+				Coordinates oldEndCoordinates = s.getEndCoordinates();
+
 				s.setCoordinates(this, newStartCoordinates, newEndCoordinates);
+
+				try {
+					checkForCollisions(s);
+				} catch (RuntimeException ex) {
+					// Collision with other ships, roll back changes!
+					s.setCoordinates(this, oldStartCoordinates,
+							oldEndCoordinates);
+					throw ex;
+				}
+			} else {
+				throw new RuntimeException(
+						"moveShip: New coordinates not within board!");
 			}
 		}
 
@@ -204,22 +269,16 @@ public class Board {
 			if (withinBoard(s.getStartCoordinates())
 					&& withinBoard(s.getEndCoordinates())) {
 
-				// Check if coordinates are already used
-				for (Ship placed : placedShips) {
-					for (Coordinates d : s.getExtrapolatedCoordinates()) {
-						for (Coordinates c : placed.getCoordinatesForShip()) {
-							if (c.equals(d)) {
-								throw new RuntimeException(
-										"Conflicting coordinates for ship "
-												+ placed + " and " + s);
-							}
-						}
-					}
+				try {
+					checkForCollisions(s);
+					placedShips.add(s);
+				} catch (RuntimeException ex) {
+					// Nothing to rollback, throw it further
+					throw ex;
 				}
-
-				placedShips.add(s);
 			} else {
-				throw new RuntimeException("Coordinates not within board!");
+				throw new RuntimeException(
+						"placeShip: Coordinates of ship not within board!");
 			}
 		}
 
@@ -247,6 +306,63 @@ public class Board {
 	 * 
 	 */
 	public static enum Direction {
-		NORTH, SOUTH, WEST, EAST
+		NORTH, SOUTH, WEST, EAST;
+
+		/**
+		 * Rotate clockwise
+		 * 
+		 * @return
+		 */
+		public Direction rotateCW() {
+			switch (this) {
+			case NORTH:
+				return EAST;
+			case WEST:
+				return NORTH;
+			case SOUTH:
+				return WEST;
+			case EAST:
+				return SOUTH;
+			}
+			throw new RuntimeException();
+		}
+
+		/**
+		 * Rotate counter-clockwise
+		 * 
+		 * @return
+		 */
+		public Direction rotateCCW() {
+			switch (this) {
+			case NORTH:
+				return WEST;
+			case WEST:
+				return SOUTH;
+			case SOUTH:
+				return EAST;
+			case EAST:
+				return NORTH;
+			}
+			throw new RuntimeException();
+		}
+
+		/**
+		 * Opposite direction
+		 * 
+		 * @return
+		 */
+		public Direction getOpposite() {
+			switch (this) {
+			case NORTH:
+				return SOUTH;
+			case WEST:
+				return EAST;
+			case SOUTH:
+				return NORTH;
+			case EAST:
+				return WEST;
+			}
+			throw new RuntimeException();
+		}
 	}
 }
