@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -26,6 +27,8 @@ public class BoardView extends Parent {
 
 	private Map<Coordinates, MissileView> missileViews = new HashMap<>();
 	private List<ShipView> shipViews = new LinkedList<>();
+	private Group ships = new Group();
+	private Group missiles = new Group();
 
 	public BoardView(Game game, BoardType type) {
 		final Board board = type.getBoard(game);
@@ -40,6 +43,9 @@ public class BoardView extends Parent {
 		for (int i = 0; i <= columns; i++) {
 			getChildren().add(getLine(0, i * SIZE, SIZE * rows, i * SIZE));
 		}
+
+		getChildren().add(ships);
+		getChildren().add(missiles);
 
 		for (Ship ship : board.getPlacedShips()) {
 			addShip(ship);
@@ -136,6 +142,10 @@ public class BoardView extends Parent {
 							mv.update(m);
 						else
 							drawMissile(m);
+
+						if (m.getSunkShip() != null) {
+							addShip(m.getSunkShip());
+						}
 					}
 				});
 			}
@@ -154,7 +164,7 @@ public class BoardView extends Parent {
 	public void addShip(Ship ship) {
 		ShipView sv = new ShipView(ship);
 		moveShip(sv, ship);
-		getChildren().add(sv);
+		ships.getChildren().add(sv);
 		shipViews.add(sv);
 	}
 
@@ -171,7 +181,7 @@ public class BoardView extends Parent {
 		MissileView mv = new MissileView(missile);
 		mv.relocate(getX(missile.getCoordinates()),
 				getY(missile.getCoordinates()));
-		getChildren().add(mv);
+		missiles.getChildren().add(mv);
 		missileViews.put(missile.getCoordinates(), mv);
 	}
 
