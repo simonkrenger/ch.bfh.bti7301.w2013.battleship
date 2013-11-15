@@ -345,5 +345,24 @@ public class Board {
 			}
 			throw new RuntimeException();
 		}
+
+		/**
+		 * Opposite direction
+		 * 
+		 * @return
+		 */
+		public Direction getOpposite() {
+			switch (this) {
+			case NORTH:
+				return SOUTH;
+			case WEST:
+				return EAST;
+			case SOUTH:
+				return NORTH;
+			case EAST:
+				return WEST;
+			}
+			throw new RuntimeException();
+		}
 	}
 }
