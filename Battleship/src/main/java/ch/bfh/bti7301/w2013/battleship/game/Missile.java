@@ -26,7 +26,13 @@ package ch.bfh.bti7301.w2013.battleship.game;
 import java.io.Serializable;
 
 /**
- * @author simon
+ * @author Simon Krenger <simon@krenger.ch>
+ * 
+ *         This class represents a "shot" or missile object which is an object
+ *         exchanged between two clients. As soon as a player shoots on the
+ *         opponents field, such a missile object is generated and sent to the
+ *         other client. There, the state of the missile is set (wherever the
+ *         missile hit a ship or not) and returned to the sender.
  * 
  */
 public class Missile implements Serializable {
@@ -63,10 +69,22 @@ public class Missile implements Serializable {
 		GAME_WON
 	}
 
+	/**
+	 * Coordinates of the missile
+	 */
 	private Coordinates coordinates;
 
+	/**
+	 * Current state of the missile. Is initially "FIRED" and is changed by the
+	 * remote client.
+	 */
 	private MissileState status;
 
+	/**
+	 * In case a ship is sunk, the affected ship is "attached" to this missile
+	 * object and sent to the opponent. This way, the client can draw the
+	 * correct ship and indicate correctly, that this ship was sunk.
+	 */
 	private Ship sunkShip;
 
 	public Missile(Coordinates c) {
@@ -84,25 +102,50 @@ public class Missile implements Serializable {
 		return this.status;
 	}
 
+	/**
+	 * Method to set the missile state
+	 * 
+	 * @param state
+	 *            The new state of the missile
+	 */
 	public void setMissileState(MissileState state) {
 		this.status = state;
 	}
-	
+
+	/**
+	 * Attaches a ship to the missile. This should only be done when the ship
+	 * was sunk.
+	 * 
+	 * @param s
+	 *            Ship to be attached to this missile
+	 */
 	public void setSunkShip(Ship s) {
-		this.sunkShip  = s;
+		this.sunkShip = s;
 	}
-	
+
+	/**
+	 * Returns the ship that was sunk as a result of this missile. This method
+	 * returns a ship when the missile state is either "SUNK" or "GAME_WON".
+	 * With this, the remote client can draw the ship correctly.
+	 * 
+	 * @return The ship sunk by this missile
+	 */
 	public Ship getSunkShip() {
 		return this.sunkShip;
 	}
 
+	/**
+	 * Returns the coordinates for this missile
+	 * 
+	 * @return Coordinates indicating the set coordinates for this missile.
+	 */
 	public Coordinates getCoordinates() {
 		return this.coordinates;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Missile [coordinates=" + coordinates + ", status=" + status
-				+ "]";
+				+ ", getSunkShip()=" + getSunkShip() + "]";
 	}
 }
