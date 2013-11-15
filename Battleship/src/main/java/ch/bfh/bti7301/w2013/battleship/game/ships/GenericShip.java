@@ -38,6 +38,8 @@ import ch.bfh.bti7301.w2013.battleship.game.Ship;
  */
 public class GenericShip implements Ship {
 
+	private static final long serialVersionUID = -2036713668702750208L;
+
 	/**
 	 * Start coordinates for the ship
 	 */

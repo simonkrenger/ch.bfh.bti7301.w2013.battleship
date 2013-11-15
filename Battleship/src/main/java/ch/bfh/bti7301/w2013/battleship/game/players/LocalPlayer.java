@@ -57,6 +57,7 @@ public class LocalPlayer extends GenericPlayer {
 					s.setDamage(m.getCoordinates());
 					if (s.isSunk()) {
 						m.setMissileState(MissileState.SUNK);
+						m.setSunkShip(s);
 						if (playerBoard.checkAllShipsSunk()) {
 							m.setMissileState(MissileState.GAME_WON);
 						}

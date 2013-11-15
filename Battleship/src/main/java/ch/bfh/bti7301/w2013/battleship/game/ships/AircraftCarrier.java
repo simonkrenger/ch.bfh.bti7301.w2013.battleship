@@ -33,6 +33,8 @@ import ch.bfh.bti7301.w2013.battleship.game.Ship;
  */
 public class AircraftCarrier extends GenericShip implements Ship {
 
+	private static final long serialVersionUID = 1L;
+	
 	private static int SHIP_SIZE = 5;
 
 	@Override

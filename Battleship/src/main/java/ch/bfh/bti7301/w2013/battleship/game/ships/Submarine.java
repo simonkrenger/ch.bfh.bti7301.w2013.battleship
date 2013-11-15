@@ -33,6 +33,8 @@ import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
  */
 public class Submarine extends GenericShip implements Ship {
 
+	private static final long serialVersionUID = 1L;
+	
 	private static int SHIP_SIZE = 3;
 
 	@Override

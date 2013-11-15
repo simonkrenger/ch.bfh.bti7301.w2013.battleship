@@ -23,6 +23,7 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import ch.bfh.bti7301.w2013.battleship.game.Board.BoardSetup;
@@ -33,7 +34,7 @@ import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
  * @author simon
  * 
  */
-public interface Ship {
+public interface Ship extends Serializable {
 
 	/**
 	 * Get the start coordinates for the ship

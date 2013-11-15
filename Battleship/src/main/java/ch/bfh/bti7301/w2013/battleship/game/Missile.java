@@ -63,9 +63,11 @@ public class Missile implements Serializable {
 		GAME_WON
 	}
 
-	private Coordinates coordinates = null;
+	private Coordinates coordinates;
 
-	private MissileState status = null;
+	private MissileState status;
+
+	private Ship sunkShip;
 
 	public Missile(Coordinates c) {
 		this.status = MissileState.FIRED;
@@ -84,6 +86,14 @@ public class Missile implements Serializable {
 
 	public void setMissileState(MissileState state) {
 		this.status = state;
+	}
+	
+	public void setSunkShip(Ship s) {
+		this.sunkShip  = s;
+	}
+	
+	public Ship getSunkShip() {
+		return this.sunkShip;
 	}
 
 	public Coordinates getCoordinates() {
