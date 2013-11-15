@@ -306,7 +306,6 @@ public class Battleship extends Application {
 				ready.setVisible(false);
 			}
 		});
-		// ready.setVisible(false);
 		return ready;
 	}
 
