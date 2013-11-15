@@ -2,6 +2,7 @@ package ch.bfh.bti7301.w2013.battleship.network;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
 import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
@@ -10,6 +11,7 @@ import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 public class Connection extends Thread {
 
 	final static int GAMEPORT = 49768;
+	final static int SCANPORT = 49769;
 	final static String localhost = "127.0.0.1";
 
 	private ConnectionState connectionState;
@@ -175,6 +177,13 @@ public class Connection extends Thread {
 		Connection.getInstance();
 		
 
+	}
+	
+	public ArrayList<String> findOpponents(){
+		
+		
+		return null;
+		
 	}
 
 	private void cleanUp() {
