@@ -30,6 +30,7 @@ import static ch.bfh.bti7301.w2013.battleship.utils.GameUtils.rnd;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -49,10 +50,16 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
+import javax.sound.sampled.AudioFileFormat.Type;
+import javax.sound.sampled.AudioSystem;
+
 import ch.bfh.bti7301.w2013.battleship.game.Board.BoardSetup;
 import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
+import ch.bfh.bti7301.w2013.battleship.game.BoardListener;
 import ch.bfh.bti7301.w2013.battleship.game.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
+import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Player;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
@@ -62,6 +69,7 @@ import ch.bfh.bti7301.w2013.battleship.gui.GuiPlayerStateListenerAdapter;
 import ch.bfh.bti7301.w2013.battleship.gui.NetworkPanel;
 import ch.bfh.bti7301.w2013.battleship.gui.ReadyButton;
 import ch.bfh.bti7301.w2013.battleship.network.NetworkInformation;
+import ch.bfh.bti7301.w2013.battleship.sounds.SoundEffects;
 
 /**
  * @author Christian Meyer <chrigu.meyer@gmail.com>
@@ -71,8 +79,27 @@ public class Battleship extends Application {
 
 	private Game game;
 
-	public Battleship() {
+	public Battleship() throws Exception {
 		game = Game.getInstance();
+		game.getOpponent().getBoard().addBoardListener(new BoardListener() {
+			@Override
+			public void stateChanged(final Missile m) {
+				switch (m.getMissileState()) {
+				case HIT:
+					SoundEffects.playHit();
+					break;
+				case SUNK:
+				case GAME_WON:
+					SoundEffects.playSunk();
+					if (new Random().nextBoolean())
+						SoundEffects.playSOS();
+					else
+						SoundEffects.playWilhelmScream();
+				default:
+					break;
+				}
+			}
+		});
 	}
 
 	/**
@@ -81,7 +108,8 @@ public class Battleship extends Application {
 	public static void main(String[] args) {
 		// Output this for debugging and testing
 		System.out.println(NetworkInformation.getIntAddresses());
-
+		for (Type t : AudioSystem.getAudioFileTypes())
+			System.out.println(t.getExtension());
 		launch(args);
 	}
 
