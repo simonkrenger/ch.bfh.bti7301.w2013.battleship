@@ -59,6 +59,8 @@ public class Game {
 
 	@SuppressWarnings("unused")
 	private Connection connection;
+	@SuppressWarnings("unused")
+	private GameState gameState;
 
 	/**
 	 * Private constructor for the Singleton pattern
@@ -78,6 +80,7 @@ public class Game {
 			instance.localPlayer = new LocalPlayer();
 			instance.opponentPlayer = new NetworkPlayer();
 			instance.connection = Connection.getInstance();
+			instance.gameState = GameState.getInstance();
 		}
 		return instance;
 	}

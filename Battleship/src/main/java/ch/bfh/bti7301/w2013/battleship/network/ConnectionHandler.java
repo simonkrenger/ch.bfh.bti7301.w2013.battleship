@@ -89,6 +89,14 @@ public class ConnectionHandler extends Thread {
 	public void setConnectionSocket(Socket connectionSocket) {
 		this.connectionSocket = connectionSocket;
 	}
+	
+	public String getLocalIp(){
+		return connectionSocket.getLocalAddress().getHostAddress();
+	}
+	
+	public String getOpponentIp(){
+		return connectionSocket.getInetAddress().getHostAddress();
+	}
 
 	public void cleanUp() {
 		if (!connectionSocket.isClosed()) {
