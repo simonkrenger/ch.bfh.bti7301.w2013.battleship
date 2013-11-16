@@ -11,42 +11,51 @@ import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 public class Connection extends Thread {
 
 	final static int GAMEPORT = 49768;
-	//final static int SCANPORT = 49769;
-	final static String localhost = "127.0.0.1";
+
+	private static Connection instance;
 
 	private ConnectionState connectionState;
-	private ConnectionStateListener connectionStateListener;
-	private static Connection instance;
-	private ConnectionListener listener;
 
+	private ConnectionStateListener connectionStateListener;
+	private ConnectionListener listener;
 	private ConnectionHandler handler;
+
 	private static Game game = Game.getInstance();
 
 	private Connection() {
 		listener = new ConnectionListener(this);
 		listener.start();
+		GameState.getInstance();
+
+	}
+
+	public static Connection getInstance() {
+		if (instance == null) {
+			instance = new Connection();
+		}
+		return instance;
 	}
 
 	public void acceptOpponent(Socket socket) {
 
 		if (getConnectionState() == ConnectionState.CONNECTED) {
-			throw new RuntimeException("Already connected");
+			setConnectionState(ConnectionState.CONNECTED, "already connected!");
 		}
 		try {
 			handler = new ConnectionHandler(this, socket);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.err.println("");
+			setConnectionState(ConnectionState.CONNECTIONERROR,
+					"couldn't create connectionHandler");
+			// TODO: Reestablish Connection
 		}
 
 	}
 
 	public void connectOpponent(String Ip) {
-		// for test only
 
 		if (getConnectionState() == ConnectionState.CONNECTED) {
-			throw new RuntimeException("Already connected");
+			setConnectionState(ConnectionState.CONNECTED, "already connected!");
 		}
 
 		try {
@@ -55,16 +64,12 @@ public class Connection extends Thread {
 			listener.closeListener();
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			setConnectionState(ConnectionState.CONNECTIONERROR,
+					"couldn't connect, please try again");
+			// TODO: GUI Should show this Error and ask the user to connect
+			// again.
 		}
-	}
-
-	public static Connection getInstance() {
-		if (instance == null) {
-			instance = new Connection();
-		}
-		return instance;
 	}
 
 	public void sendMissile(Missile missile) {
@@ -92,7 +97,6 @@ public class Connection extends Thread {
 					game.getLocalPlayer().setPlayerState(PlayerState.PLAYING);
 					game.getOpponent().setPlayerState(PlayerState.WAITING);
 				} else {
-					// TODO: Set button to "Start"
 					game.getOpponent().setPlayerState(PlayerState.READY);
 				}
 				break;
@@ -158,7 +162,7 @@ public class Connection extends Thread {
 	public void setConnectionState(ConnectionState connectionState, String msg) {
 		this.connectionState = connectionState;
 		if (connectionStateListener != null) {
-			connectionStateListener.stateChanged(connectionState, msg );
+			connectionStateListener.stateChanged(connectionState, msg);
 		}
 	}
 
@@ -170,25 +174,35 @@ public class Connection extends Thread {
 	public void closeConnection() {
 		instance.cleanUp();
 	}
-	
-	private void reestablishConnection(ConnectionState local, ConnectionState opponent, Object lastSent, Object lastReceived){
-		this.instance.cleanUp();
-		this.instance = null;
+
+	public void reestablishConnection(ConnectionState local, Object lastSent,
+			Object lastReceived) {
+		getInstance().cleanUp();
+		instance = null;
 		Connection.getInstance();
-		
+		setConnectionState(local, "reestablished connection");
+
+		// FIX THIS
+		if (lastSent != null) {
+			handler.sendObject(lastSent);
+		}
+		if (lastReceived != null) {
+			// Do Something
+		}
 
 	}
-	
-	public ArrayList<String> findOpponents(){
-		
-		
+
+	public ArrayList<String> findOpponents() {
+		// ToDO
+
 		return null;
-		
+
 	}
 
 	private void cleanUp() {
 		// TODO: think about the whole closing game thing
 		handler.cleanUp();
 		setConnectionState(ConnectionState.CLOSED, "the connection was closed");
+		instance = null;
 	}
 }

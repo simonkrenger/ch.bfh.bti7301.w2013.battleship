@@ -17,14 +17,18 @@ public class ConnectionHandler extends Thread {
 		setConnectionSocket(socket);
 		setOut(new ObjectOutputStream(connectionSocket.getOutputStream()));
 		start();
-		connection.setConnectionState(ConnectionState.CONNECTED, "connetcion established");
+		connection.setConnectionState(ConnectionState.CONNECTED,
+				"connetcion established");
 	}
 
 	public void run() {
 		try {
 			setIn(new ObjectInputStream(connectionSocket.getInputStream()));
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+
+			Connection.getInstance().setConnectionState(
+					ConnectionState.INPUTERROR, "can not set an Input Stram");
+			// ToDo Reestablish Connection.
 		}
 
 		while (true) {
@@ -32,17 +36,25 @@ public class ConnectionHandler extends Thread {
 				Object inputObject = in.readObject();
 				receiveObject(inputObject);
 			} catch (EOFException e) {
-				// opponent disconnected
+				e.printStackTrace();
 				Connection.getInstance().setConnectionState(
-						ConnectionState.INPUTERROR, "an input error ocured while sending ");
-				
+						ConnectionState.INPUTERROR, "opponent disconnected ");
+				// ToDo Reestablish Connection.
+
 				break;
-				
+
 			} catch (IOException e) {
 				e.printStackTrace();
+				Connection.getInstance().setConnectionState(
+						ConnectionState.INPUTERROR,
+						"someting with the input stream went wrong");
+				// ToDo Reestablish Connection.
 
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
+				Connection.getInstance().setConnectionState(
+						ConnectionState.INPUTERROR, "there is no input stream");
+				// ToDo Reestablish Connection.
 			}
 		}
 	}
@@ -52,8 +64,12 @@ public class ConnectionHandler extends Thread {
 			out.writeObject(outgoingObject);
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block todo
 			e.printStackTrace();
+			Connection
+					.getInstance()
+					.setConnectionState(ConnectionState.OUTPUTEROR,
+							"somtehing went wrong while sending an Object to your opponent");
+			// ToDo Reestablish Connection.
 		}
 
 	}
@@ -75,14 +91,17 @@ public class ConnectionHandler extends Thread {
 	}
 
 	public void cleanUp() {
-		try {
-			in.close();
-			out.close();
-			connectionSocket.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (!connectionSocket.isClosed()) {
+			try {
+				in.close();
+				out.close();
+				connectionSocket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+				Connection.getInstance().setConnectionState(
+						ConnectionState.CONNECTIONERROR,
+						"the connection is stuck");
+			}
 		}
-
 	}
 }
