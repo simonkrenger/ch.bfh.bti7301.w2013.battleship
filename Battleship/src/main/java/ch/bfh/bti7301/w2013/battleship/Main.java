@@ -194,9 +194,11 @@ public class Main extends Application {
 
 		double scale = 1.2;
 		double baseWidth = pbv.getBoundsInParent().getWidth();
+		double baseHeight = pbv.getBoundsInParent().getHeight();
 		double width = baseWidth * 1.5 + 40;
+		double height = baseHeight + 20;
 		root.getTransforms().add(new Scale(scale, scale));
-		final Scene scene = new Scene(root, width * scale, 502 * scale,
+		final Scene scene = new Scene(root, width * scale, height * scale,
 				Color.WHITE);
 		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);
