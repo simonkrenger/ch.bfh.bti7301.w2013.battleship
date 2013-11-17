@@ -75,11 +75,11 @@ import ch.bfh.bti7301.w2013.battleship.sounds.SoundEffects;
  * @author Christian Meyer <chrigu.meyer@gmail.com>
  * 
  */
-public class Battleship extends Application {
+public class Main extends Application {
 
 	private Game game;
 
-	public Battleship() throws Exception {
+	public Main() throws Exception {
 		game = Game.getInstance();
 		game.getOpponent().getBoard().addBoardListener(new BoardListener() {
 			@Override
