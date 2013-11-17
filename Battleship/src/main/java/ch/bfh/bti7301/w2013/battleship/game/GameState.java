@@ -15,7 +15,7 @@ public class GameState {
 	private PlayerState opponentPlayerState;
 	private String localIp;
 	private String opponentIp;
-
+    private int reestablishCount;
 	public String getLocalIp() {
 		return localIp;
 	}
@@ -38,6 +38,7 @@ public class GameState {
 		setLastOut(null);
 		setLocalPlayerState(GenericPlayer.PlayerState.GAME_STARTED);
 		setOpponentPlayerState(null);
+		setReestablishCount(0);
 	}
 
 	public void restoreGame(Object opponentCounter) {
@@ -59,6 +60,7 @@ public class GameState {
 	}
 
 	public void resumeGame() {
+		setReestablishCount(0);
 		// TODO
 	}
 	
@@ -113,4 +115,14 @@ public class GameState {
 		this.opponentPlayerState = networkPlayerState;
 	}
 
+	public void setReestablishCount(int reestablishCount) {
+		this.reestablishCount = reestablishCount;
+	}
+	
+	public void addReestablishCount(){
+		this.reestablishCount++;
+	}
+	public int getReestablishCount() {
+		return reestablishCount;
+	}
 }

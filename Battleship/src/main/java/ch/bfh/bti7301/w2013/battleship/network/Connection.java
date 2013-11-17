@@ -20,7 +20,7 @@ public class Connection extends Thread {
 	private ConnectionStateListener connectionStateListener;
 	private ConnectionListener listener;
 	private ConnectionHandler handler;
-	
+
 	private static Game game = Game.getInstance();
 	private static GameState gameState = GameState.getInstance();
 
@@ -44,17 +44,17 @@ public class Connection extends Thread {
 		}
 		try {
 			handler = new ConnectionHandler(this, socket);
-			
+			listener.closeListener();
+
 		} catch (IOException e) {
 			e.printStackTrace();
-			setConnectionState(ConnectionState.CONNECTIONERROR,
+			catchAndReestablish(ConnectionState.CONNECTIONERROR,
 					"couldn't create connectionHandler");
-			// TODO: Reestablish Connection
-		}
-		
-		gameState.setOpponentIp(handler.getOpponentIp());
-		gameState.setLocalIp(handler.getLocalIp());
 
+			gameState.setOpponentIp(handler.getOpponentIp());
+			gameState.setLocalIp(handler.getLocalIp());
+
+		}
 	}
 
 	public void connectOpponent(String Ip) {
@@ -76,7 +76,7 @@ public class Connection extends Thread {
 			// TODO: GUI Should show this Error and ask the user to connect
 			// again.
 		}
-		
+
 		gameState.setOpponentIp(handler.getOpponentIp());
 		gameState.setLocalIp(handler.getLocalIp());
 	}
@@ -84,9 +84,11 @@ public class Connection extends Thread {
 	public void sendMissile(Missile missile) {
 		if (instance.connectionState != ConnectionState.CONNECTED) {
 			throw new RuntimeException("Cannot shoot an imaginary Opponent");
+			// TODO: GUI Should show this Error and ask the user to connect
+		   // again.
 		}
 		handler.sendObject(missile);
-		
+
 		setGameStateOut(missile);
 
 	}
@@ -95,18 +97,20 @@ public class Connection extends Thread {
 
 		if (instance.connectionState != ConnectionState.CONNECTED) {
 			throw new RuntimeException("No Conncetion yet");
+		// TODO: GUI Should show this Error 
 		}
 		handler.sendObject(state);
-		
+
 		setGameStateOut(state);
 	}
-	
-	public void sendCounter(int counter){
+
+	public void sendCounter(int counter) {
 		if (instance.connectionState != ConnectionState.CONNECTED) {
 			throw new RuntimeException("No Conncetion yet");
+		// TODO: GUI Should show this Error 
 		}
 		handler.sendObject(counter);
-		
+
 	}
 
 	public static void receiveObjectToGame(Object object) {
@@ -149,15 +153,13 @@ public class Connection extends Thread {
 			Missile received = (Missile) object;
 			instance.handleMissile(received);
 		}
-		
-		else if (object instanceof Integer){
+
+		else if (object instanceof Integer) {
 			gameState.restoreGame(object);
 		}
-		
+
 		setGameStateIn(object);
 	}
-	
-	
 
 	private void handleMissile(Missile missile) {
 
@@ -205,23 +207,36 @@ public class Connection extends Thread {
 		instance.cleanUp();
 	}
 
-	public void reestablishConnection(GameState lastLocalState) {
+	public void catchAndReestablish(ConnectionState errorType, String errorMsg) {
+
+		if (GameState.getInstance().getReestablishCount() > 0)
+			instance.setConnectionState(errorType, errorMsg);
+
+		else {
+			Connection.getInstance().setConnectionState(errorType,
+					errorMsg + " the connection will try to reset itself");
+			instance.reestablishConnection();
+		}
+
+	}
+
+	public void reestablishConnection() {
+		gameState.addReestablishCount();
 		getInstance().cleanUp();
 		Connection.getInstance();
 		instance.connectOpponent(gameState.getOpponentIp());
-		//Do Something to make user Wait for the Recovery.
+		// Do something to make user Wait for the Recovery.
 		instance.sendCounter(gameState.getCounter());
 	}
-	
-	
-	private void setGameStateOut(Object out){
+
+	private void setGameStateOut(Object out) {
 		gameState.addCounter();
 		gameState.setLastOut(out);
 		gameState.setLocalPlayerState(game.getLocalPlayer().getPlayerState());
 		gameState.setOpponentPlayerState(game.getOpponent().getPlayerState());
 	}
-	
-	private static void setGameStateIn(Object in){
+
+	private static void setGameStateIn(Object in) {
 		gameState.addCounter();
 		gameState.setLastIn(in);
 		gameState.setLocalPlayerState(game.getLocalPlayer().getPlayerState());
@@ -236,8 +251,9 @@ public class Connection extends Thread {
 	}
 
 	private void cleanUp() {
-		// TODO: think about the whole closing game thing
-		handler.cleanUp();
+		listener = null;
+		handler.closeHandler();
+		handler = null;
 		setConnectionState(ConnectionState.CLOSED, "the connection was closed");
 		instance = null;
 	}

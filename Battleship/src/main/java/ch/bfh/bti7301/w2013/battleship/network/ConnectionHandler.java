@@ -25,36 +25,27 @@ public class ConnectionHandler extends Thread {
 		try {
 			setIn(new ObjectInputStream(connectionSocket.getInputStream()));
 		} catch (IOException e) {
-
-			Connection.getInstance().setConnectionState(
-					ConnectionState.INPUTERROR, "can not set an Input Stram");
-			// ToDo Reestablish Connection.
+			e.printStackTrace();
+			Connection.getInstance().catchAndReestablish(ConnectionState.INPUTERROR, "cannot set the input stream");
 		}
 
 		while (true) {
 			try {
 				Object inputObject = in.readObject();
 				receiveObject(inputObject);
+				
 			} catch (EOFException e) {
 				e.printStackTrace();
-				Connection.getInstance().setConnectionState(
-						ConnectionState.INPUTERROR, "opponent disconnected ");
-				// ToDo Reestablish Connection.
-
+				Connection.getInstance().catchAndReestablish(ConnectionState.INPUTERROR, "opponent disconnected");
 				break;
 
 			} catch (IOException e) {
 				e.printStackTrace();
-				Connection.getInstance().setConnectionState(
-						ConnectionState.INPUTERROR,
-						"someting with the input stream went wrong");
-				// ToDo Reestablish Connection.
+				Connection.getInstance().catchAndReestablish(ConnectionState.INPUTERROR, "someting with the input stream went wrong");
 
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
-				Connection.getInstance().setConnectionState(
-						ConnectionState.INPUTERROR, "there is no input stream");
-				// ToDo Reestablish Connection.
+				Connection.getInstance().catchAndReestablish(ConnectionState.INPUTERROR, "there is no input stream");
 			}
 		}
 	}
@@ -65,15 +56,14 @@ public class ConnectionHandler extends Thread {
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			Connection
-					.getInstance()
-					.setConnectionState(ConnectionState.OUTPUTEROR,
-							"somtehing went wrong while sending an Object to your opponent");
-			// ToDo Reestablish Connection.
+			Connection.getInstance().catchAndReestablish(ConnectionState.OUTPUTEROR, "somtehing went wrong while sending an Object to your opponent");
 		}
 
 	}
 
+
+	
+	
 	public void receiveObject(Object receivedObject) {
 		Connection.receiveObjectToGame(receivedObject);
 	}
@@ -98,7 +88,7 @@ public class ConnectionHandler extends Thread {
 		return connectionSocket.getInetAddress().getHostAddress();
 	}
 
-	public void cleanUp() {
+	public void closeHandler() {
 		if (!connectionSocket.isClosed()) {
 			try {
 				in.close();
@@ -109,6 +99,7 @@ public class ConnectionHandler extends Thread {
 				Connection.getInstance().setConnectionState(
 						ConnectionState.CONNECTIONERROR,
 						"the connection is stuck");
+				//TODO: Some GUI Interaction is asked for.
 			}
 		}
 	}

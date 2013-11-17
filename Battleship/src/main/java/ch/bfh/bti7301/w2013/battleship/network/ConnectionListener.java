@@ -3,6 +3,7 @@ package ch.bfh.bti7301.w2013.battleship.network;
 import java.io.IOException;
 import java.net.ServerSocket;
 
+
 public class ConnectionListener extends Thread {
 
 	private ServerSocket listener;
@@ -29,8 +30,7 @@ public class ConnectionListener extends Thread {
 	public void run() { 
 		try {
 			while (!listener.isClosed()) {
-				connection.acceptOpponent(listener.accept());
-				listener.close();
+				connection.acceptOpponent(listener.accept());	
 			}
 
 		} catch (IOException e) {
@@ -38,8 +38,7 @@ public class ConnectionListener extends Thread {
 				return;
 			}
 			e.printStackTrace();
-			connection.setConnectionState(ConnectionState.LISTENERERROR,
-					"opponent could not be accepted, try again");
+			connection.catchAndReestablish(ConnectionState.LISTENERERROR, "opponent could not be accepted the connection");
 		}
 	}
 
@@ -49,10 +48,13 @@ public class ConnectionListener extends Thread {
 			isClosed = true;
 			listener.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			if (isClosed) {
+				return;
+			}
 			e.printStackTrace();
 			connection.setConnectionState(ConnectionState.CONNECTIONERROR,
 					"the connection is stuck");
+			//TODO: Some GUI Interaction is asked for.
 		}
 	}
 
