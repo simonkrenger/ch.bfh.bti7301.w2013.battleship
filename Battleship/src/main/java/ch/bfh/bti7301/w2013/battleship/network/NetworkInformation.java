@@ -2,7 +2,6 @@ package ch.bfh.bti7301.w2013.battleship.network;
 
 import java.net.*;
 import java.util.*;
-import java.io.*;
 
 /**
  * Class to check and find the users network settings

@@ -5,59 +5,28 @@ import java.net.*;
 import java.util.ArrayList;
 
 import ch.bfh.bti7301.w2013.battleship.game.Game;
+import ch.bfh.bti7301.w2013.battleship.game.GameState;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 
 public class Connection extends Thread {
 
 	final static int GAMEPORT = 49768;
-	//final static int SCANPORT = 49769;
-	final static String localhost = "127.0.0.1";
+
+	private static Connection instance;
 
 	private ConnectionState connectionState;
-	private ConnectionStateListener connectionStateListener;
-	private static Connection instance;
-	private ConnectionListener listener;
 
+	private ConnectionStateListener connectionStateListener;
+	private ConnectionListener listener;
 	private ConnectionHandler handler;
+
 	private static Game game = Game.getInstance();
+	private static GameState gameState = GameState.getInstance();
 
 	private Connection() {
 		listener = new ConnectionListener(this);
 		listener.start();
-	}
-
-	public void acceptOpponent(Socket socket) {
-
-		if (getConnectionState() == ConnectionState.CONNECTED) {
-			throw new RuntimeException("Already connected");
-		}
-		try {
-			handler = new ConnectionHandler(this, socket);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.err.println("");
-		}
-
-	}
-
-	public void connectOpponent(String Ip) {
-		// for test only
-
-		if (getConnectionState() == ConnectionState.CONNECTED) {
-			throw new RuntimeException("Already connected");
-		}
-
-		try {
-			Socket socket = new Socket(Ip, GAMEPORT);
-			handler = new ConnectionHandler(this, socket);
-			listener.closeListener();
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	public static Connection getInstance() {
@@ -67,19 +36,81 @@ public class Connection extends Thread {
 		return instance;
 	}
 
+	public void acceptOpponent(Socket socket) {
+
+		if (getConnectionState() == ConnectionState.CONNECTED) {
+			setConnectionState(ConnectionState.CONNECTED, "already connected!");
+			// TODO: GUI Should show this Error
+		}
+		try {
+			handler = new ConnectionHandler(this, socket);
+			listener.closeListener();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			catchAndReestablish(ConnectionState.CONNECTIONERROR,
+					"couldn't create connectionHandler");
+
+			gameState.setOpponentIp(handler.getOpponentIp());
+			gameState.setLocalIp(handler.getLocalIp());
+
+		}
+	}
+
+	public void connectOpponent(String Ip) {
+
+		if (getConnectionState() == ConnectionState.CONNECTED) {
+			setConnectionState(ConnectionState.CONNECTED, "already connected!");
+			// TODO: GUI Should show this Error
+		}
+
+		try {
+			Socket socket = new Socket(Ip, GAMEPORT);
+			handler = new ConnectionHandler(this, socket);
+			listener.closeListener();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			setConnectionState(ConnectionState.CONNECTIONERROR,
+					"couldn't connect, please try again");
+			// TODO: GUI Should show this Error and ask the user to connect
+			// again.
+		}
+
+		gameState.setOpponentIp(handler.getOpponentIp());
+		gameState.setLocalIp(handler.getLocalIp());
+	}
+
 	public void sendMissile(Missile missile) {
 		if (instance.connectionState != ConnectionState.CONNECTED) {
 			throw new RuntimeException("Cannot shoot an imaginary Opponent");
+			// TODO: GUI Should show this Error and ask the user to connect
+		   // again.
 		}
 		handler.sendObject(missile);
+
+		setGameStateOut(missile);
+
 	}
 
 	public void sendStatus(PlayerState state) {
 
 		if (instance.connectionState != ConnectionState.CONNECTED) {
 			throw new RuntimeException("No Conncetion yet");
+		// TODO: GUI Should show this Error 
 		}
 		handler.sendObject(state);
+
+		setGameStateOut(state);
+	}
+
+	public void sendCounter(int counter) {
+		if (instance.connectionState != ConnectionState.CONNECTED) {
+			throw new RuntimeException("No Conncetion yet");
+		// TODO: GUI Should show this Error 
+		}
+		handler.sendObject(counter);
+
 	}
 
 	public static void receiveObjectToGame(Object object) {
@@ -92,7 +123,6 @@ public class Connection extends Thread {
 					game.getLocalPlayer().setPlayerState(PlayerState.PLAYING);
 					game.getOpponent().setPlayerState(PlayerState.WAITING);
 				} else {
-					// TODO: Set button to "Start"
 					game.getOpponent().setPlayerState(PlayerState.READY);
 				}
 				break;
@@ -123,6 +153,12 @@ public class Connection extends Thread {
 			Missile received = (Missile) object;
 			instance.handleMissile(received);
 		}
+
+		else if (object instanceof Integer) {
+			gameState.restoreGame(object);
+		}
+
+		setGameStateIn(object);
 	}
 
 	private void handleMissile(Missile missile) {
@@ -158,7 +194,7 @@ public class Connection extends Thread {
 	public void setConnectionState(ConnectionState connectionState, String msg) {
 		this.connectionState = connectionState;
 		if (connectionStateListener != null) {
-			connectionStateListener.stateChanged(connectionState, msg );
+			connectionStateListener.stateChanged(connectionState, msg);
 		}
 	}
 
@@ -170,25 +206,55 @@ public class Connection extends Thread {
 	public void closeConnection() {
 		instance.cleanUp();
 	}
-	
-	private void reestablishConnection(ConnectionState local, ConnectionState opponent, Object lastSent, Object lastReceived){
-		this.instance.cleanUp();
-		this.instance = null;
-		Connection.getInstance();
-		
+
+	public void catchAndReestablish(ConnectionState errorType, String errorMsg) {
+
+		if (GameState.getInstance().getReestablishCount() > 0)
+			instance.setConnectionState(errorType, errorMsg);
+
+		else {
+			Connection.getInstance().setConnectionState(errorType,
+					errorMsg + " the connection will try to reset itself");
+			instance.reestablishConnection();
+		}
 
 	}
-	
-	public ArrayList<String> findOpponents(){
-		
-		
+
+	public void reestablishConnection() {
+		gameState.addReestablishCount();
+		getInstance().cleanUp();
+		Connection.getInstance();
+		instance.connectOpponent(gameState.getOpponentIp());
+		// Do something to make user Wait for the Recovery.
+		instance.sendCounter(gameState.getCounter());
+	}
+
+	private void setGameStateOut(Object out) {
+		gameState.addCounter();
+		gameState.setLastOut(out);
+		gameState.setLocalPlayerState(game.getLocalPlayer().getPlayerState());
+		gameState.setOpponentPlayerState(game.getOpponent().getPlayerState());
+	}
+
+	private static void setGameStateIn(Object in) {
+		gameState.addCounter();
+		gameState.setLastIn(in);
+		gameState.setLocalPlayerState(game.getLocalPlayer().getPlayerState());
+		gameState.setOpponentPlayerState(game.getOpponent().getPlayerState());
+	}
+
+	public ArrayList<String> findOpponents() {
+		// ToDO
+
 		return null;
-		
+
 	}
 
 	private void cleanUp() {
-		// TODO: think about the whole closing game thing
-		handler.cleanUp();
+		listener = null;
+		handler.closeHandler();
+		handler = null;
 		setConnectionState(ConnectionState.CLOSED, "the connection was closed");
+		instance = null;
 	}
 }

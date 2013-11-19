@@ -2,7 +2,7 @@ package ch.bfh.bti7301.w2013.battleship.network;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.SocketException;
+
 
 public class ConnectionListener extends Thread {
 
@@ -16,20 +16,21 @@ public class ConnectionListener extends Thread {
 			this.connection = connection;
 			connection.setConnectionState(ConnectionState.LISTENING,
 					"the listener is set up");
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 			connection.setConnectionState(ConnectionState.LISTENERERROR,
 					"listener on port" + Connection.GAMEPORT
 							+ "could not be started.");
+			//TODO: Maybe try an alternative Port: GUI Interaction
 		}
 
 	}
 
-	public void run() { // run the service
+	public void run() { 
 		try {
 			while (!listener.isClosed()) {
-				connection.acceptOpponent(listener.accept());
-				listener.close();
+				connection.acceptOpponent(listener.accept());	
 			}
 
 		} catch (IOException e) {
@@ -37,20 +38,23 @@ public class ConnectionListener extends Thread {
 				return;
 			}
 			e.printStackTrace();
-			connection.setConnectionState(ConnectionState.LISTENERERROR,
-					"opponent could not be accepted");
+			connection.catchAndReestablish(ConnectionState.LISTENERERROR, "opponent could not be accepted the connection");
 		}
 	}
 
 	public void closeListener() {
+		if (!listener.isClosed())
 		try {
 			isClosed = true;
 			listener.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			if (isClosed) {
+				return;
+			}
 			e.printStackTrace();
 			connection.setConnectionState(ConnectionState.CONNECTIONERROR,
-					"connection could not be closed");
+					"the connection is stuck");
+			//TODO: Some GUI Interaction is asked for.
 		}
 	}
 
