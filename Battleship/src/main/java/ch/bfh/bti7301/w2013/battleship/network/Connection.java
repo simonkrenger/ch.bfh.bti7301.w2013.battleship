@@ -11,7 +11,7 @@ import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 public class Connection extends Thread {
 
 	final static int GAMEPORT = 49768;
-	final static int SCANPORT = 49769;
+	//final static int SCANPORT = 49769;
 	final static String localhost = "127.0.0.1";
 
 	private ConnectionState connectionState;

@@ -24,20 +24,15 @@
 package ch.bfh.bti7301.w2013.battleship;
 
 import static ch.bfh.bti7301.w2013.battleship.utils.GameUtils.getAvailableShips;
+import static ch.bfh.bti7301.w2013.battleship.utils.GameUtils.getFont;
+import static ch.bfh.bti7301.w2013.battleship.utils.GameUtils.getString;
 import static ch.bfh.bti7301.w2013.battleship.utils.GameUtils.rnd;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Random;
 
-import javafx.animation.ParallelTransitionBuilder;
-import javafx.animation.ScaleTransitionBuilder;
-import javafx.animation.TranslateTransitionBuilder;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
@@ -45,45 +40,66 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.InnerShadow;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import javafx.util.Duration;
+
+import javax.sound.sampled.AudioFileFormat.Type;
+import javax.sound.sampled.AudioSystem;
+
 import ch.bfh.bti7301.w2013.battleship.game.Board.BoardSetup;
 import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
+import ch.bfh.bti7301.w2013.battleship.game.BoardListener;
 import ch.bfh.bti7301.w2013.battleship.game.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
+import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Player;
-import ch.bfh.bti7301.w2013.battleship.game.PlayerStateListener;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView.BoardType;
-import ch.bfh.bti7301.w2013.battleship.network.Connection;
-import ch.bfh.bti7301.w2013.battleship.network.ConnectionState;
-import ch.bfh.bti7301.w2013.battleship.network.ConnectionStateListener;
+import ch.bfh.bti7301.w2013.battleship.gui.GuiPlayerStateListenerAdapter;
+import ch.bfh.bti7301.w2013.battleship.gui.NetworkPanel;
+import ch.bfh.bti7301.w2013.battleship.gui.ReadyButton;
 import ch.bfh.bti7301.w2013.battleship.network.NetworkInformation;
+import ch.bfh.bti7301.w2013.battleship.sounds.SoundEffects;
 
 /**
  * @author Christian Meyer <chrigu.meyer@gmail.com>
  * 
  */
-public class Battleship extends Application {
-	private ResourceBundle labels;
+public class Main extends Application {
 
 	private Game game;
 
-	public Battleship() {
-		labels = ResourceBundle.getBundle("translations");
+	public Main() throws Exception {
 		game = Game.getInstance();
+		game.getOpponent().getBoard().addBoardListener(new BoardListener() {
+			@Override
+			public void stateChanged(final Missile m) {
+				switch (m.getMissileState()) {
+				case HIT:
+					SoundEffects.playHit();
+					break;
+				case SUNK:
+				case GAME_WON:
+					SoundEffects.playSunk();
+					if (new Random().nextBoolean())
+						SoundEffects.playSOS();
+					else
+						SoundEffects.playWilhelmScream();
+				default:
+					break;
+				}
+			}
+		});
 	}
 
 	/**
@@ -92,20 +108,19 @@ public class Battleship extends Application {
 	public static void main(String[] args) {
 		// Output this for debugging and testing
 		System.out.println(NetworkInformation.getIntAddresses());
-
+		for (Type t : AudioSystem.getAudioFileTypes())
+			System.out.println(t.getExtension());
 		launch(args);
 	}
 
 	@Override
 	public void start(Stage primaryStage) {
-		primaryStage.setTitle(labels.getString("title"));
+		primaryStage.setTitle(getString("title"));
 
 		randomPlacement(getAvailableShips(game.getRule()), game
 				.getLocalPlayer().getBoard().getBoardSetup());
 
 		final Group root = new Group();
-		final Scene scene = new Scene(root, 800, 600, Color.WHITE);
-		primaryStage.setScene(scene);
 
 		final BoardView pbv = new BoardView(game, BoardType.LOCAL);
 		pbv.relocate(10, 10);
@@ -117,21 +132,26 @@ public class Battleship extends Application {
 		obv.relocate(pbv.getBoundsInParent().getMaxX() + 20, 10);
 		root.getChildren().add(obv);
 
-		final Button ready = buildReadyButton(pbv, obv);
-		ready.relocate(obv.getBoundsInParent().getMinX(), obv
+		VBox guiBox = new VBox(20);
+		guiBox.relocate(obv.getBoundsInParent().getMinX(), obv
 				.getBoundsInParent().getMaxY() + 8);
-		root.getChildren().add(ready);
+		guiBox.setPrefWidth(obv.getBoundsInParent().getWidth());
+		guiBox.setPrefHeight(obv.getBoundsInParent().getHeight() - 10);
+		root.getChildren().add(guiBox);
 
-		game.getOpponent().addPlayerStateListener(new PlayerStateListener() {
-			@Override
-			public void stateChanged(Player p, final PlayerState s) {
-				Platform.runLater(new Runnable() {
+		final Button ready = new ReadyButton(game, pbv, obv, guiBox);
+		guiBox.getChildren().add(ready);
+
+		NetworkPanel networkPanel = new NetworkPanel();
+		guiBox.getChildren().add(networkPanel);
+
+		game.getOpponent().addPlayerStateListener(
+				new GuiPlayerStateListenerAdapter() {
 					@Override
-					public void run() {
-						// javaFX operations should go here
+					public void doStateChanged(Player p, PlayerState s) {
 						switch (s) {
 						case READY:
-							ready.setText(labels.getString("start"));
+							ready.setText(getString("start"));
 							break;
 						case PLAYING:
 							ColorAdjust ca = new ColorAdjust();
@@ -143,14 +163,10 @@ public class Battleship extends Application {
 						}
 					}
 				});
-			}
-		});
-		game.getLocalPlayer().addPlayerStateListener(new PlayerStateListener() {
-			@Override
-			public void stateChanged(Player p, final PlayerState s) {
-				Platform.runLater(new Runnable() {
+		game.getLocalPlayer().addPlayerStateListener(
+				new GuiPlayerStateListenerAdapter() {
 					@Override
-					public void run() {
+					public void doStateChanged(Player p, PlayerState s) {
 						switch (s) {
 						case PLAYING:
 							obv.setEffect(null);
@@ -167,14 +183,6 @@ public class Battleship extends Application {
 					}
 				});
 
-			}
-		});
-
-		HBox ipBox = getIpBox();
-		ipBox.relocate(pbv.getBoundsInParent().getMinX(), pbv
-				.getBoundsInParent().getMaxY() + 20);
-		root.getChildren().add(ipBox);
-
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			@Override
 			public void handle(WindowEvent event) {
@@ -184,6 +192,16 @@ public class Battleship extends Application {
 			}
 		});
 
+		double scale = 1.2;
+		double baseWidth = pbv.getBoundsInParent().getWidth();
+		double baseHeight = pbv.getBoundsInParent().getHeight();
+		double width = baseWidth * 1.5 + 40;
+		double height = baseHeight + 20;
+		root.getTransforms().add(new Scale(scale, scale));
+		final Scene scene = new Scene(root, width * scale, height * scale,
+				Color.WHITE);
+		primaryStage.setScene(scene);
+		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
 
@@ -194,13 +212,13 @@ public class Battleship extends Application {
 		Font f = new Font(40);
 		switch (state) {
 		case GAME_WON:
-			t.setText(labels.getString("game.won"));
+			t.setText(getString("game.won"));
 			t.setTextFill(Color.ALICEBLUE);
 			is.setColor(Color.AQUA);
 			f = getFont("fonts/overhaul.ttf", 40);
 			break;
 		case GAME_LOST:
-			t.setText(labels.getString("game.lost"));
+			t.setText(getString("game.lost"));
 			t.setTextFill(Color.DEEPPINK);
 			is.setColor(Color.DARKRED);
 			f = getFont("fonts/thin-pencil-handwriting.ttf", 40);
@@ -226,98 +244,6 @@ public class Battleship extends Application {
 		t.relocate(0, (rootBounds.getHeight() - t.getBoundsInParent()
 				.getHeight()) / 2);
 		root.getChildren().add(t);
-	}
-
-	private Font getFont(String res, double size) {
-		return Font.loadFont(
-				getClass().getClassLoader().getResourceAsStream(res), size);
-	}
-
-	private HBox getIpBox() {
-		// Temporary input field to enter the opponent's
-		final HBox ipBox = new HBox();
-		final TextField ipAddress = new TextField();
-
-		Matcher m = Pattern.compile("\\d+\\.\\d+\\.\\d+\\.").matcher(
-				NetworkInformation.getIntAddresses().toString());
-		if (m.find())
-			ipAddress.setText(m.group());
-
-		ipBox.getChildren().add(ipAddress);
-		final Button connect = new Button(labels.getString("connect"));
-		Connection.getInstance().setConnectionStateListener(
-				new ConnectionStateListener() {
-					@Override
-					public void stateChanged(ConnectionState newState, String mgs) {
-						switch (newState) {
-						case CLOSED:
-							break;
-						case LISTENING:
-							ipBox.setVisible(true);
-							break;
-						case CONNECTED:
-							ipBox.setVisible(false);
-							break;
-						case CONNECTIONERROR:
-							break;
-						case INPUTERROR:
-							break;
-						case LISTENERERROR:
-							break;
-						case OUTPUTEROR:
-							break;
-						default:
-							break;
-						}
-					}
-				});
-		connect.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				Connection.getInstance().connectOpponent(ipAddress.getText());
-				System.out.println(ipAddress.getText());
-			}
-		});
-		ipBox.getChildren().add(connect);
-		ipBox.getChildren().add(
-				new Label(NetworkInformation.getIntAddresses().toString()));
-		return ipBox;
-	}
-
-	private Button buildReadyButton(final BoardView pbv, final BoardView obv) {
-		final Button ready = new Button(labels.getString("ready"));
-		ready.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				game.getLocalPlayer().setPlayerState(PlayerState.READY);
-				ParallelTransitionBuilder
-						.create()
-						.children(
-								ScaleTransitionBuilder.create().node(pbv)
-										.duration(Duration.seconds(1)).toX(0.5)
-										.toY(0.5).build(),
-								TranslateTransitionBuilder
-										.create()
-										.node(pbv)
-										.duration(Duration.seconds(1))
-										.toX(-pbv.getBoundsInParent()
-												.getWidth() / 4)
-										.toY(-pbv.getBoundsInParent()
-												.getHeight() / 4).build(),
-								ScaleTransitionBuilder.create().node(obv)
-										.duration(Duration.seconds(1)).toX(2)
-										.toY(2).build(),
-								TranslateTransitionBuilder
-										.create()
-										.node(obv)
-										.duration(Duration.seconds(1))
-										.toY(obv.getBoundsInParent()
-												.getHeight()).build()//
-						).build().play();
-				ready.setVisible(false);
-			}
-		});
-		return ready;
 	}
 
 	private void randomPlacement(List<Ship> ships, BoardSetup setup) {

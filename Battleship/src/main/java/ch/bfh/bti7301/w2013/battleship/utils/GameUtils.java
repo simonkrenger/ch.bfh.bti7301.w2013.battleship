@@ -2,8 +2,11 @@ package ch.bfh.bti7301.w2013.battleship.utils;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Map.Entry;
 import java.util.Random;
+
+import javafx.scene.text.Font;
 
 import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
 import ch.bfh.bti7301.w2013.battleship.game.Coordinates;
@@ -35,6 +38,15 @@ public class GameUtils {
 			throw new RuntimeException(
 					"Error while creating ships through reflection", e);
 		}
+	}
+
+	public static Font getFont(String res, double size) {
+		return Font.loadFont(GameUtils.class.getClassLoader()
+				.getResourceAsStream(res), size);
+	}
+
+	public static String getString(String key) {
+		return ResourceBundle.getBundle("translations").getString(key);
 	}
 
 	public static <E> E rnd(E[] choices) {
