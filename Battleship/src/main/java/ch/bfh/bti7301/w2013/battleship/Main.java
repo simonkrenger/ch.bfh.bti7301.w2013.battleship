@@ -37,9 +37,12 @@ import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.InnerShadow;
@@ -50,10 +53,6 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-
-import javax.sound.sampled.AudioFileFormat.Type;
-import javax.sound.sampled.AudioSystem;
-
 import ch.bfh.bti7301.w2013.battleship.game.Board.BoardSetup;
 import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
 import ch.bfh.bti7301.w2013.battleship.game.BoardListener;
@@ -68,7 +67,7 @@ import ch.bfh.bti7301.w2013.battleship.gui.BoardView.BoardType;
 import ch.bfh.bti7301.w2013.battleship.gui.GuiPlayerStateListenerAdapter;
 import ch.bfh.bti7301.w2013.battleship.gui.NetworkPanel;
 import ch.bfh.bti7301.w2013.battleship.gui.ReadyButton;
-import ch.bfh.bti7301.w2013.battleship.network.NetworkInformation;
+import ch.bfh.bti7301.w2013.battleship.gui.SettingsPanel;
 import ch.bfh.bti7301.w2013.battleship.sounds.SoundEffects;
 
 /**
@@ -106,10 +105,6 @@ public class Main extends Application {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// Output this for debugging and testing
-		System.out.println(NetworkInformation.getIntAddresses());
-		for (Type t : AudioSystem.getAudioFileTypes())
-			System.out.println(t.getExtension());
 		launch(args);
 	}
 
@@ -142,8 +137,10 @@ public class Main extends Application {
 		final Button ready = new ReadyButton(game, pbv, obv, guiBox);
 		guiBox.getChildren().add(ready);
 
-		NetworkPanel networkPanel = new NetworkPanel();
-		guiBox.getChildren().add(networkPanel);
+		TabPane tabs = new TabPane();
+		guiBox.getChildren().add(tabs);
+		tabs.getTabs().add(createTab(new NetworkPanel(), "network"));
+		tabs.getTabs().add(createTab(new SettingsPanel(), "settings"));
 
 		game.getOpponent().addPlayerStateListener(
 				new GuiPlayerStateListenerAdapter() {
@@ -244,6 +241,13 @@ public class Main extends Application {
 		t.relocate(0, (rootBounds.getHeight() - t.getBoundsInParent()
 				.getHeight()) / 2);
 		root.getChildren().add(t);
+	}
+
+	private Tab createTab(Node content, String name) {
+		Tab tab = new Tab(getString(name));
+		tab.setClosable(false);
+		tab.setContent(content);
+		return tab;
 	}
 
 	private void randomPlacement(List<Ship> ships, BoardSetup setup) {
