@@ -99,4 +99,42 @@ public class GameRule {
 		 */
 		DEFAULT;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + boardSize;
+		result = prime * result
+				+ ((gameType == null) ? 0 : gameType.hashCode());
+		result = prime * result
+				+ ((shipList == null) ? 0 : shipList.hashCode());
+		result = prime * result + totalTime;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		GameRule other = (GameRule) obj;
+		if (boardSize != other.boardSize)
+			return false;
+		if (gameType != other.gameType)
+			return false;
+		if (shipList == null) {
+			if (other.shipList != null)
+				return false;
+		} else if (!shipList.equals(other.shipList))
+			return false;
+		if (totalTime != other.totalTime)
+			return false;
+		return true;
+	}
+	
+	
 }

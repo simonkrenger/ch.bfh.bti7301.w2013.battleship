@@ -5,6 +5,7 @@ import java.net.*;
 import java.util.ArrayList;
 
 import ch.bfh.bti7301.w2013.battleship.game.Game;
+import ch.bfh.bti7301.w2013.battleship.game.GameRule;
 import ch.bfh.bti7301.w2013.battleship.game.GameState;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
@@ -112,6 +113,14 @@ public class Connection extends Thread {
 		handler.sendObject(counter);
 
 	}
+	
+	public void sendGameRule(GameRule rule) {
+		if (instance.connectionState != ConnectionState.CONNECTED) {
+			throw new RuntimeException("No Connection yet");
+		// TODO: GUI Should show this Error 
+		}
+		handler.sendObject(rule);
+	}
 
 	public static void receiveObjectToGame(Object object) {
 
@@ -152,6 +161,10 @@ public class Connection extends Thread {
 		} else if (object instanceof Missile) {
 			Missile received = (Missile) object;
 			instance.handleMissile(received);
+		} else if (object instanceof GameRule) {
+			GameRule received = (GameRule) object;
+			// This method checks if the gamerules are equal and corrects any differences
+			Game.getInstance().checkGameRule(received);
 		}
 
 		else if (object instanceof Integer) {

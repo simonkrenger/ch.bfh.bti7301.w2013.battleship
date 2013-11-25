@@ -83,6 +83,7 @@ public class LocalPlayer extends GenericPlayer {
 				|| (status == PlayerState.GAME_LOST && getPlayerState() == PlayerState.GAME_WON))
 			return;
 
+		// This occurs when the player presses "ready" and the opponents is already "ready"
 		if (status == PlayerState.READY
 				&& Game.getInstance().getOpponent().getPlayerState() == PlayerState.READY) {
 			status = PlayerState.WAITING;

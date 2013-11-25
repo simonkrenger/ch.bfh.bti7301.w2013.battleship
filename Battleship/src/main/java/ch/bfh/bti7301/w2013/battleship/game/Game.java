@@ -124,6 +124,21 @@ public class Game {
 	public GameRule getRule() {
 		return rule;
 	}
+	
+	/**
+	 * Method to check game rules
+	 * @param g
+	 */
+	public void checkGameRule(GameRule g) {
+		if(g.equals(this.rule)) {
+			// Everything is ok
+		} else {
+			// TODO: Notify user that he has different GameRules
+			// if( User wants to replace his gamerules )
+			// { // TODO: Replace this.rule and reload GUI }
+			// else { // TODO: To be discussed (disconnect?) }
+		}
+	}
 
 	/**
 	 * Method to get the ID of this game
