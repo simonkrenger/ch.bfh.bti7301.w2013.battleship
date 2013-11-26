@@ -30,7 +30,6 @@ import static ch.bfh.bti7301.w2013.battleship.utils.GameUtils.rnd;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -55,10 +54,8 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import ch.bfh.bti7301.w2013.battleship.game.Board.BoardSetup;
 import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
-import ch.bfh.bti7301.w2013.battleship.game.BoardListener;
 import ch.bfh.bti7301.w2013.battleship.game.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
-import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Player;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
@@ -68,7 +65,7 @@ import ch.bfh.bti7301.w2013.battleship.gui.GuiPlayerStateListenerAdapter;
 import ch.bfh.bti7301.w2013.battleship.gui.NetworkPanel;
 import ch.bfh.bti7301.w2013.battleship.gui.ReadyButton;
 import ch.bfh.bti7301.w2013.battleship.gui.SettingsPanel;
-import ch.bfh.bti7301.w2013.battleship.sounds.SoundEffects;
+import ch.bfh.bti7301.w2013.battleship.sounds.SoundEffectsBoardListener;
 
 /**
  * @author Christian Meyer <chrigu.meyer@gmail.com>
@@ -80,25 +77,14 @@ public class Main extends Application {
 
 	public Main() throws Exception {
 		game = Game.getInstance();
-		game.getOpponent().getBoard().addBoardListener(new BoardListener() {
-			@Override
-			public void stateChanged(final Missile m) {
-				switch (m.getMissileState()) {
-				case HIT:
-					SoundEffects.playHit();
-					break;
-				case SUNK:
-				case GAME_WON:
-					SoundEffects.playSunk();
-					if (new Random().nextBoolean())
-						SoundEffects.playSOS();
-					else
-						SoundEffects.playWilhelmScream();
-				default:
-					break;
-				}
-			}
-		});
+		game.getOpponent()
+				.getBoard()
+				.addBoardListener(
+						new SoundEffectsBoardListener(BoardType.OPPONENT));
+		game.getLocalPlayer()
+				.getBoard()
+				.addBoardListener(
+						new SoundEffectsBoardListener(BoardType.LOCAL));
 	}
 
 	/**
