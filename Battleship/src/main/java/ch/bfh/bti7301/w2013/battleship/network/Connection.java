@@ -57,12 +57,11 @@ public class Connection extends Thread {
 			e.printStackTrace();
 			catchAndReestablish(ConnectionState.CONNECTIONERROR,
 					"couldn't create connectionHandler");
-
-			gameState.setOpponentIp(handler.getOpponentIp());
-			gameState.setLocalIp(handler.getLocalIp());
-			
-
 		}
+		
+		gameState.setOpponentIp(handler.getOpponentIp());
+		gameState.setLocalIp(handler.getLocalIp());
+		
 	}
 
 	public void connectOpponent(String Ip) {
