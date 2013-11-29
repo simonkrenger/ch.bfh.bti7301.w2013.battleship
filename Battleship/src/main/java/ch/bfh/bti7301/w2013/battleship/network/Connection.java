@@ -29,6 +29,9 @@ public class Connection extends Thread {
 	private Connection() {
 		listener = new ConnectionListener(this);
 		listener.start();
+		
+		setConnectionState(ConnectionState.LISTENING,
+				"the listener is set up");
 	}
 
 	public static Connection getInstance() {
@@ -47,6 +50,8 @@ public class Connection extends Thread {
 		try {
 			handler = new ConnectionHandler(this, socket);
 			listener.closeListener();
+			setConnectionState(ConnectionState.CONNECTED,
+					"connection established");
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -70,6 +75,9 @@ public class Connection extends Thread {
 			Socket socket = new Socket(Ip, GAMEPORT);
 			handler = new ConnectionHandler(this, socket);
 			listener.closeListener();
+			
+			setConnectionState(ConnectionState.CONNECTED,
+					"connection established");
 
 		} catch (IOException e) {
 			e.printStackTrace();
