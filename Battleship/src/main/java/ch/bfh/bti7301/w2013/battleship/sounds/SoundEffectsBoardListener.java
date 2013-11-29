@@ -20,9 +20,11 @@ public class SoundEffectsBoardListener implements BoardListener {
 		case LOCAL:
 			if (!SettingsPanel.getSettings().isLocalSound())
 				return;
+			break;
 		case OPPONENT:
 			if (!SettingsPanel.getSettings().isOpponentSound())
 				return;
+			break;
 		}
 
 		switch (m.getMissileState()) {

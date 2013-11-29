@@ -17,8 +17,6 @@ public class ConnectionHandler extends Thread {
 		setConnectionSocket(socket);
 		setOut(new ObjectOutputStream(connectionSocket.getOutputStream()));
 		start();
-		connection.setConnectionState(ConnectionState.CONNECTED,
-				"connetcion established");
 	}
 
 	public void run() {

@@ -12,8 +12,13 @@ import java.util.Properties;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import ch.bfh.bti7301.w2013.battleship.game.Game;
+import ch.bfh.bti7301.w2013.battleship.game.GameRule;
 
 public class SettingsPanel extends VBox {
 	private static final String SOUNDEFFECTS_LOCAL = "soundeffects.local";
@@ -31,10 +36,13 @@ public class SettingsPanel extends VBox {
 		soundBox.getChildren().add(createCheckBox(SOUNDEFFECTS_LOCAL, true));
 		soundPane.setCollapsible(false);
 		getChildren().add(soundPane);
-		TitledPane rulePane = new TitledPane();
-		rulePane.setText(getString("gamerules"));
-		rulePane.setCollapsible(false);
-		getChildren().add(rulePane);
+		// TitledPane rulePane = new TitledPane();
+		// rulePane.setText(getString("gamerules"));
+		// GridPane ruleBox = new GridPane();
+		// rulePane.setContent(ruleBox);
+		// ruleBox.addRow(0, new Label("Board size"), new TextField());
+		// rulePane.setCollapsible(false);
+		// getChildren().add(rulePane);
 	}
 
 	private CheckBox createCheckBox(final String id, boolean def) {
@@ -60,7 +68,8 @@ public class SettingsPanel extends VBox {
 			try (InputStream is = new FileInputStream("battleship.properties")) {
 				properties.loadFromXML(is);
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.out
+						.println("Couldn't load properties, using default values");
 			}
 		}
 
@@ -72,7 +81,11 @@ public class SettingsPanel extends VBox {
 			return is(SOUNDEFFECTS_LOCAL, true);
 		}
 
-		public void set(String key, Object value) {
+		public GameRule getRule() {
+			return Game.getInstance().getRule();
+		}
+
+		private void set(String key, Object value) {
 			properties.put(key, String.valueOf(value));
 			try (OutputStream os = new FileOutputStream("battleship.properties")) {
 				properties.storeToXML(os, "Battleship settings");
