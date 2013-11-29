@@ -55,6 +55,7 @@ public class Connection extends Thread {
 
 			gameState.setOpponentIp(handler.getOpponentIp());
 			gameState.setLocalIp(handler.getLocalIp());
+			
 
 		}
 	}
@@ -81,6 +82,8 @@ public class Connection extends Thread {
 
 		gameState.setOpponentIp(handler.getOpponentIp());
 		gameState.setLocalIp(handler.getLocalIp());
+		
+		
 	}
 
 	public void sendMissile(Missile missile) {
@@ -228,6 +231,8 @@ public class Connection extends Thread {
 
 	public void catchAndReestablish(ConnectionState errorType, String errorMsg) {
 
+		game.getLocalPlayer().setPlayerState(PlayerState.BLOCCKED);
+		
 		if (GameState.getInstance().getReestablishCount() > 0)
 			instance.setConnectionState(errorType, errorMsg);
 

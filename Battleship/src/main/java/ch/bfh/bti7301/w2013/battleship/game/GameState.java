@@ -44,8 +44,7 @@ public class GameState {
 	public void restoreGame(Object opponentCounter) {
 		int oct = (int) opponentCounter;
 		if (this.counter == oct) {
-			
-			// TODO resume Game
+			Game.getInstance().getLocalPlayer().setPlayerState(localPlayerState);
 			
 		} else if (this.counter > oct) {
 			if (lastOut instanceof PlayerState) {
