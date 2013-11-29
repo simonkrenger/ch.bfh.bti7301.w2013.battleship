@@ -51,7 +51,7 @@ public class NetworkPanel extends VBox {
 		ipBox.getChildren().add(ipAddress);
 		final Button connect = new Button(ResourceBundle.getBundle(
 				"translations").getString("connect"));
-		Connection.getInstance().setConnectionStateListener(
+		Connection.getInstance().addConnectionStateListener(
 				new GuiConnectionStateListenerAdapter() {
 					@Override
 					public void doStateChanged(ConnectionState newState,
