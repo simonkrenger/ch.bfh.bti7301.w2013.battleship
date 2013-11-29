@@ -17,6 +17,7 @@ public class Connection extends Thread {
 	private static Connection instance;
 
 	private ConnectionState connectionState;
+	private String connectionStateMessage;
 
 	private ConnectionStateListener connectionStateListener;
 	private ConnectionListener listener;
@@ -86,7 +87,7 @@ public class Connection extends Thread {
 		if (instance.connectionState != ConnectionState.CONNECTED) {
 			throw new RuntimeException("Cannot shoot an imaginary Opponent");
 			// TODO: GUI Should show this Error and ask the user to connect
-		   // again.
+			// again.
 		}
 		handler.sendObject(missile);
 
@@ -98,7 +99,7 @@ public class Connection extends Thread {
 
 		if (instance.connectionState != ConnectionState.CONNECTED) {
 			throw new RuntimeException("No Conncetion yet");
-		// TODO: GUI Should show this Error 
+			// TODO: GUI Should show this Error
 		}
 		handler.sendObject(state);
 
@@ -108,7 +109,7 @@ public class Connection extends Thread {
 	public void sendCounter(int counter) {
 		if (instance.connectionState != ConnectionState.CONNECTED) {
 			throw new RuntimeException("No Conncetion yet");
-		// TODO: GUI Should show this Error 
+			// TODO: GUI Should show this Error
 		}
 		handler.sendObject(counter);
 
@@ -204,8 +205,13 @@ public class Connection extends Thread {
 		return connectionState;
 	}
 
+	public String getConnectionStateMessage() {
+		return connectionStateMessage;
+	}
+
 	public void setConnectionState(ConnectionState connectionState, String msg) {
 		this.connectionState = connectionState;
+		this.connectionStateMessage = msg;
 		if (connectionStateListener != null) {
 			connectionStateListener.stateChanged(connectionState, msg);
 		}
