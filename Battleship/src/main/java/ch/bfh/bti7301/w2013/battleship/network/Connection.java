@@ -19,7 +19,7 @@ public class Connection extends Thread {
 	private ConnectionState connectionState;
 	private String connectionStateMessage;
 
-	private ConnectionStateListener connectionStateListener;
+	private ArrayList<ConnectionStateListener> connectionStateListeners = new ArrayList<ConnectionStateListener>();
 	private ConnectionListener listener;
 	private ConnectionHandler handler;
 
@@ -29,6 +29,9 @@ public class Connection extends Thread {
 	private Connection() {
 		listener = new ConnectionListener(this);
 		listener.start();
+		
+		setConnectionState(ConnectionState.LISTENING,
+				"the listener is set up");
 	}
 
 	public static Connection getInstance() {
@@ -47,6 +50,8 @@ public class Connection extends Thread {
 		try {
 			handler = new ConnectionHandler(this, socket);
 			listener.closeListener();
+			setConnectionState(ConnectionState.CONNECTED,
+					"connection established");
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -70,6 +75,9 @@ public class Connection extends Thread {
 			Socket socket = new Socket(Ip, GAMEPORT);
 			handler = new ConnectionHandler(this, socket);
 			listener.closeListener();
+			
+			setConnectionState(ConnectionState.CONNECTED,
+					"connection established");
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -212,14 +220,13 @@ public class Connection extends Thread {
 	public void setConnectionState(ConnectionState connectionState, String msg) {
 		this.connectionState = connectionState;
 		this.connectionStateMessage = msg;
-		if (connectionStateListener != null) {
-			connectionStateListener.stateChanged(connectionState, msg);
+		for(ConnectionStateListener listener : connectionStateListeners) {
+			listener.stateChanged(connectionState, msg);
 		}
 	}
 
-	public void setConnectionStateListener(
-			ConnectionStateListener connectionStateListener) {
-		this.connectionStateListener = connectionStateListener;
+	public void addConnectionStateListener(ConnectionStateListener csl) {
+		connectionStateListeners.add(csl);
 	}
 
 	public void closeConnection() {

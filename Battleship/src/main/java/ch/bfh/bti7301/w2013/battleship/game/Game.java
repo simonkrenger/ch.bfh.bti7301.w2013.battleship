@@ -27,12 +27,14 @@ import ch.bfh.bti7301.w2013.battleship.game.players.LocalPlayer;
 import ch.bfh.bti7301.w2013.battleship.game.players.NetworkPlayer;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 import ch.bfh.bti7301.w2013.battleship.network.Connection;
+import ch.bfh.bti7301.w2013.battleship.network.ConnectionState;
+import ch.bfh.bti7301.w2013.battleship.network.ConnectionStateListener;
 
 /**
  * @author simon
  * 
  */
-public class Game {
+public class Game implements ConnectionStateListener {
 
 	/**
 	 * GameID, a unique identifier for the current game TODO: Implement method
@@ -66,7 +68,7 @@ public class Game {
 	 * Private constructor for the Singleton pattern
 	 */
 	private Game() {
-		// private
+		
 	}
 
 	/**
@@ -77,9 +79,15 @@ public class Game {
 	public static Game getInstance() {
 		if (instance == null) {
 			instance = new Game();
+			
+			// Add players
 			instance.localPlayer = new LocalPlayer();
 			instance.opponentPlayer = new NetworkPlayer();
+			
+			// Add connection state listener to handle GameRule validation
 			instance.connection = Connection.getInstance();
+			Connection.getInstance().addConnectionStateListener(instance);
+			
 			instance.gameState = GameState.getInstance();
 		}
 		return instance;
@@ -125,6 +133,14 @@ public class Game {
 		return rule;
 	}
 	
+	@Override
+	public void stateChanged(ConnectionState newState, String msg) {
+		// As soon as the connection changes to "CONNECTED", send the GameRule to be checked
+		if(newState == ConnectionState.CONNECTED) {
+			Connection.getInstance().sendGameRule(this.rule);
+		}
+	}
+	
 	/**
 	 * Method to check game rules
 	 * @param g
@@ -158,4 +174,6 @@ public class Game {
 	public void setGameID(int gameID) {
 		this.gameID = gameID;
 	}
+
+
 }

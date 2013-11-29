@@ -14,9 +14,6 @@ public class ConnectionListener extends Thread {
 		try {
 			listener = new ServerSocket(Connection.GAMEPORT);
 			this.connection = connection;
-			connection.setConnectionState(ConnectionState.LISTENING,
-					"the listener is set up");
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 			connection.setConnectionState(ConnectionState.LISTENERERROR,
