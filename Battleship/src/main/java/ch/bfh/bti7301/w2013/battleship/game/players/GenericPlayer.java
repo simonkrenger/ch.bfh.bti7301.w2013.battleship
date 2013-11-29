@@ -61,7 +61,7 @@ public class GenericPlayer implements Player {
 	private ArrayList<PlayerStateListener> pStateListener = new ArrayList<PlayerStateListener>();
 
 	public enum PlayerState {
-		GAME_STARTED, READY, WAITING, PLAYING, GAME_WON, GAME_LOST
+		GAME_STARTED, READY, WAITING, PLAYING, GAME_WON, GAME_LOST, BLOCCKED
 	}
 
 	public GenericPlayer() {

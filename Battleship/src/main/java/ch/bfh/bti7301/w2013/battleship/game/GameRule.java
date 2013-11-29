@@ -23,6 +23,7 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,8 +37,13 @@ import ch.bfh.bti7301.w2013.battleship.game.ships.Submarine;
  * @author simon
  * 
  */
-public class GameRule {
+public class GameRule implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private int boardSize = 12;
 	private int totalTime = 0;
 	private GameType gameType = GameType.DEFAULT;
