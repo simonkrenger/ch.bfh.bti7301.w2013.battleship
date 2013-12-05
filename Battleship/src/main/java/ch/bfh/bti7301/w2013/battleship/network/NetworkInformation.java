@@ -112,7 +112,18 @@ public class NetworkInformation {
 		}
 
 		return broadcastAddresses;
-
+	}
+	
+	public static String bcToIp(String bc){
+		
+		for (InterfaceAddress ip: getIpAddresses()){
+			
+			if (ip.getBroadcast().getHostAddress().equals(bc)){
+				return ip.getAddress().getHostAddress();
+			}
+		}
+		return null;
+		
 	}
 
 	/**

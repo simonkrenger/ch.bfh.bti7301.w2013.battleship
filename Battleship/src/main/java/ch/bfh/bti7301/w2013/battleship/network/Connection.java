@@ -279,6 +279,17 @@ public class Connection extends Thread {
 		return null;
 
 	}
+	
+	public ArrayList<String> foundOpponent(ArrayList<String> foundOpponents){
+		
+		//TODO: Meyer Wohin???
+		return foundOpponents;
+		
+	}
+	
+	public ConnectionHandler getHandler() {
+		return handler;
+	}
 
 	private void cleanUp() {
 		listener = null;
