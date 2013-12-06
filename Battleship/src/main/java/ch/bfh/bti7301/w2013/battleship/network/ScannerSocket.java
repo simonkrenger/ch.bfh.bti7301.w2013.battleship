@@ -28,6 +28,8 @@ public class ScannerSocket extends Thread {
 		
 					try {
 						NetworkScanner.getInstance().readUdpSocket((String)in.readObject());
+						//Test
+						System.out.println("a udp Socket was generated an its listener is started" );
 					} catch (ClassNotFoundException | IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -48,6 +50,7 @@ public class ScannerSocket extends Thread {
 	
 	public void sendMsg(String msg) throws IOException{
 	 out.writeObject(msg);
+	 System.out.println("a message has been sent over the udp Socket: " + this.ip );
 	}
 	
 

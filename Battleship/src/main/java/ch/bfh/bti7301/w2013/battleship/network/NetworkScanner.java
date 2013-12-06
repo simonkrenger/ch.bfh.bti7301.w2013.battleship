@@ -13,7 +13,7 @@ public class NetworkScanner {
 	private static ArrayList<ScannerSocket> udpSockets;
 
 	private NetworkScanner() throws IOException {
-		getInstance();
+		//getInstance();
 		setSockets();
 		sendUdpMessage(PLAYERNAME);
 	}
@@ -35,6 +35,8 @@ public class NetworkScanner {
 		for (InetAddress bc : NetworkInformation.getBroadcastAddresses()){
 			udpSockets.add(new ScannerSocket(bc));
 		}
+		
+		System.out.println("udp sockets are set" + udpSockets.toString());
 		
 	}
 
@@ -92,6 +94,7 @@ public class NetworkScanner {
 			name = matchName(in);	
 			
 			Connection.getInstance().foundOpponent(ip,name);
+			System.out.println("a upd message was received" + in);
 		}
 		
 	}
@@ -105,6 +108,7 @@ public class NetworkScanner {
 				socken.sendMsg("BSG-" + NetworkInformation.bcToIp(socken.ip.getHostAddress()) + "-" + name);
 			}
   
+		System.out.println("a upd message was sent");
 
 	}
 	
