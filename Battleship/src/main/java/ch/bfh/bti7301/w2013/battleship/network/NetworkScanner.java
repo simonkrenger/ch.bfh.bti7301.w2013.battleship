@@ -8,12 +8,14 @@ import java.util.regex.Pattern;
 
 public class NetworkScanner {
 	
+	private static final String PLAYERNAME = "INITIAL";
 	private static NetworkScanner instance;
 	private static ArrayList<ScannerSocket> udpSockets;
 
 	private NetworkScanner() throws IOException {
 		getInstance();
 		setSockets();
+		sendUdpMessage(PLAYERNAME);
 	}
 	
 	public static NetworkScanner getInstance()  {
@@ -82,14 +84,16 @@ public class NetworkScanner {
 
 	public void readUdpSocket(String in) {
 		
-		ArrayList<String> foundOpponent = new ArrayList<>();
+		//ArrayList<String> foundOpponent = new ArrayList<>();
+		String ip, name;
 		
 		if (matchMsg(in)){		
-			foundOpponent.add(matchIp(in));
-			foundOpponent.add(matchName(in));	
+			ip = matchIp(in);
+			name = matchName(in);	
+			
+			Connection.getInstance().foundOpponent(ip,name);
 		}
 		
-		Connection.getInstance().foundOpponent(foundOpponent);
 	}
 
 	public static void sendUdpMessage(String name) throws IOException {

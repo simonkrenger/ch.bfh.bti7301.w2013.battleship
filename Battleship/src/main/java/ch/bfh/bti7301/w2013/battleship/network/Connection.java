@@ -19,12 +19,14 @@ public class Connection extends Thread {
 	private ConnectionState connectionState;
 	private String connectionStateMessage;
 
+	private ArrayList<DiscoveryListener> discoveryListeners = new ArrayList<DiscoveryListener>();
 	private ArrayList<ConnectionStateListener> connectionStateListeners = new ArrayList<ConnectionStateListener>();
 	private ConnectionListener listener;
 	private ConnectionHandler handler;
-
+	private NetworkScanner udpScanner;
 	private static Game game = Game.getInstance();
 	private static GameState gameState = GameState.getInstance();
+
 
 	private Connection() {
 		listener = new ConnectionListener(this);
@@ -32,6 +34,8 @@ public class Connection extends Thread {
 		
 		setConnectionState(ConnectionState.LISTENING,
 				"the listener is set up");
+		
+		this.udpScanner = NetworkScanner.getInstance();
 	}
 
 	public static Connection getInstance() {
@@ -280,10 +284,15 @@ public class Connection extends Thread {
 
 	}
 	
-	public ArrayList<String> foundOpponent(ArrayList<String> foundOpponents){
+	public void addDiscoveryListener(DiscoveryListener listener){
+		discoveryListeners.add(listener);
+	}
+	
+	public void foundOpponent(String ip, String name){
 		
-		//TODO: Meyer Wohin???
-		return foundOpponents;
+		for(DiscoveryListener listener : discoveryListeners) {
+			listener.foundOpponent(ip, name);
+		}
 		
 	}
 	
