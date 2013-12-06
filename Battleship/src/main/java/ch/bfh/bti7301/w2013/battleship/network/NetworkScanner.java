@@ -108,16 +108,6 @@ public class NetworkScanner {
 		//TODO: close all open sockets.
 	}
 	
-	public static void main(String[] args) {
-
-		try {
-			sendUdpMessage("etepetete");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
 
 }
 
