@@ -129,6 +129,10 @@ public class Game implements ConnectionStateListener {
 		return null;
 	}
 
+	/**
+	 * Method to get the gamerules of this instance of Game
+	 * @return The active gamerules
+	 */
 	public GameRule getRule() {
 		return rule;
 	}
