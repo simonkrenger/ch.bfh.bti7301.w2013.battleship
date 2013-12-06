@@ -23,31 +23,43 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game.players.ai;
 
+import static ch.bfh.bti7301.w2013.battleship.utils.GameUtils.getAvailableShips;
+import ch.bfh.bti7301.w2013.battleship.game.Board.BoardSetup;
+import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer;
 import ch.bfh.bti7301.w2013.battleship.network.Connection;
 
 /**
  * @author simon
- *
+ * 
  */
 public class ComputerPlayer extends GenericPlayer {
-	
+
 	StrategyStack strategy;
-	
+
 	public ComputerPlayer() {
 		this("Computer");
 	}
 
 	public ComputerPlayer(String name) {
 		super(name);
-		
+
 		strategy = new StrategyStack(10);
-		
+
 		// Generate 5 random steps
 		strategy.addRandom(5);
+
+		// Random setup
+		BoardSetup bs = this.getBoard().getBoardSetup();
+		bs.randomPlacement(
+						getAvailableShips(Game.getInstance().getRule()));
+		
+		bs.done();
+		
+		this.setPlayerState(status);
 	}
-	
+
 	public void sendMissile(Missile m) {
 		// TODO
 	}
