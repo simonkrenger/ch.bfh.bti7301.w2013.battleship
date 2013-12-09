@@ -1,6 +1,6 @@
 package ch.bfh.bti7301.w2013.battleship.network;
 
-import java.io.*;
+	import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 

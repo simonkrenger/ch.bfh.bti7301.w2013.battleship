@@ -3,21 +3,34 @@ package ch.bfh.bti7301.w2013.battleship.network;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 
 public class ScannerSocket extends Thread {
 
 	public InetAddress ip;
-	public static Socket udpSocket;
+	public static DatagramSocket udpSocket;
+	
 	public static ObjectOutputStream out;
 	public static ObjectInputStream in;
 	
-	ScannerSocket(InetAddress ip) throws IOException{
+	ScannerSocket(InetAddress ip){
 		this.ip = ip;
-		udpSocket = new Socket(ip, Connection.GAMEPORT);
-		in = new ObjectInputStream(udpSocket.getInputStream());
-		out = new ObjectOutputStream(udpSocket.getOutputStream());
+		
+		
+		try {
+			udpSocket = new DatagramSocket(Connection.GAMEPORT);
+			
+			//in = new ObjectInputStream(udpSocket.getInputStream());
+			//out = new ObjectOutputStream(udpSocket.getOutputStream());
+			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		start();
 		
 	}
@@ -25,8 +38,8 @@ public class ScannerSocket extends Thread {
 	public void run() {
 
 				while (!udpSocket.isClosed()) {
-		
 					try {
+
 						NetworkScanner.getInstance().readUdpSocket((String)in.readObject());
 						//Test
 						System.out.println("a udp Socket was generated an its listener is started" );
