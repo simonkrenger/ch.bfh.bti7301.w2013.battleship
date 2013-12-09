@@ -89,6 +89,8 @@ public class Game implements ConnectionStateListener {
 			Connection.getInstance().addConnectionStateListener(instance);
 			
 			instance.gameState = GameState.getInstance();
+		
+
 		}
 		return instance;
 	}
