@@ -48,9 +48,6 @@ public class DiscoverySocketSender extends Thread {
 				e.printStackTrace();
 				udpSocket.close();
 			}
-
-			udpSocket.close();
-
 		}
 	}
 
