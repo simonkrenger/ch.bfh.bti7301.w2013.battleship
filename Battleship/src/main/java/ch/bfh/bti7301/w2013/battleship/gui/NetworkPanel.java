@@ -48,9 +48,8 @@ public class NetworkPanel extends VBox {
 			@Override
 			public void foundOpponent(final String ip, final String name) {
 				// Ignore my own IPs
-				// FIXME: Deactivated because it's depressing if it's all empty
-				// if (NetworkInformation.getIntAddresses().contains(ip))
-				// return;
+				if (NetworkInformation.getIntAddresses().contains(ip))
+					return;
 
 				Platform.runLater(new Runnable() {
 					@Override
