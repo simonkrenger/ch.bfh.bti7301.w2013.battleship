@@ -47,12 +47,21 @@ public class NetworkPanel extends VBox {
 		conn.addDiscoveryListener(new DiscoveryListener() {
 			@Override
 			public void foundOpponent(final String ip, final String name) {
+				// Ignore my own IPs
+				// FIXME: Deactivated because it's depressing if it's all empty
+				// if (NetworkInformation.getIntAddresses().contains(ip))
+				// return;
+
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
 						NetworkClient nc = peers.get(ip);
 						if (nc != null) {
-							nc.name = name;
+							if (!nc.name.equals(name)) {
+								opponents.remove(nc);
+								nc.name = name;
+								opponents.add(nc);
+							}
 						} else {
 							nc = new NetworkClient(ip, name);
 							peers.put(ip, nc);
