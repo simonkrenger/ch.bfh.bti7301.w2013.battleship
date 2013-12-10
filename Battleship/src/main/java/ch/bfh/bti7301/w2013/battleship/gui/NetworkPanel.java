@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -41,8 +42,13 @@ public class NetworkPanel extends VBox {
 
 		conn.addDiscoveryListener(new DiscoveryListener() {
 			@Override
-			public void foundOpponent(String ip, String name) {
-				opponents.add(new NetworkClient(ip, name));
+			public void foundOpponent(final String ip, final String name) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						opponents.add(new NetworkClient(ip, name));
+					}
+				});
 			}
 		});
 		ips.setItems(opponents);
