@@ -290,6 +290,7 @@ public class Connection extends Thread {
 		System.out.println("method foundOpponent on Connection is called");
 		for(DiscoveryListener listener : discoveryListeners) {
 			listener.foundOpponent(ip, name);
+			System.out.println("listener-x");
 		}
 		
 	}

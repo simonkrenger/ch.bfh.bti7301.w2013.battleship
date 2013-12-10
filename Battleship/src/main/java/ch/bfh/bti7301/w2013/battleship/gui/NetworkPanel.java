@@ -42,7 +42,9 @@ public class NetworkPanel extends VBox {
 		conn.addDiscoveryListener(new DiscoveryListener() {
 			@Override
 			public void foundOpponent(String ip, String name) {
+				System.out.println("opponent found in NetworkPanel");
 				opponents.add(new NetworkClient(ip, name));
+				System.out.println("opponent Added in NetworkPanel");
 			}
 		});
 		ips.setItems(opponents);

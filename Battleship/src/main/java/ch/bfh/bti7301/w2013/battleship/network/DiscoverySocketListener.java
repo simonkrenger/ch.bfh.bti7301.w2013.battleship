@@ -26,7 +26,7 @@ public class DiscoverySocketListener extends Thread {
 			}
 			String ip = packetIn.getAddress().getHostAddress();
 			String data = new String(packetIn.getData());
-			System.out.println(data);
+			System.out.println("fresh from Incomeing Packet:" + data);
 			NetworkScanner.getInstance().readUdpSocket(ip,data);
 		}
 		
