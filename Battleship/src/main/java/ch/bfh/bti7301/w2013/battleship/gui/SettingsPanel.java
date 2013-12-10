@@ -36,13 +36,13 @@ public class SettingsPanel extends VBox {
 		soundBox.getChildren().add(createCheckBox(SOUNDEFFECTS_LOCAL, true));
 		soundPane.setCollapsible(false);
 		getChildren().add(soundPane);
-		// TitledPane rulePane = new TitledPane();
-		// rulePane.setText(getString("gamerules"));
-		// GridPane ruleBox = new GridPane();
-		// rulePane.setContent(ruleBox);
-		// ruleBox.addRow(0, new Label("Board size"), new TextField());
-		// rulePane.setCollapsible(false);
-		// getChildren().add(rulePane);
+		TitledPane rulePane = new TitledPane();
+		rulePane.setText(getString("gamerules"));
+		GridPane ruleBox = new GridPane();
+		rulePane.setContent(ruleBox);
+		ruleBox.addRow(0, new Label(getString("boardsize")), new TextField());
+		rulePane.setCollapsible(false);
+		getChildren().add(rulePane);
 	}
 
 	private CheckBox createCheckBox(final String id, boolean def) {
