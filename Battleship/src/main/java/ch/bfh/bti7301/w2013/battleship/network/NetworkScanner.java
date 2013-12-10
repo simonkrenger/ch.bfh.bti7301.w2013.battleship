@@ -15,14 +15,12 @@ public class NetworkScanner {
 	private static DiscoverySocketSender discoverySender;
 
 	private NetworkScanner() throws IOException {
-		String playerName = SettingsPanel.getSettings().getPlayerName();
-		
 		udpSocket = new DatagramSocket(Connection.GAMEPORT);
-		discoveryListener = new DiscoverySocketListener(udpSocket, playerName);
+		discoveryListener = new DiscoverySocketListener(udpSocket);
 		
 		System.out.println("listener is startet on Socket " + udpSocket.getLocalAddress().getHostAddress());
 		
-		discoverySender = new DiscoverySocketSender(udpSocket, playerName);
+		discoverySender = new DiscoverySocketSender(udpSocket);
 		
 		System.out.println("sender is startet on Socket " + udpSocket.getLocalAddress().getHostAddress());
 	}

@@ -7,7 +7,7 @@ public class DiscoverySocketListener extends Thread {
 
 	public DatagramSocket udpSocket;
 
-	DiscoverySocketListener(DatagramSocket socket,String name) {
+	DiscoverySocketListener(DatagramSocket socket) {
 		this.udpSocket = socket;
 		start();
 	}
@@ -25,7 +25,7 @@ public class DiscoverySocketListener extends Thread {
 				e.printStackTrace();
 			}
 			String ip = packetIn.getAddress().getHostAddress();
-			String data = new String(packetIn.getData());
+			String data = new String(packetIn.getData(), packetIn.getOffset(), packetIn.getLength());
 			System.out.println("fresh from Incomeing Packet:" + data);
 			NetworkScanner.getInstance().readUdpSocket(ip,data);
 		}

@@ -31,6 +31,13 @@ public class SettingsPanel extends VBox {
 	public SettingsPanel() {
 		GridPane nameBox = new GridPane();
 		TextField nameField = new TextField(settings.getPlayerName());
+		nameField.textProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable,
+					String oldValue, String newValue) {
+				settings.set(PLAYER_NAME, newValue);
+			}
+		});
 		nameBox.addRow(0, new Label(getString("player.name")), nameField);
 		getChildren().add(nameBox);
 
@@ -94,7 +101,7 @@ public class SettingsPanel extends VBox {
 			String name = properties.getProperty(PLAYER_NAME);
 			if (name == null) {
 				name = randomPlayerName();
-				properties.put(PLAYER_NAME, name);
+				set(PLAYER_NAME, name);
 			}
 			return name;
 		}
