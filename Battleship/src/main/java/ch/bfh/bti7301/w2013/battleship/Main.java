@@ -52,7 +52,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
-import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import ch.bfh.bti7301.w2013.battleship.game.Board.BoardSetup;
@@ -199,8 +198,8 @@ public class Main extends Application {
 				st.setX(s);
 				st.setY(s);
 				Bounds rb = root.getBoundsInParent();
-				double tx = (scene.getWidth() - rb.getWidth()) / 2;
-				double ty = (scene.getHeight() - rb.getHeight()) / 2;
+				double tx = (scene.getWidth() - rb.getWidth() - s * 4) / 2;
+				double ty = (scene.getHeight() - rb.getHeight() - s * 4) / 2;
 				root.relocate(tx, ty);
 				System.out.println("Width: " + newWidth);
 			}
@@ -212,12 +211,12 @@ public class Main extends Application {
 					Number oldHeight, Number newHeight) {
 				double sw = scene.getWidth() / width;
 				double sh = newHeight.doubleValue() / height;
-				double smin = Math.min(sw, sh);
-				st.setX(smin);
-				st.setY(smin);
+				double s = Math.min(sw, sh);
+				st.setX(s);
+				st.setY(s);
 				Bounds rb = root.getBoundsInParent();
-				double tx = (scene.getWidth() - rb.getWidth()) / 2;
-				double ty = (scene.getHeight() - rb.getHeight()) / 2;
+				double tx = (scene.getWidth() - rb.getWidth() - s * 4) / 2;
+				double ty = (scene.getHeight() - rb.getHeight() - s * 4) / 2;
 				root.relocate(tx, ty);
 				System.out.println("Height: " + newHeight);
 			}
