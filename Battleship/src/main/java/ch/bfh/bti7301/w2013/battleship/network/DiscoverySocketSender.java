@@ -33,8 +33,6 @@ public class DiscoverySocketSender extends Thread {
 
 				udpSocket.send(packetOut);
 
-				System.out.println("sent packet " + name);
-
 				sleep(5000);
 
 			} catch (IOException e1) {

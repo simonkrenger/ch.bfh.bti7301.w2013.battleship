@@ -26,6 +26,7 @@ public class DiscoverySocketListener extends Thread {
 				e.printStackTrace();
 			}
 			String ip = packetIn.getAddress().getHostAddress();
+
 			String data;
 			try {
 				data = new String(packetIn.getData(), packetIn.getOffset(), packetIn.getLength(), "utf-8");
