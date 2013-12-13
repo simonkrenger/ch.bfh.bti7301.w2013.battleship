@@ -27,6 +27,8 @@ import static ch.bfh.bti7301.w2013.battleship.utils.GameUtils.getAvailableShips;
 import ch.bfh.bti7301.w2013.battleship.game.Board.BoardSetup;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
+import ch.bfh.bti7301.w2013.battleship.game.Player;
+import ch.bfh.bti7301.w2013.battleship.game.PlayerStateListener;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer;
 import ch.bfh.bti7301.w2013.battleship.network.Connection;
 
@@ -34,7 +36,7 @@ import ch.bfh.bti7301.w2013.battleship.network.Connection;
  * @author simon
  * 
  */
-public class ComputerPlayer extends GenericPlayer {
+public class ComputerPlayer extends GenericPlayer implements PlayerStateListener {
 
 	StrategyStack strategy;
 
@@ -45,9 +47,8 @@ public class ComputerPlayer extends GenericPlayer {
 	public ComputerPlayer(String name) {
 		super(name);
 
-		strategy = new StrategyStack(10);
-
 		// Generate 5 random steps
+		strategy = new StrategyStack(10);
 		strategy.addRandom(5);
 
 		// Random setup
@@ -57,10 +58,27 @@ public class ComputerPlayer extends GenericPlayer {
 		
 		bs.done();
 		
-		this.setPlayerState(status);
+		this.setPlayerState(PlayerState.READY);
 	}
 
 	public void sendMissile(Missile m) {
+		
+		Missile result = Game.getInstance().getLocalPlayer().placeMissile(m);
+		
+		
+		
 		// TODO
+		// This is what gets called in NetworkPlayer: Connection.getInstance().sendMissile(m);
+	}
+
+	@Override
+	public void stateChanged(Player p, PlayerState s) {
+		// TODO Auto-generated method stub
+		if(p == this) {
+			// This means our state changed
+		} else {
+			// Our opponents state changed
+		}
+		
 	}
 }
