@@ -1,7 +1,14 @@
 package ch.bfh.bti7301.w2013.battleship.network;
 
-import java.net.*;
-import java.util.*;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 
 /**
  * Class to check and find the users network settings
@@ -11,6 +18,15 @@ import java.util.*;
  */
 
 public class NetworkInformation {
+	public static final InetAddress MULTICAST_GROUP = getMulticastGroup();
+
+	private static InetAddress getMulticastGroup() {
+		try {
+			return InetAddress.getByName("239.255.255.250");
+		} catch (UnknownHostException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	/**
 	 * Method to get all IP Addresses of Up IPv4, non loopback and non virtual
@@ -18,7 +34,6 @@ public class NetworkInformation {
 	 * 
 	 * @return An Array List With the Interfaces names and Ip Addresses.
 	 */
-
 	public static ArrayList<InterfaceAddress> getIpAddresses() {
 
 		ArrayList<InterfaceAddress> ipAddresses = new ArrayList<InterfaceAddress>();
@@ -67,6 +82,7 @@ public class NetworkInformation {
 
 	/**
 	 * Returns an ArrayList with all the Interfaces that are up.
+	 * 
 	 * @return
 	 */
 	private static ArrayList<NetworkInterface> getUpInterfaces() {
@@ -84,8 +100,7 @@ public class NetworkInformation {
 		for (NetworkInterface adapter : Collections.list(allInterfaces)) {
 
 			try {
-				if (adapter.isUp() && !adapter.isLoopback()
-						&& !adapter.isVirtual()) {
+				if (adapter.isUp() && !adapter.isLoopback()) {
 
 					upIpv4Interfaces.add(adapter);
 
@@ -101,17 +116,28 @@ public class NetworkInformation {
 	}
 
 	public static ArrayList<InetAddress> getBroadcastAddresses() {
-		
+
 		ArrayList<InetAddress> broadcastAddresses = new ArrayList<InetAddress>();
-		
-		for (InterfaceAddress broadcast : getIpAddresses()){
+
+		for (InterfaceAddress broadcast : getIpAddresses()) {
 			InetAddress bc = broadcast.getBroadcast();
-			if (bc != null ){
-			broadcastAddresses.add(bc);
+			if (bc != null) {
+				broadcastAddresses.add(bc);
 			}
 		}
 
 		return broadcastAddresses;
+	}
+
+	public static String bcToIp(String bc) {
+
+		for (InterfaceAddress ip : getIpAddresses()) {
+
+			if (ip.getBroadcast().getHostAddress().equals(bc)) {
+				return ip.getAddress().getHostAddress();
+			}
+		}
+		return null;
 
 	}
 

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
+import java.util.Random;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -21,12 +22,25 @@ import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.GameRule;
 
 public class SettingsPanel extends VBox {
+	private static final String PLAYER_NAME = "player.name";
 	private static final String SOUNDEFFECTS_LOCAL = "soundeffects.local";
 	private static final String SOUNDEFFECTS_OPPONENT = "soundeffects.opponent";
 
 	private static final Settings settings = new Settings();
 
 	public SettingsPanel() {
+		GridPane nameBox = new GridPane();
+		TextField nameField = new TextField(settings.getPlayerName());
+		nameField.textProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable,
+					String oldValue, String newValue) {
+				settings.set(PLAYER_NAME, newValue);
+			}
+		});
+		nameBox.addRow(0, new Label(getString("player.name")), nameField);
+		getChildren().add(nameBox);
+
 		TitledPane soundPane = new TitledPane();
 		soundPane.setText(getString("soundeffects"));
 		VBox soundBox = new VBox();
@@ -36,13 +50,14 @@ public class SettingsPanel extends VBox {
 		soundBox.getChildren().add(createCheckBox(SOUNDEFFECTS_LOCAL, true));
 		soundPane.setCollapsible(false);
 		getChildren().add(soundPane);
-		// TitledPane rulePane = new TitledPane();
-		// rulePane.setText(getString("gamerules"));
-		// GridPane ruleBox = new GridPane();
-		// rulePane.setContent(ruleBox);
-		// ruleBox.addRow(0, new Label("Board size"), new TextField());
-		// rulePane.setCollapsible(false);
-		// getChildren().add(rulePane);
+
+		TitledPane rulePane = new TitledPane();
+		rulePane.setText(getString("gamerules"));
+		GridPane ruleBox = new GridPane();
+		rulePane.setContent(ruleBox);
+		ruleBox.addRow(0, new Label(getString("boardsize")), new TextField());
+		rulePane.setCollapsible(false);
+		getChildren().add(rulePane);
 	}
 
 	private CheckBox createCheckBox(final String id, boolean def) {
@@ -63,6 +78,15 @@ public class SettingsPanel extends VBox {
 
 	public static class Settings {
 		private Properties properties = new Properties();
+		private String[] names = { "Captain Cook", "Captain Jack Sparrow",
+				"Admiral Nelson", "Duck Dodger", "James T. Kirk",
+				"Jean-Luc Picard", "Hector Barbarossa", "Captain Nemo",
+				"Captain Haddock" };
+
+		private String randomPlayerName() {
+			Random rnd = new Random();
+			return names[rnd.nextInt(names.length)];
+		}
 
 		private Settings() {
 			try (InputStream is = new FileInputStream("battleship.properties")) {
@@ -71,6 +95,15 @@ public class SettingsPanel extends VBox {
 				System.out
 						.println("Couldn't load properties, using default values");
 			}
+		}
+
+		public String getPlayerName() {
+			String name = properties.getProperty(PLAYER_NAME);
+			if (name == null) {
+				name = randomPlayerName();
+				set(PLAYER_NAME, name);
+			}
+			return name;
 		}
 
 		public boolean isOpponentSound() {

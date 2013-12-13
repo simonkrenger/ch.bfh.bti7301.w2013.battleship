@@ -1,6 +1,6 @@
 package ch.bfh.bti7301.w2013.battleship.network;
 
-import java.io.*;
+	import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 
@@ -19,12 +19,13 @@ public class Connection extends Thread {
 	private ConnectionState connectionState;
 	private String connectionStateMessage;
 
+	private ArrayList<DiscoveryListener> discoveryListeners = new ArrayList<DiscoveryListener>();
 	private ArrayList<ConnectionStateListener> connectionStateListeners = new ArrayList<ConnectionStateListener>();
 	private ConnectionListener listener;
 	private ConnectionHandler handler;
-
 	private static Game game = Game.getInstance();
 	private static GameState gameState = GameState.getInstance();
+
 
 	private Connection() {
 		listener = new ConnectionListener(this);
@@ -32,6 +33,8 @@ public class Connection extends Thread {
 		
 		setConnectionState(ConnectionState.LISTENING,
 				"the listener is set up");
+		
+		findOpponent();			//For test only!!
 	}
 
 	public static Connection getInstance() {
@@ -272,12 +275,28 @@ public class Connection extends Thread {
 		gameState.setLocalPlayerState(game.getLocalPlayer().getPlayerState());
 		gameState.setOpponentPlayerState(game.getOpponent().getPlayerState());
 	}
-
-	public ArrayList<String> findOpponents() {
-		// ToDO
-
-		return null;
-
+ 
+	
+	public void addDiscoveryListener(DiscoveryListener listener){
+		discoveryListeners.add(listener);
+	}
+	
+	public void findOpponent(){
+		NetworkScanner.getInstance();
+		System.out.println("NetworkScanner startet");
+	}
+	
+	public void foundOpponent(String ip, String name){
+		System.out.println("method foundOpponent on Connection is called");
+		for(DiscoveryListener listener : discoveryListeners) {
+			listener.foundOpponent(ip, name);
+			System.out.println("listener-x");
+		}
+		
+	}
+	
+	public ConnectionHandler getHandler() {
+		return handler;
 	}
 
 	private void cleanUp() {
