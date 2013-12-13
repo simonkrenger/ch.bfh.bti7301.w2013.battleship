@@ -25,16 +25,15 @@ public class DiscoverySocketSender extends Thread {
 				String name = SettingsPanel.getSettings().getPlayerName();
 				byte[] buf = name.getBytes();
 
-				for (InetAddress bc : NetworkInformation
-						.getBroadcastAddresses()) {
-					System.out.println("packet sent to BC Add: "  + bc.getHostAddress());
-					DatagramPacket packetOut = new DatagramPacket(buf,
-							buf.length, bc, Connection.GAMEPORT);
+				InetAddress bc = NetworkInformation.MULTICAST_GROUP;
+				System.out.println("packet sent to BC Add: "
+						+ bc.getHostAddress());
+				DatagramPacket packetOut = new DatagramPacket(buf, buf.length,
+						bc, Connection.GAMEPORT);
 
-					udpSocket.send(packetOut);
-					
-					System.out.println("sent packet " + name);
-				}
+				udpSocket.send(packetOut);
+
+				System.out.println("sent packet " + name);
 
 				sleep(5000);
 
