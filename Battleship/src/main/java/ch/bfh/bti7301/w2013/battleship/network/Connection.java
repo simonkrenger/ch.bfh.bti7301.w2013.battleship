@@ -283,14 +283,14 @@ public class Connection extends Thread {
 	
 	public void findOpponent(){
 		NetworkScanner.getInstance();
-		System.out.println("NetworkScanner startet");
+		System.out.println("Connection: NetworkScanner startet");
 	}
 	
 	public void foundOpponent(String ip, String name){
-		System.out.println("method foundOpponent on Connection is called");
+		System.out.println("Connection: method foundOpponent on Connection is called");
 		for(DiscoveryListener listener : discoveryListeners) {
 			listener.foundOpponent(ip, name);
-			System.out.println("listener-x");
+			System.out.println("Connection: listener-x");
 		}
 		
 	}

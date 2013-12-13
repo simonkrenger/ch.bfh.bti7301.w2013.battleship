@@ -33,7 +33,7 @@ public class DiscoverySocketSender extends Thread {
 
 					udpSocket.send(packetOut);
 					
-					System.out.println("sent packet " + name);
+					System.out.println("DiscoverySocketSend: sent packet " + name);
 				}
 
 				sleep(5000);
@@ -49,7 +49,7 @@ public class DiscoverySocketSender extends Thread {
 				udpSocket.close();
 			}
 
-			udpSocket.close();
+			
 
 		}
 	}
