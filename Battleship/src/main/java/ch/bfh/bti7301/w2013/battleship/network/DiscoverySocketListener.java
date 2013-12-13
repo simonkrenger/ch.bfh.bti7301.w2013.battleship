@@ -1,6 +1,7 @@
 package ch.bfh.bti7301.w2013.battleship.network;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 public class DiscoverySocketListener extends Thread {
@@ -25,9 +26,14 @@ public class DiscoverySocketListener extends Thread {
 				e.printStackTrace();
 			}
 			String ip = packetIn.getAddress().getHostAddress();
-			String data = new String(packetIn.getData(), packetIn.getOffset(), packetIn.getLength());
-			System.out.println("fresh from Incomeing Packet:" + data);
-			NetworkScanner.getInstance().readUdpSocket(ip,data);
+			String data;
+			try {
+				data = new String(packetIn.getData(), packetIn.getOffset(), packetIn.getLength(), "utf-8");
+				System.out.println("fresh from Incomeing Packet:" + data);
+				NetworkScanner.getInstance().readUdpSocket(ip,data);
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException(e);
+			}
 		}
 		
 		udpSocket.close();
