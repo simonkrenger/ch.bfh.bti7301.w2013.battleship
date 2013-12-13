@@ -2,8 +2,11 @@ package ch.bfh.bti7301.w2013.battleship.gui;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -61,6 +64,7 @@ public class NetworkPanel extends VBox {
 								nc.name = name;
 								opponents.add(nc);
 							}
+							nc.seen();
 						} else {
 							nc = new NetworkClient(ip, name);
 							peers.put(ip, nc);
@@ -78,6 +82,35 @@ public class NetworkPanel extends VBox {
 			}
 		});
 		getChildren().add(ips);
+
+		Timer time = new Timer();
+		TimerTask task = new TimerTask() {
+			final List<NetworkClient> toRemove = new LinkedList<>();
+
+			@Override
+			public void run() {
+				if (!toRemove.isEmpty())
+					return;
+
+				for (NetworkClient opponent : opponents) {
+					if (opponent.isStale()) {
+						peers.remove(opponent.ip);
+						toRemove.add(opponent);
+					}
+				}
+
+				if (!toRemove.isEmpty()) {
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							opponents.removeAll(toRemove);
+							toRemove.clear();
+						}
+					});
+				}
+			}
+		};
+		time.schedule(task, 0, 2000);
 	}
 
 	private HBox getIpBox() {
@@ -169,15 +202,25 @@ public class NetworkPanel extends VBox {
 
 	private class NetworkClient {
 		String ip, name;
+		long lastSeen;
 
 		public NetworkClient(String ip, String name) {
 			this.ip = ip;
 			this.name = name;
+			lastSeen = System.currentTimeMillis();
 		}
 
 		@Override
 		public String toString() {
 			return name;
+		}
+
+		public void seen() {
+			lastSeen = System.currentTimeMillis();
+		}
+
+		public boolean isStale() {
+			return System.currentTimeMillis() - lastSeen > 6000;
 		}
 	}
 }
