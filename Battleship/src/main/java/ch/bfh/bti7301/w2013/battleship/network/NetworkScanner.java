@@ -6,22 +6,23 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class NetworkScanner {
+import ch.bfh.bti7301.w2013.battleship.gui.SettingsPanel;
 
-	private static final String PLAYERNAME = "CAPTAIN-COOK";
-	
+public class NetworkScanner {
 	private static NetworkScanner instance;
-	DatagramSocket udpSocket;
+	MulticastSocket udpSocket;
 	private static DiscoverySocketListener discoveryListener;
 	private static DiscoverySocketSender discoverySender;
 
 	private NetworkScanner() throws IOException {
-		udpSocket = new DatagramSocket(Connection.GAMEPORT);
-		discoveryListener = new DiscoverySocketListener(udpSocket, PLAYERNAME);
+		udpSocket = new MulticastSocket(Connection.GAMEPORT);
+		udpSocket.setReuseAddress(true);
+		udpSocket.joinGroup(NetworkInformation.MULTICAST_GROUP);
+		discoveryListener = new DiscoverySocketListener(udpSocket);
 		
 		System.out.println("listener is startet on Socket " + udpSocket.getLocalAddress().getHostAddress());
 		
-		discoverySender = new DiscoverySocketSender(udpSocket, PLAYERNAME);
+		discoverySender = new DiscoverySocketSender(udpSocket);
 		
 		System.out.println("sender is startet on Socket " + udpSocket.getLocalAddress().getHostAddress());
 	}

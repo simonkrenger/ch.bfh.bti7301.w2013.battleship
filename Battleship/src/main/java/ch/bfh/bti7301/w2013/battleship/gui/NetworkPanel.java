@@ -1,6 +1,8 @@
 package ch.bfh.bti7301.w2013.battleship.gui;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,6 +35,8 @@ public class NetworkPanel extends VBox {
 			new LinkedList<NetworkClient>());
 	private Connection conn = Connection.getInstance();
 
+	private Map<String, NetworkClient> peers = new HashMap<>();
+
 	final TextField ipAddress = new TextField();
 
 	public NetworkPanel() {
@@ -43,10 +47,25 @@ public class NetworkPanel extends VBox {
 		conn.addDiscoveryListener(new DiscoveryListener() {
 			@Override
 			public void foundOpponent(final String ip, final String name) {
+				// Ignore my own IPs
+				if (NetworkInformation.getIntAddresses().contains(ip))
+					return;
+
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
-						opponents.add(new NetworkClient(ip, name));
+						NetworkClient nc = peers.get(ip);
+						if (nc != null) {
+							if (!nc.name.equals(name)) {
+								opponents.remove(nc);
+								nc.name = name;
+								opponents.add(nc);
+							}
+						} else {
+							nc = new NetworkClient(ip, name);
+							peers.put(ip, nc);
+							opponents.add(nc);
+						}
 					}
 				});
 			}

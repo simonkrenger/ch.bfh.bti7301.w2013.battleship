@@ -5,14 +5,14 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+import ch.bfh.bti7301.w2013.battleship.gui.SettingsPanel;
+
 public class DiscoverySocketSender extends Thread {
-	public String name;
 	public DatagramSocket udpSocket;
 
-	public DiscoverySocketSender(DatagramSocket socket, String name) {
+	public DiscoverySocketSender(DatagramSocket socket) {
 
 		this.udpSocket = socket;
-		this.name = name;
 		start();
 	}
 
@@ -22,20 +22,19 @@ public class DiscoverySocketSender extends Thread {
 
 			try {
 
-				byte[] buf = new byte[256];
-				buf = name.getBytes();
+				String name = SettingsPanel.getSettings().getPlayerName();
+				byte[] buf = name.getBytes();
 
-				for (InetAddress bc : NetworkInformation
-						.getBroadcastAddresses()) {
-					System.out.println("packet sent to BC Add: "  + bc.getHostAddress());
-					DatagramPacket packetOut = new DatagramPacket(buf,
-							buf.length, bc, Connection.GAMEPORT);
+				InetAddress bc = NetworkInformation.MULTICAST_GROUP;
+				System.out.println("packet sent to BC Add: "
+						+ bc.getHostAddress());
+				DatagramPacket packetOut = new DatagramPacket(buf, buf.length,
+						bc, Connection.GAMEPORT);
 
-					udpSocket.send(packetOut);
-					
-					System.out.println("DiscoverySocketSend: sent packet " + name);
-				}
 
+				udpSocket.send(packetOut);
+
+				System.out.println("sent packet " + name);
 				sleep(5000);
 
 			} catch (IOException e1) {
@@ -48,8 +47,6 @@ public class DiscoverySocketSender extends Thread {
 				e.printStackTrace();
 				udpSocket.close();
 			}
-
-			
 
 		}
 	}
