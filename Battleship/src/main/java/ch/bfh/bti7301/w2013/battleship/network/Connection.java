@@ -34,7 +34,7 @@ public class Connection extends Thread {
 		setConnectionState(ConnectionState.LISTENING,
 				"the listener is set up");
 		
-		findOpponent();			//For test only!!
+		findOpponent();			//TODO: Should this be somwhere else?? For test only!!
 	}
 
 	public static Connection getInstance() {
@@ -288,9 +288,11 @@ public class Connection extends Thread {
 	
 	public void foundOpponent(String ip, String name){
 		System.out.println("Connection: method foundOpponent on Connection is called");
+		int i = 0;
 		for(DiscoveryListener listener : discoveryListeners) {
 			listener.foundOpponent(ip, name);
-			System.out.println("Connection: listener-x");
+			System.out.println("Connection: listener-" + i);
+			i++;
 		}
 		
 	}

@@ -5,16 +5,24 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
+
+import javax.sound.sampled.ReverbType;
 
 public class ConnectionHandler extends Thread {
 
 	private Socket connectionSocket;
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
+	@SuppressWarnings("unused")
+	private ConnectionKeepalive keepalive;
 
 	public ConnectionHandler(Connection connection, Socket socket)
 			throws IOException {
+		
 		setConnectionSocket(socket);
+		
+		startKeepalive();
 		setOut(new ObjectOutputStream(connectionSocket.getOutputStream()));
 		start();
 	}
@@ -59,11 +67,14 @@ public class ConnectionHandler extends Thread {
 
 	}
 
-
-	
 	
 	public void receiveObject(Object receivedObject) {
+		String ka = new String ("keepalive");
+		if (!receivedObject.equals(ka)){
 		Connection.receiveObjectToGame(receivedObject);
+		System.out.println("Dropped Keepalive: " + receivedObject );
+		
+		}
 	}
 
 	public void setIn(ObjectInputStream in) {
@@ -85,10 +96,16 @@ public class ConnectionHandler extends Thread {
 	public String getOpponentIp(){
 		return connectionSocket.getInetAddress().getHostAddress();
 	}
+	
+	public void startKeepalive() throws SocketException{
+		this.connectionSocket.setSoTimeout(6000);
+		this.keepalive = new ConnectionKeepalive();
+	}
 
 	public void closeHandler() {
 		if (!connectionSocket.isClosed()) {
 			try {
+				keepalive.interrupt();
 				in.close();
 				out.close();
 				connectionSocket.close();
@@ -101,4 +118,5 @@ public class ConnectionHandler extends Thread {
 			}
 		}
 	}
+	
 }
