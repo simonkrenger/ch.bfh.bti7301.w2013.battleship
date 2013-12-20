@@ -1,5 +1,7 @@
 package ch.bfh.bti7301.w2013.battleship.network;
 
+import java.io.Serializable;
+
 public class ConnectionKeepalive extends Thread {
 
 	public ConnectionKeepalive() {
@@ -22,6 +24,11 @@ public class ConnectionKeepalive extends Thread {
 		}
 	}
 
-	static class KeepAlive {
+	static class KeepAlive implements Serializable {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 6337911690510859715L;
 	}
 }
