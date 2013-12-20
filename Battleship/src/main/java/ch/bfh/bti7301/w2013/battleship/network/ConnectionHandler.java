@@ -73,10 +73,7 @@ public class ConnectionHandler extends Thread {
 
 	
 	public void receiveObject(Object receivedObject) {
-		if (!(receivedObject instanceof Integer)){
 		Connection.receiveObjectToGame(receivedObject);
-				
-		}
 	}
 
 	public void setIn(ObjectInputStream in) {

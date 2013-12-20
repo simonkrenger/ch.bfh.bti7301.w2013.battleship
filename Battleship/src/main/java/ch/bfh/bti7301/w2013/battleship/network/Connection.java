@@ -148,6 +148,9 @@ public class Connection extends Thread {
 			GameRule received = (GameRule) object;
 			// This method checks if the gamerules are equal and corrects any differences
 			Game.getInstance().checkGameRule(received);
+		} else if (object instanceof Integer) {
+			Integer tiger = (Integer) object;
+			System.out.println("Tiger received, yay: " + tiger);
 		}
 
 		else if (object instanceof Integer) {
