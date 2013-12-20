@@ -29,6 +29,7 @@ public class ConnectionKeepalive extends Thread {
 		/**
 		 * 
 		 */
-		private static final long serialVersionUID = 6337911690510859715L;
+		private static final long serialVersionUID = 1L;
+
 	}
 }
