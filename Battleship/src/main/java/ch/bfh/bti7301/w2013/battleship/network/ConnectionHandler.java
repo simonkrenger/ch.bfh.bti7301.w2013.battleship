@@ -84,8 +84,9 @@ public class ConnectionHandler extends Thread {
 		this.out = out;
 	}
 
-	public void setConnectionSocket(Socket connectionSocket) {
+	public void setConnectionSocket(Socket connectionSocket) throws SocketException {
 		this.connectionSocket = connectionSocket;
+		this.connectionSocket.setSoTimeout(6000);
 	}
 	
 	public String getLocalIp(){
@@ -97,7 +98,6 @@ public class ConnectionHandler extends Thread {
 	}
 	
 	public void startKeepalive() throws SocketException{
-		this.connectionSocket.setSoTimeout(6000);
 		this.keepalive = new ConnectionKeepalive();
 	}
 
