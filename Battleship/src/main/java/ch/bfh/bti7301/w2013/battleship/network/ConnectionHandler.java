@@ -40,6 +40,7 @@ public class ConnectionHandler extends Thread {
 		while (true) {
 			try {
 				Object inputObject = in.readObject();
+				System.out.println(inputObject);
 				receiveObject(inputObject);
 				
 			} catch (EOFException e) {
@@ -61,6 +62,7 @@ public class ConnectionHandler extends Thread {
 	public void sendObject(Object outgoingObject) {
 		try {
 			out.writeObject(outgoingObject);
+			System.out.println(outgoingObject);
 
 		} catch (IOException e) {
 			e.printStackTrace();
