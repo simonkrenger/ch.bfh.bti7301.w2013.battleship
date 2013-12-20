@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
@@ -50,6 +52,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
+import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import ch.bfh.bti7301.w2013.battleship.game.Board.BoardSetup;
@@ -178,13 +181,51 @@ public class Main extends Application {
 		double scale = 1.2;
 		double baseWidth = pbv.getBoundsInParent().getWidth();
 		double baseHeight = pbv.getBoundsInParent().getHeight();
-		double width = baseWidth * 1.5 + 40;
-		double height = baseHeight + 20;
-		root.getTransforms().add(new Scale(scale, scale));
+		final double width = baseWidth * 1.5 + 40;
+		final double height = baseHeight + 20;
+		final Scale st = new Scale(scale, scale);
+		root.getTransforms().add(st);
 		final Scene scene = new Scene(root, width * scale, height * scale,
 				Color.WHITE);
+
+		scene.widthProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(
+					ObservableValue<? extends Number> observableValue,
+					Number oldWidth, Number newWidth) {
+				double sw = newWidth.doubleValue() / width;
+				double sh = scene.getHeight() / height;
+				double s = Math.min(sw, sh);
+				st.setX(s);
+				st.setY(s);
+				Bounds rb = root.getBoundsInParent();
+				double tx = (scene.getWidth() - rb.getWidth()) / 2;
+				double ty = (scene.getHeight() - rb.getHeight()) / 2;
+				root.relocate(tx, ty);
+				System.out.println("Width: " + newWidth);
+			}
+		});
+		scene.heightProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(
+					ObservableValue<? extends Number> observableValue,
+					Number oldHeight, Number newHeight) {
+				double sw = scene.getWidth() / width;
+				double sh = newHeight.doubleValue() / height;
+				double smin = Math.min(sw, sh);
+				st.setX(smin);
+				st.setY(smin);
+				Bounds rb = root.getBoundsInParent();
+				double tx = (scene.getWidth() - rb.getWidth()) / 2;
+				double ty = (scene.getHeight() - rb.getHeight()) / 2;
+				root.relocate(tx, ty);
+				System.out.println("Height: " + newHeight);
+			}
+		});
+
 		primaryStage.setScene(scene);
-		primaryStage.setResizable(false);
+		primaryStage.setMinHeight(height);
+		primaryStage.setMinWidth(width);
 		primaryStage.show();
 	}
 
