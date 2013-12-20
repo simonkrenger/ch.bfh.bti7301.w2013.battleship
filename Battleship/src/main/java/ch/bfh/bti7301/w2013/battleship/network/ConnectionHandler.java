@@ -9,6 +9,8 @@ import java.net.SocketException;
 
 import javax.sound.sampled.ReverbType;
 
+import ch.bfh.bti7301.w2013.battleship.network.ConnectionKeepalive.KeepAlive;
+
 public class ConnectionHandler extends Thread {
 
 	private Socket connectionSocket;
@@ -69,8 +71,7 @@ public class ConnectionHandler extends Thread {
 
 	
 	public void receiveObject(Object receivedObject) {
-		
-		if (!receivedObject.equals("keepalive")){
+		if (!(receivedObject instanceof KeepAlive)){
 		Connection.receiveObjectToGame(receivedObject);
 				
 		}
