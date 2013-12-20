@@ -40,9 +40,8 @@ public class ConnectionHandler extends Thread {
 		while (true) {
 			try {
 				Object inputObject = in.readObject();
-				System.out.println(inputObject);
-				receiveObject("RCV:"  + inputObject);
-				
+				System.out.println("RCV: "  + inputObject);
+				receiveObject(inputObject);
 			} catch (EOFException e) {
 				e.printStackTrace();
 				Connection.getInstance().catchAndReestablish(ConnectionState.INPUTERROR, "opponent disconnected");

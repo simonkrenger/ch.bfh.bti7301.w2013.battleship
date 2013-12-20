@@ -145,6 +145,7 @@ public class Connection extends Thread {
 			Missile received = (Missile) object;
 			Game.getInstance().handleMissile(received);
 		} else if (object instanceof GameRule) {
+			System.out.println("GameRule received: " + object);
 			GameRule received = (GameRule) object;
 			// This method checks if the gamerules are equal and corrects any differences
 			Game.getInstance().checkGameRule(received);
