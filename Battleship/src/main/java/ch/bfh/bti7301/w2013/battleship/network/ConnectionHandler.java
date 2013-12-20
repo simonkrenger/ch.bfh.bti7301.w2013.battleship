@@ -59,7 +59,7 @@ public class ConnectionHandler extends Thread {
 		}
 	}
 
-	public void sendObject(Object outgoingObject) {
+	public synchronized void sendObject(Object outgoingObject) {
 		try {
 			out.writeObject(outgoingObject);
 			System.out.println("SEND: " + outgoingObject);
