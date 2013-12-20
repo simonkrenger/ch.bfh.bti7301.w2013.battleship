@@ -41,7 +41,7 @@ public class ConnectionHandler extends Thread {
 			try {
 				Object inputObject = in.readObject();
 				System.out.println(inputObject);
-				receiveObject(inputObject);
+				receiveObject("RCV:"  + inputObject);
 				
 			} catch (EOFException e) {
 				e.printStackTrace();
@@ -62,7 +62,7 @@ public class ConnectionHandler extends Thread {
 	public void sendObject(Object outgoingObject) {
 		try {
 			out.writeObject(outgoingObject);
-			System.out.println(outgoingObject);
+			System.out.println("SEND: " + outgoingObject);
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -73,7 +73,7 @@ public class ConnectionHandler extends Thread {
 
 	
 	public void receiveObject(Object receivedObject) {
-		if (!(receivedObject instanceof KeepAlive)){
+		if (!(receivedObject instanceof Integer)){
 		Connection.receiveObjectToGame(receivedObject);
 				
 		}
