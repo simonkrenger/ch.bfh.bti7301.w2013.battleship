@@ -22,9 +22,9 @@ public class ConnectionHandler extends Thread {
 		
 		setConnectionSocket(socket);
 		
-		startKeepalive();
 		setOut(new ObjectOutputStream(connectionSocket.getOutputStream()));
 		start();
+		startKeepalive();
 	}
 
 	public void run() {
@@ -69,11 +69,10 @@ public class ConnectionHandler extends Thread {
 
 	
 	public void receiveObject(Object receivedObject) {
-		String ka = new String ("keepalive");
-		if (!receivedObject.equals(ka)){
-		Connection.receiveObjectToGame(receivedObject);
-		System.out.println("Dropped Keepalive: " + receivedObject );
 		
+		if (!receivedObject.equals("keepalive")){
+		Connection.receiveObjectToGame(receivedObject);
+				
 		}
 	}
 

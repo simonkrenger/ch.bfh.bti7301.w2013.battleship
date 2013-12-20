@@ -9,14 +9,16 @@ public class ConnectionKeepalive extends Thread{
 	}
 
 public void run (){
-	
-	String keepalive = new String("keepalive");
-	Connection.getInstance().getHandler().sendObject(keepalive);
+	while(true){
+	Connection.getInstance().getHandler().sendObject("keepalive");
 	try {
 		sleep(5000);
+	
 	} catch (InterruptedException e) {
 		// TODO Auto-generated catch block
+		System.out.println("ConnectionKeepalive: exception sleep");
 		e.printStackTrace();
+	}
 	}
 }
 	
