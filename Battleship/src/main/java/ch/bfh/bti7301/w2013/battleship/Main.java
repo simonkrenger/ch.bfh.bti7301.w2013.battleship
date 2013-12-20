@@ -26,11 +26,6 @@ package ch.bfh.bti7301.w2013.battleship;
 import static ch.bfh.bti7301.w2013.battleship.utils.GameUtils.getAvailableShips;
 import static ch.bfh.bti7301.w2013.battleship.utils.GameUtils.getFont;
 import static ch.bfh.bti7301.w2013.battleship.utils.GameUtils.getString;
-import static ch.bfh.bti7301.w2013.battleship.utils.GameUtils.rnd;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -54,12 +49,8 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import ch.bfh.bti7301.w2013.battleship.game.Board.BoardSetup;
-import ch.bfh.bti7301.w2013.battleship.game.Board.Direction;
-import ch.bfh.bti7301.w2013.battleship.game.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Player;
-import ch.bfh.bti7301.w2013.battleship.game.Ship;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView.BoardType;
