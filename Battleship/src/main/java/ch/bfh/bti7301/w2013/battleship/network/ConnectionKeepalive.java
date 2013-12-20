@@ -8,10 +8,11 @@ public class ConnectionKeepalive extends Thread {
 		start();
 	}
 
-	private static KeepAlive KEEP_ALIVE = new KeepAlive();
+	private static Object KEEP_ALIVE = new Integer(42);
 
 	public void run() {
 		while (true) {
+			
 			Connection.getInstance().getHandler().sendObject(KEEP_ALIVE);
 			try {
 				sleep(5000);
