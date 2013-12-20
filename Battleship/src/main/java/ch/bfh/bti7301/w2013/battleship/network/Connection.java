@@ -140,41 +140,10 @@ public class Connection extends Thread {
 
 		if (object instanceof PlayerState) {
 			PlayerState received = (PlayerState) object;
-			switch (received) {
-			case READY:
-				if (game.getLocalPlayer().getPlayerState() == PlayerState.READY) {
-					game.getLocalPlayer().setPlayerState(PlayerState.PLAYING);
-					game.getOpponent().setPlayerState(PlayerState.WAITING);
-				} else {
-					game.getOpponent().setPlayerState(PlayerState.READY);
-				}
-				break;
-			case WAITING:
-				game.getOpponent().setPlayerState(PlayerState.WAITING);
-				game.getLocalPlayer().setPlayerState(PlayerState.PLAYING);
-				break;
-			case GAME_LOST:
-				game.getOpponent().setPlayerState(PlayerState.GAME_LOST);
-				game.getLocalPlayer().setPlayerState(PlayerState.GAME_WON);
-				break;
-			case GAME_WON:
-				game.getOpponent().setPlayerState(PlayerState.GAME_WON);
-				game.getLocalPlayer().setPlayerState(PlayerState.GAME_LOST);
-				break;
-			case GAME_STARTED:
-				// TODO
-				break;
-			case PLAYING:
-				// TODO
-				break;
-			default:
-				throw new RuntimeException("Invalid PlayerState received:"
-						+ received);
-			}
-
+			Game.getInstance().handlePlayerState(received);
 		} else if (object instanceof Missile) {
 			Missile received = (Missile) object;
-			instance.handleMissile(received);
+			Game.getInstance().handleMissile(received);
 		} else if (object instanceof GameRule) {
 			GameRule received = (GameRule) object;
 			// This method checks if the gamerules are equal and corrects any differences
@@ -186,32 +155,6 @@ public class Connection extends Thread {
 		}
 
 		setGameStateIn(object);
-	}
-
-	private void handleMissile(Missile missile) {
-
-		switch (missile.getMissileState()) {
-		case FIRED:
-			Missile feedback = game.getLocalPlayer().placeMissile(missile);
-			sendMissile(feedback);
-			break;
-		case MISS:
-			game.getOpponent().setPlayerState(PlayerState.PLAYING);
-			game.getLocalPlayer().setPlayerState(PlayerState.WAITING);
-			game.getOpponent().getBoard().updateMissile(missile);
-			break;
-		case HIT:
-		case SUNK:
-			game.getOpponent().setPlayerState(PlayerState.WAITING);
-			game.getLocalPlayer().setPlayerState(PlayerState.PLAYING);
-			game.getOpponent().getBoard().updateMissile(missile);
-			break;
-		case GAME_WON:
-			game.getOpponent().setPlayerState(PlayerState.GAME_LOST);
-			game.getLocalPlayer().setPlayerState(PlayerState.GAME_WON);
-			game.getOpponent().getBoard().updateMissile(missile);
-			break;
-		}
 	}
 
 	public ConnectionState getConnectionState() {

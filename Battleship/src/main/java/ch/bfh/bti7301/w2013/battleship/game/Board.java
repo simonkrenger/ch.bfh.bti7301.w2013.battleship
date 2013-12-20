@@ -23,7 +23,10 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game;
 
+import static ch.bfh.bti7301.w2013.battleship.utils.GameUtils.rnd;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 
@@ -284,6 +287,52 @@ public class Board {
 
 		public void done() {
 			setup = null;
+		}
+
+		public void randomPlacement(List<Ship> ships) {
+			long time = System.currentTimeMillis();
+			int size = Game.getInstance().getRule().getBoardSize();
+			List<Coordinates> free = new ArrayList<>(size * size);
+
+			for (int i = 1; i <= size; i++)
+				for (int j = 1; j <= size; j++)
+					free.add(new Coordinates(i, j));
+
+			for (Ship ship : ships) {
+				boolean successful = false;
+				Coordinates c;
+				Direction d = rnd(Direction.values());
+				do {
+					c = rnd(free);
+					for (int i = 0; i < Direction.values().length; i++) {
+						try {
+							ship.setCoordinates(setup, c, d);
+							setup.placeShip(ship);
+							successful = true;
+							break;
+						} catch (RuntimeException ignore) {
+							d = d.rotateCW();
+						}
+					}
+					if (System.currentTimeMillis() - time > 1000) {
+						throw new RuntimeException(
+								"Random placement took too long!");
+					}
+				} while (!successful);
+
+				Coordinates c1 = ship.getStartCoordinates().getNext(
+						ship.getDirection().getOpposite());
+				Coordinates c2 = c1.getNext(ship.getDirection().rotateCW());
+				Coordinates c3 = c1.getNext(ship.getDirection().rotateCCW());
+				for (int i = 0; i < ship.getSize() + 2; i++) {
+					free.remove(c1);
+					free.remove(c2);
+					free.remove(c3);
+					c1 = c1.getNext(ship.getDirection());
+					c2 = c2.getNext(ship.getDirection());
+					c3 = c3.getNext(ship.getDirection());
+				}
+			}
 		}
 	}
 

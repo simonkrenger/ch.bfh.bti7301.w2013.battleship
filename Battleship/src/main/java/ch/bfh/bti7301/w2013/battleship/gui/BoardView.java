@@ -21,6 +21,7 @@ import ch.bfh.bti7301.w2013.battleship.game.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
+import ch.bfh.bti7301.w2013.battleship.game.Missile.MissileState;
 
 public class BoardView extends Parent {
 	public static final int SIZE = 40;
@@ -29,6 +30,8 @@ public class BoardView extends Parent {
 	private List<ShipView> shipViews = new LinkedList<>();
 	private Group ships = new Group();
 	private Group missiles = new Group();
+
+	private boolean blocked = false;
 
 	public BoardView(Game game, BoardType type) {
 		final Board board = type.getBoard(game);
@@ -62,6 +65,11 @@ public class BoardView extends Parent {
 			setOnMouseClicked(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent e) {
+					if (blocked)
+						return;
+					else
+						blocked = true;
+
 					Missile m = new Missile(getCoordinates(e.getX(), e.getY()));
 					drawMissile(m);
 					try {
@@ -146,6 +154,9 @@ public class BoardView extends Parent {
 						if (m.getSunkShip() != null) {
 							addShip(m.getSunkShip());
 						}
+
+						if (m.getMissileState() != MissileState.FIRED)
+							blocked = false;
 					}
 				});
 			}

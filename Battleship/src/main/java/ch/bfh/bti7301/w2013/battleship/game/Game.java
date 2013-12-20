@@ -68,7 +68,7 @@ public class Game implements ConnectionStateListener {
 	 * Private constructor for the Singleton pattern
 	 */
 	private Game() {
-		
+
 	}
 
 	/**
@@ -79,17 +79,16 @@ public class Game implements ConnectionStateListener {
 	public static Game getInstance() {
 		if (instance == null) {
 			instance = new Game();
-			
+
 			// Add players
 			instance.localPlayer = new LocalPlayer();
 			instance.opponentPlayer = new NetworkPlayer();
-			
+
 			// Add connection state listener to handle GameRule validation
 			instance.connection = Connection.getInstance();
 			Connection.getInstance().addConnectionStateListener(instance);
-			
+
 			instance.gameState = GameState.getInstance();
-		
 
 		}
 		return instance;
@@ -121,44 +120,126 @@ public class Game implements ConnectionStateListener {
 	 *         game is not running!
 	 */
 	public Player getActivePlayer() {
-		if (localPlayer.getPlayerState() == PlayerState.PLAYING
-				&& opponentPlayer.getPlayerState() == PlayerState.WAITING) {
-			return localPlayer;
-		} else if (opponentPlayer.getPlayerState() == PlayerState.PLAYING
-				&& localPlayer.getPlayerState() == PlayerState.WAITING) {
-			return opponentPlayer;
+		if (getLocalPlayer().getPlayerState() == PlayerState.PLAYING
+				&& getOpponent().getPlayerState() == PlayerState.WAITING) {
+			return getLocalPlayer();
+		} else if (getOpponent().getPlayerState() == PlayerState.PLAYING
+				&& getLocalPlayer().getPlayerState() == PlayerState.WAITING) {
+			return getOpponent();
 		}
 		return null;
 	}
 
+	public void setActivePlayer(Player p) {
+		if (p == getOpponent()) {
+			getOpponent().setPlayerState(PlayerState.PLAYING);
+			getLocalPlayer().setPlayerState(PlayerState.WAITING);
+		} else if (p == getLocalPlayer()) {
+			getOpponent().setPlayerState(PlayerState.WAITING);
+			getLocalPlayer().setPlayerState(PlayerState.PLAYING);
+		} else {
+			throw new RuntimeException("setActivePlayer() failed, player" + p
+					+ " not recognized!");
+		}
+	}
+	
+	public void setWinningPlayer(Player p) {
+		if (p == getOpponent()) {
+			
+		} else if(p == getLocalPlayer()) {
+			getOpponent().setPlayerState(PlayerState.GAME_LOST);
+			getLocalPlayer().setPlayerState(PlayerState.GAME_WON);
+		} else {
+			throw new RuntimeException("setWinningPlayer() failed, player" + p
+					+ " not recognized!");
+		}
+	}
+
 	/**
 	 * Method to get the gamerules of this instance of Game
+	 * 
 	 * @return The active gamerules
 	 */
 	public GameRule getRule() {
 		return rule;
 	}
-	
+
 	@Override
 	public void stateChanged(ConnectionState newState, String msg) {
-		// As soon as the connection changes to "CONNECTED", send the GameRule to be checked
-		if(newState == ConnectionState.CONNECTED) {
+		// As soon as the connection changes to "CONNECTED", send the GameRule
+		// to be checked
+		if (newState == ConnectionState.CONNECTED) {
 			Connection.getInstance().sendGameRule(this.rule);
 		}
 	}
-	
+
 	/**
 	 * Method to check game rules
+	 * 
 	 * @param g
 	 */
 	public void checkGameRule(GameRule g) {
-		if(g.equals(this.rule)) {
+		if (g.equals(this.rule)) {
 			// Everything is ok
 		} else {
 			// TODO: Notify user that he has different GameRules
 			// if( User wants to replace his gamerules )
 			// { // TODO: Replace this.rule and reload GUI }
 			// else { // TODO: To be discussed (disconnect?) }
+		}
+	}
+
+	public void handleMissile(Missile m) {
+		// This method is called when a Missile arrives from the opponent
+		switch (m.getMissileState()) {
+		case FIRED:
+			// "FIRED" means the missile was fired and needs to be sent back
+			// with a new status
+			Missile feedback = getLocalPlayer().placeMissile(m);
+			Connection.getInstance().sendMissile(feedback);
+			break;
+		case MISS:
+			setActivePlayer(getOpponent());
+			getOpponent().getBoard().updateMissile(m);
+			break;
+		case HIT:
+		case SUNK:
+			setActivePlayer(getLocalPlayer());
+			getOpponent().getBoard().updateMissile(m);
+			break;
+		case GAME_WON:
+			setWinningPlayer(getLocalPlayer());
+			getOpponent().getBoard().updateMissile(m);
+			break;
+		}
+	}
+
+	public void handlePlayerState(PlayerState ps) {
+		// This method is called when a PlayerState arrives from the opponent.
+
+		switch (ps) {
+		case READY:
+			if (getLocalPlayer().getPlayerState() == PlayerState.READY) {
+				setActivePlayer(getLocalPlayer());
+			} else {
+				getOpponent().setPlayerState(PlayerState.READY);
+			}
+			break;
+		case WAITING:
+			setActivePlayer(getLocalPlayer());
+			break;
+		case GAME_LOST:
+			setWinningPlayer(getLocalPlayer());
+			break;
+		case GAME_WON:
+			setWinningPlayer(getOpponent());
+			break;
+		case GAME_STARTED:
+		case PLAYING:
+			// TODO
+			break;
+		default:
+			throw new RuntimeException("Invalid PlayerState received:" + ps);
 		}
 	}
 
@@ -180,6 +261,5 @@ public class Game implements ConnectionStateListener {
 	public void setGameID(int gameID) {
 		this.gameID = gameID;
 	}
-
 
 }

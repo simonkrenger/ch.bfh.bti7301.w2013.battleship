@@ -27,6 +27,7 @@ import ch.bfh.bti7301.w2013.battleship.game.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Missile.MissileState;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
+import ch.bfh.bti7301.w2013.battleship.game.Player;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
 import ch.bfh.bti7301.w2013.battleship.network.Connection;
 
@@ -84,11 +85,11 @@ public class LocalPlayer extends GenericPlayer {
 			return;
 
 		// This occurs when the player presses "ready" and the opponents is already "ready"
+		Player opponent = Game.getInstance().getOpponent();
 		if (status == PlayerState.READY
-				&& Game.getInstance().getOpponent().getPlayerState() == PlayerState.READY) {
+				&& opponent.getPlayerState() == PlayerState.READY) {
 			status = PlayerState.WAITING;
-			Game.getInstance().getOpponent()
-					.setPlayerState(PlayerState.PLAYING);
+			opponent.setPlayerState(PlayerState.PLAYING);
 		}
 
 		super.setPlayerState(status);
