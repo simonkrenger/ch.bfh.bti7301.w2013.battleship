@@ -137,11 +137,14 @@ public class Connection extends Thread {
 	}
 
 	public static void receiveObjectToGame(Object object) {
+		System.out.println("Received object " + object);
 
 		if (object instanceof PlayerState) {
+			System.out.println("PlayerState");
 			PlayerState received = (PlayerState) object;
 			Game.getInstance().handlePlayerState(received);
 		} else if (object instanceof Missile) {
+			System.out.println("Missile");
 			Missile received = (Missile) object;
 			Game.getInstance().handleMissile(received);
 		} else if (object instanceof GameRule) {

@@ -75,6 +75,8 @@ public class BoardView extends Parent {
 					try {
 						board.placeMissile(m);
 					} catch (RuntimeException r) {
+						r.printStackTrace();
+						blocked = false;
 						missileViews.get(m.getCoordinates()).setVisible(false);
 					}
 				}
