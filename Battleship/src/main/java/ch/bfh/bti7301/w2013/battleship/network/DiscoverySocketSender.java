@@ -26,8 +26,6 @@ public class DiscoverySocketSender extends Thread {
 				byte[] buf = name.getBytes();
 
 				InetAddress bc = NetworkInformation.MULTICAST_GROUP;
-				System.out.println("packet sent to BC Add: "
-						+ bc.getHostAddress());
 				DatagramPacket packetOut = new DatagramPacket(buf, buf.length,
 						bc, Connection.GAMEPORT);
 

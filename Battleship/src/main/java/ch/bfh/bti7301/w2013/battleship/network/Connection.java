@@ -230,11 +230,10 @@ public class Connection extends Thread {
 	
 	public void findOpponent(){
 		NetworkScanner.getInstance();
-		System.out.println("Connection: NetworkScanner startet");
 	}
 	
 	public void foundOpponent(String ip, String name){
-		System.out.println("Connection: method foundOpponent on Connection is called");
+		System.out.println("Connection: method foundOpponent on Connection is called" + name);
 		int i = 0;
 		for(DiscoveryListener listener : discoveryListeners) {
 			listener.foundOpponent(ip, name);

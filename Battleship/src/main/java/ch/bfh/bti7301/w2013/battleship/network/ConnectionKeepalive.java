@@ -19,7 +19,6 @@ public class ConnectionKeepalive extends Thread {
 
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-				System.out.println("ConnectionKeepalive: exception sleep");
 				e.printStackTrace();
 			}
 		}
