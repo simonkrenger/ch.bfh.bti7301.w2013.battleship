@@ -1,6 +1,5 @@
 package ch.bfh.bti7301.w2013.battleship.network;
 
-import java.io.Serializable;
 
 public class ConnectionKeepalive extends Thread {
 
@@ -8,7 +7,7 @@ public class ConnectionKeepalive extends Thread {
 		start();
 	}
 
-	private static Object KEEP_ALIVE = new Integer(42);
+	private static Object KEEP_ALIVE = new Integer(-1);
 
 	public void run() {
 		while (true) {
@@ -19,17 +18,10 @@ public class ConnectionKeepalive extends Thread {
 
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
+				System.out.println("SLEEP IN CONNETION KEEPALIVE WAS INTERRUPTED");
 				e.printStackTrace();
 			}
 		}
 	}
 
-	static class KeepAlive implements Serializable {
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
-	}
 }

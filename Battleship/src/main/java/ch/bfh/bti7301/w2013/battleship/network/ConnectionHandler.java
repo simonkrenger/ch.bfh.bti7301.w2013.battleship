@@ -7,16 +7,14 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 
-import javax.sound.sampled.ReverbType;
+import org.hamcrest.core.IsInstanceOf;
 
-import ch.bfh.bti7301.w2013.battleship.network.ConnectionKeepalive.KeepAlive;
 
 public class ConnectionHandler extends Thread {
 
 	private Socket connectionSocket;
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
-	@SuppressWarnings("unused")
 	private ConnectionKeepalive keepalive;
 
 	public ConnectionHandler(Connection connection, Socket socket)
@@ -40,8 +38,9 @@ public class ConnectionHandler extends Thread {
 		while (true) {
 			try {
 				Object inputObject = in.readObject();
-				System.out.println("RCV: "  + inputObject);
+				System.out.println("RECEIVED OBJECT: " + inputObject);
 				receiveObject(inputObject);
+				
 			} catch (EOFException e) {
 				e.printStackTrace();
 				Connection.getInstance().catchAndReestablish(ConnectionState.INPUTERROR, "opponent disconnected");
@@ -61,8 +60,7 @@ public class ConnectionHandler extends Thread {
 	public synchronized void sendObject(Object outgoingObject) {
 		try {
 			out.writeObject(outgoingObject);
-			System.out.println("SEND: " + outgoingObject);
-
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 			Connection.getInstance().catchAndReestablish(ConnectionState.OUTPUTEROR, "somtehing went wrong while sending an Object to your opponent");
@@ -72,7 +70,12 @@ public class ConnectionHandler extends Thread {
 
 	
 	public void receiveObject(Object receivedObject) {
+		if (!(receivedObject instanceof Integer)){
 		Connection.receiveObjectToGame(receivedObject);
+		}
+		else if (!((Integer)receivedObject == -1)){
+		Connection.receiveObjectToGame(receivedObject);
+		}
 	}
 
 	public void setIn(ObjectInputStream in) {

@@ -20,11 +20,9 @@ public class NetworkScanner {
 		udpSocket.joinGroup(NetworkInformation.MULTICAST_GROUP);
 		discoveryListener = new DiscoverySocketListener(udpSocket);
 		
-		System.out.println("listener is startet on Socket " + udpSocket.getLocalAddress().getHostAddress());
 		
 		discoverySender = new DiscoverySocketSender(udpSocket);
 		
-		System.out.println("sender is startet on Socket " + udpSocket.getLocalAddress().getHostAddress());
 	}
 	
 
@@ -80,9 +78,6 @@ public class NetworkScanner {
 	}
 
 	public void readUdpSocket(String ip,String name) {
-		
-		System.out.println("a upd message was received from" + ip
-				+ " with name " + name);
 			Connection.getInstance().foundOpponent(ip, name);
 
 	}
