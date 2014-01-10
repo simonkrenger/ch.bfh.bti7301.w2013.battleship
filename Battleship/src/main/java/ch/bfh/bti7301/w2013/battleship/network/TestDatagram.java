@@ -23,10 +23,10 @@ public class TestDatagram extends Thread {
 
 	public TestDatagram() {
 		try {
-			localIp = InetAddress.getByName("172.16.3.105");
-			remoteIp = InetAddress.getByName("0.0.0.0");
+			localIp = InetAddress.getByName("147.87.46.74");
+			remoteIp = InetAddress.getByName("147.87.47.255");
 			port = 4406;
-			socket = new DatagramSocket(port);
+			socket = new DatagramSocket(port, localIp);
 			socket.setBroadcast(true);
 			soPort = socket.getLocalPort();
 			soIp = socket.getLocalAddress();
