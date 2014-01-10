@@ -7,8 +7,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 
-import org.hamcrest.core.IsInstanceOf;
-
 
 public class ConnectionHandler extends Thread {
 
@@ -39,8 +37,8 @@ public class ConnectionHandler extends Thread {
 			try {
 				Object inputObject = in.readObject();
 				System.out.println("RECEIVED OBJECT: " + inputObject);
+
 				receiveObject(inputObject);
-				
 			} catch (EOFException e) {
 				e.printStackTrace();
 				Connection.getInstance().catchAndReestablish(ConnectionState.INPUTERROR, "opponent disconnected");
@@ -60,7 +58,7 @@ public class ConnectionHandler extends Thread {
 	public synchronized void sendObject(Object outgoingObject) {
 		try {
 			out.writeObject(outgoingObject);
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 			Connection.getInstance().catchAndReestablish(ConnectionState.OUTPUTEROR, "somtehing went wrong while sending an Object to your opponent");

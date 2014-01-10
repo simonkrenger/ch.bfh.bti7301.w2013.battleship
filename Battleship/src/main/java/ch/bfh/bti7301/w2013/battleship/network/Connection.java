@@ -30,9 +30,12 @@ public class Connection extends Thread {
 		listener = new ConnectionListener(this);
 		listener.start();
 
-		setConnectionState(ConnectionState.LISTENING, "the listener is set up");
+		
+		setConnectionState(ConnectionState.LISTENING,
+				"the listener is set up");
+		
+		findOpponent();			//TODO: Should this be somwhere else?? For test only!!
 
-		findOpponent(); // TODO: Should this be somwhere else?? For test only!!
 	}
 
 	public static Connection getInstance() {
@@ -136,19 +139,24 @@ public class Connection extends Thread {
 	}
 
 	public static void receiveObjectToGame(Object object) {
+		System.out.println("Received object " + object);
 
 		if (object instanceof PlayerState) {
+			System.out.println("PlayerState");
 			PlayerState received = (PlayerState) object;
 			Game.getInstance().handlePlayerState(received);
 		} else if (object instanceof Missile) {
+			System.out.println("Missile");
 			Missile received = (Missile) object;
 			Game.getInstance().handleMissile(received);
 		} else if (object instanceof GameRule) {
+			System.out.println("GameRule received: " + object);
 			GameRule received = (GameRule) object;
 			// This method checks if the gamerules are equal and corrects any
 			// differences
 			Game.getInstance().checkGameRule(received);
-		} else if(object instanceof Integer) {
+		}
+		else if (object instanceof Integer) {
 			gameState.restoreGame(object);
 		}
 		
@@ -227,6 +235,7 @@ public class Connection extends Thread {
 	public void findOpponent() {
 		NetworkScanner.getInstance();
 	}
+
 
 	public void foundOpponent(String ip, String name) {
 		for (DiscoveryListener listener : discoveryListeners) {

@@ -29,8 +29,8 @@ public class DiscoverySocketSender extends Thread {
 				DatagramPacket packetOut = new DatagramPacket(buf, buf.length,
 						bc, Connection.GAMEPORT);
 
-				udpSocket.send(packetOut);
 
+				udpSocket.send(packetOut);
 				sleep(5000);
 
 			} catch (IOException e1) {
@@ -43,6 +43,7 @@ public class DiscoverySocketSender extends Thread {
 				e.printStackTrace();
 				udpSocket.close();
 			}
+
 		}
 	}
 
