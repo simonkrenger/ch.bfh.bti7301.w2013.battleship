@@ -39,43 +39,43 @@ public class NetworkScanner {
 	}
 
 
-	private String matchIp(String str) {
-
-		String IPADDRESS_PATTERN = "(([2]([0-4][0-9]|[5][0-5])|[0-1]?[0-9]?[0-9])[.]){3}(([2]([0-4][0-9]|[5][0-5])|[0-1]?[0-9]?[0-9]))";
-
-		Pattern pattern = Pattern.compile(IPADDRESS_PATTERN);
-		Matcher matcher = pattern.matcher(str);
-		if (matcher.find()) {
-			return matcher.group();
-		} else {
-			return "0.0.0.0";
-		}
-
-	}
-
-	private String matchName(String str) {
-
-		String NAME_PATTERN = "-\\w*$";
-
-		Pattern pattern = Pattern.compile(NAME_PATTERN);
-		Matcher matcher = pattern.matcher(str);
-		if (matcher.find()) {
-			return matcher.group();
-		} else {
-			return "no name";
-		}
-
-	}
-
-	private boolean matchMsg(String str) {
-
-		String MSG_PATTERN = "(BSG-)(([2]([0-4][0-9]|[5][0-5])|[0-1]?[0-9]?[0-9])[.]){3}(([2]([0-4][0-9]|[5][0-5])|[0-1]?[0-9]?[0-9]))(-\\w*)$";
-
-		Pattern pattern = Pattern.compile(MSG_PATTERN);
-		Matcher matcher = pattern.matcher(str);
-		return matcher.find();
-
-	}
+//	private String matchIp(String str) {
+//
+//		String IPADDRESS_PATTERN = "(([2]([0-4][0-9]|[5][0-5])|[0-1]?[0-9]?[0-9])[.]){3}(([2]([0-4][0-9]|[5][0-5])|[0-1]?[0-9]?[0-9]))";
+//
+//		Pattern pattern = Pattern.compile(IPADDRESS_PATTERN);
+//		Matcher matcher = pattern.matcher(str);
+//		if (matcher.find()) {
+//			return matcher.group();
+//		} else {
+//			return "0.0.0.0";
+//		}
+//
+//	}
+//
+//	private String matchName(String str) {
+//
+//		String NAME_PATTERN = "-\\w*$";
+//
+//		Pattern pattern = Pattern.compile(NAME_PATTERN);
+//		Matcher matcher = pattern.matcher(str);
+//		if (matcher.find()) {
+//			return matcher.group();
+//		} else {
+//			return "no name";
+//		}
+//
+//	}
+//
+//	private boolean matchMsg(String str) {
+//
+//		String MSG_PATTERN = "(BSG-)(([2]([0-4][0-9]|[5][0-5])|[0-1]?[0-9]?[0-9])[.]){3}(([2]([0-4][0-9]|[5][0-5])|[0-1]?[0-9]?[0-9]))(-\\w*)$";
+//
+//		Pattern pattern = Pattern.compile(MSG_PATTERN);
+//		Matcher matcher = pattern.matcher(str);
+//		return matcher.find();
+//
+//	}
 
 	public void readUdpSocket(String ip,String name) {
 			Connection.getInstance().foundOpponent(ip, name);
