@@ -136,8 +136,8 @@ public class Main extends Application {
 						case INPUTERROR:
 						case LISTENERERROR:
 						case OUTPUTEROR:
-							break;
 						case CLOSED:
+							ready.setDisable(true);
 							break;
 						case CONNECTED:
 							ready.setDisable(false);

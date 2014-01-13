@@ -26,6 +26,8 @@ package ch.bfh.bti7301.w2013.battleship.game;
 import ch.bfh.bti7301.w2013.battleship.game.players.LocalPlayer;
 import ch.bfh.bti7301.w2013.battleship.game.players.NetworkPlayer;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
+import ch.bfh.bti7301.w2013.battleship.gui.SettingsPanel;
+import ch.bfh.bti7301.w2013.battleship.gui.SettingsPanel.Settings;
 import ch.bfh.bti7301.w2013.battleship.network.Connection;
 import ch.bfh.bti7301.w2013.battleship.network.ConnectionState;
 import ch.bfh.bti7301.w2013.battleship.network.ConnectionStateListener;
@@ -47,7 +49,7 @@ public class Game implements ConnectionStateListener {
 	 */
 	private static Game instance = null;
 
-	private GameRule rule = new GameRule();
+	private GameRule rule = SettingsPanel.getSettings().getRule();
 
 	/**
 	 * The local player
@@ -142,11 +144,11 @@ public class Game implements ConnectionStateListener {
 					+ " not recognized!");
 		}
 	}
-	
+
 	public void setWinningPlayer(Player p) {
 		if (p == getOpponent()) {
-			
-		} else if(p == getLocalPlayer()) {
+
+		} else if (p == getLocalPlayer()) {
 			getOpponent().setPlayerState(PlayerState.GAME_LOST);
 			getLocalPlayer().setPlayerState(PlayerState.GAME_WON);
 		} else {

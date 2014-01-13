@@ -18,13 +18,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.GameRule;
 
 public class SettingsPanel extends VBox {
 	private static final String PLAYER_NAME = "player.name";
 	private static final String SOUNDEFFECTS_LOCAL = "soundeffects.local";
 	private static final String SOUNDEFFECTS_OPPONENT = "soundeffects.opponent";
+	private static final String BOARD_SIZE = "board.size";
 
 	private static final Settings settings = new Settings();
 
@@ -51,14 +51,28 @@ public class SettingsPanel extends VBox {
 		soundPane.setCollapsible(false);
 		getChildren().add(soundPane);
 
-		// TitledPane rulePane = new TitledPane();
-		// rulePane.setText(getString("gamerules"));
-		// GridPane ruleBox = new GridPane();
-		// rulePane.setContent(ruleBox);
-		// ruleBox.addRow(0, new Label(getString("boardsize")), new
-		// TextField());
-		// rulePane.setCollapsible(false);
-		// getChildren().add(rulePane);
+		TitledPane rulePane = new TitledPane();
+		rulePane.setText(getString("gamerules"));
+		GridPane ruleBox = new GridPane();
+		rulePane.setContent(ruleBox);
+		final TextField boardSizeField = new TextField(String.valueOf( //
+				settings.getRule().getBoardSize()));
+		boardSizeField.textProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable,
+					String oldValue, String newValue) {
+				try {
+					int bs = Integer.parseInt(newValue);
+					settings.getRule().setBoardSize(bs);
+					settings.set(BOARD_SIZE, bs);
+				} catch (Throwable e) {
+					boardSizeField.setText(oldValue);
+				}
+			}
+		});
+		ruleBox.addRow(0, new Label(getString("boardsize")), boardSizeField);
+		rulePane.setCollapsible(false);
+		getChildren().add(rulePane);
 	}
 
 	private CheckBox createCheckBox(final String id, boolean def) {
@@ -80,9 +94,11 @@ public class SettingsPanel extends VBox {
 	public static class Settings {
 		private Properties properties = new Properties();
 		private String[] names = { "Captain Cook", "Captain Jack Sparrow",
-				"Admiral Nelson", "Duck Dodger", "James T. Kirk",
+				"Admiral Nelson", "Duck Dodgers", "James T. Kirk",
 				"Jean-Luc Picard", "Hector Barbarossa", "Captain Nemo",
 				"Captain Haddock" };
+
+		private GameRule rule;
 
 		private String randomPlayerName() {
 			Random rnd = new Random();
@@ -95,6 +111,15 @@ public class SettingsPanel extends VBox {
 			} catch (IOException e) {
 				System.out
 						.println("Couldn't load properties, using default values");
+			}
+
+			rule = new GameRule();
+			String boardSizeString = properties.getProperty(BOARD_SIZE);
+			try {
+				int boardSize = Integer.parseInt(boardSizeString);
+				rule.setBoardSize(boardSize);
+			} catch (Throwable ignore) {
+				// Let's just use the default.
 			}
 		}
 
@@ -116,7 +141,7 @@ public class SettingsPanel extends VBox {
 		}
 
 		public GameRule getRule() {
-			return Game.getInstance().getRule();
+			return rule;
 		}
 
 		private void set(String key, Object value) {
