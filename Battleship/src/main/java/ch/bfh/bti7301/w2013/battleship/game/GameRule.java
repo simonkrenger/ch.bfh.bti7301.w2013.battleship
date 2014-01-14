@@ -43,7 +43,7 @@ public class GameRule implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private int boardSize = 12;
 	private int totalTime = 0;
 	private GameType gameType = GameType.DEFAULT;
@@ -71,7 +71,7 @@ public class GameRule implements Serializable {
 		return boardSize;
 	}
 
-	public void setBoardSize(int boardSize) {
+	void setBoardSize(int boardSize) {
 		this.boardSize = boardSize;
 	}
 
@@ -79,7 +79,7 @@ public class GameRule implements Serializable {
 		return gameType;
 	}
 
-	public void setGameType(GameType gameType) {
+	void setGameType(GameType gameType) {
 		this.gameType = gameType;
 	}
 
@@ -87,7 +87,7 @@ public class GameRule implements Serializable {
 		return totalTime;
 	}
 
-	public void setTotalTime(int totalTime) {
+	void setTotalTime(int totalTime) {
 		this.totalTime = totalTime;
 	}
 
@@ -95,7 +95,7 @@ public class GameRule implements Serializable {
 		return shipList;
 	}
 
-	public void setShipList(Map<Class<? extends Ship>, Integer> shipList) {
+	void setShipList(Map<Class<? extends Ship>, Integer> shipList) {
 		this.shipList = shipList;
 	}
 
@@ -141,6 +141,5 @@ public class GameRule implements Serializable {
 			return false;
 		return true;
 	}
-	
-	
+
 }

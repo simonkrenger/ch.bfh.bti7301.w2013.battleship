@@ -23,11 +23,10 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game;
 
+import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 import ch.bfh.bti7301.w2013.battleship.game.players.LocalPlayer;
 import ch.bfh.bti7301.w2013.battleship.game.players.NetworkPlayer;
-import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 import ch.bfh.bti7301.w2013.battleship.gui.SettingsPanel;
-import ch.bfh.bti7301.w2013.battleship.gui.SettingsPanel.Settings;
 import ch.bfh.bti7301.w2013.battleship.network.Connection;
 import ch.bfh.bti7301.w2013.battleship.network.ConnectionState;
 import ch.bfh.bti7301.w2013.battleship.network.ConnectionStateListener;

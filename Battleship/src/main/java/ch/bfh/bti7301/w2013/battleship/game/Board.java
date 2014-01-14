@@ -28,7 +28,10 @@ import static ch.bfh.bti7301.w2013.battleship.utils.GameUtils.rnd;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.bfh.bti7301.w2013.battleship.game.Settings.SettingsListener;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
+import ch.bfh.bti7301.w2013.battleship.gui.SettingsPanel;
+import ch.bfh.bti7301.w2013.battleship.utils.GameUtils;
 
 /**
  * Class to represent a gameboard. Features methods to place and update
@@ -63,6 +66,7 @@ public class Board {
 	 * its status updated.
 	 */
 	private ArrayList<BoardListener> listeners = new ArrayList<BoardListener>();
+	private ArrayList<BoardSizeListener> sizeListeners = new ArrayList<BoardSizeListener>();
 
 	/**
 	 * Constructor for the class, takes the board size n as an argument, where
@@ -71,8 +75,27 @@ public class Board {
 	 * @param size
 	 *            Size of one side of the rectangle
 	 */
-	public Board(int size) {
-		this.size = size;
+	public Board(int boardSize) {
+		this.size = boardSize;
+		SettingsPanel.getSettings().addListener(new SettingsListener() {
+			@Override
+			public void onChange(String key, String oldValue, String newValue) {
+				if (setup == null || !Settings.BOARD_SIZE.equals(key))
+					return; // Only do something if a board change is legal.
+
+				int newSize = Integer.parseInt(newValue);
+				int oldSize = size;
+				size = newSize;
+
+				List<Ship> ships = GameUtils.getAvailableShips( //
+						SettingsPanel.getSettings().getRule());
+				placedShips.clear();
+				setup.randomPlacement(ships);
+
+				for (BoardSizeListener l : sizeListeners)
+					l.onSizeChanged(oldSize, newSize);
+			}
+		});
 	}
 
 	/**
@@ -340,6 +363,10 @@ public class Board {
 		listeners.add(bl);
 	}
 
+	public void addSizeListener(BoardSizeListener sl) {
+		sizeListeners.add(sl);
+	}
+
 	@Override
 	public String toString() {
 		return "Board [size=" + size + ", setup=" + setup
@@ -413,5 +440,9 @@ public class Board {
 			}
 			throw new RuntimeException();
 		}
+	}
+
+	public static interface BoardSizeListener {
+		public void onSizeChanged(int oldSize, int newSize);
 	}
 }
