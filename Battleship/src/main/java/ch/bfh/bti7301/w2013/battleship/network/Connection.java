@@ -1,6 +1,6 @@
 package ch.bfh.bti7301.w2013.battleship.network;
 
-	import java.io.*;
+import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 
@@ -26,15 +26,16 @@ public class Connection extends Thread {
 	private static Game game = Game.getInstance();
 	private static GameState gameState = GameState.getInstance();
 
-
 	private Connection() {
 		listener = new ConnectionListener(this);
 		listener.start();
+
 		
 		setConnectionState(ConnectionState.LISTENING,
 				"the listener is set up");
 		
-		findOpponent();			//For test only!!
+		findOpponent();			//TODO: Should this be somwhere else?? For test only!!
+
 	}
 
 	public static Connection getInstance() {
@@ -46,6 +47,7 @@ public class Connection extends Thread {
 
 	public void acceptOpponent(Socket socket) {
 
+		System.out.println("CONNECTION.ACCEPTOPPONENT WAS CALLED");
 		if (getConnectionState() == ConnectionState.CONNECTED) {
 			setConnectionState(ConnectionState.CONNECTED, "already connected!");
 			// TODO: GUI Should show this Error
@@ -61,14 +63,15 @@ public class Connection extends Thread {
 			catchAndReestablish(ConnectionState.CONNECTIONERROR,
 					"couldn't create connectionHandler");
 		}
-		
+
 		gameState.setOpponentIp(handler.getOpponentIp());
 		gameState.setLocalIp(handler.getLocalIp());
-		
+
 	}
 
 	public void connectOpponent(String Ip) {
 
+		System.out.println("CONNECTION.CONNECTOPPONENT WAS CALLED");
 		if (getConnectionState() == ConnectionState.CONNECTED) {
 			setConnectionState(ConnectionState.CONNECTED, "already connected!");
 			// TODO: GUI Should show this Error
@@ -78,7 +81,7 @@ public class Connection extends Thread {
 			Socket socket = new Socket(Ip, GAMEPORT);
 			handler = new ConnectionHandler(this, socket);
 			listener.closeListener();
-			
+
 			setConnectionState(ConnectionState.CONNECTED,
 					"connection established");
 
@@ -92,8 +95,7 @@ public class Connection extends Thread {
 
 		gameState.setOpponentIp(handler.getOpponentIp());
 		gameState.setLocalIp(handler.getLocalIp());
-		
-		
+
 	}
 
 	public void sendMissile(Missile missile) {
@@ -127,32 +129,37 @@ public class Connection extends Thread {
 		handler.sendObject(counter);
 
 	}
-	
+
 	public void sendGameRule(GameRule rule) {
 		if (instance.connectionState != ConnectionState.CONNECTED) {
 			throw new RuntimeException("No Connection yet");
-		// TODO: GUI Should show this Error 
+			// TODO: GUI Should show this Error
 		}
 		handler.sendObject(rule);
 	}
 
 	public static void receiveObjectToGame(Object object) {
+		System.out.println("Received object " + object);
 
 		if (object instanceof PlayerState) {
+			System.out.println("PlayerState");
 			PlayerState received = (PlayerState) object;
 			Game.getInstance().handlePlayerState(received);
 		} else if (object instanceof Missile) {
+			System.out.println("Missile");
 			Missile received = (Missile) object;
 			Game.getInstance().handleMissile(received);
 		} else if (object instanceof GameRule) {
+			System.out.println("GameRule received: " + object);
 			GameRule received = (GameRule) object;
-			// This method checks if the gamerules are equal and corrects any differences
+			// This method checks if the gamerules are equal and corrects any
+			// differences
 			Game.getInstance().checkGameRule(received);
 		}
-
 		else if (object instanceof Integer) {
 			gameState.restoreGame(object);
 		}
+		
 
 		setGameStateIn(object);
 	}
@@ -166,9 +173,10 @@ public class Connection extends Thread {
 	}
 
 	public void setConnectionState(ConnectionState connectionState, String msg) {
+		System.out.println("CONNECTION.SETCONNECTIONSTATE WAS CALLED WITH MSG: "  + msg);
 		this.connectionState = connectionState;
 		this.connectionStateMessage = msg;
-		for(ConnectionStateListener listener : connectionStateListeners) {
+		for (ConnectionStateListener listener : connectionStateListeners) {
 			listener.stateChanged(connectionState, msg);
 		}
 	}
@@ -182,9 +190,9 @@ public class Connection extends Thread {
 	}
 
 	public void catchAndReestablish(ConnectionState errorType, String errorMsg) {
-
+		System.out.println("METHOD CONNECTION.CATCHANDREESTABLISH WAS CALLED");
 		game.getLocalPlayer().setPlayerState(PlayerState.BLOCCKED);
-		
+
 		if (GameState.getInstance().getReestablishCount() > 0)
 			instance.setConnectionState(errorType, errorMsg);
 
@@ -197,6 +205,7 @@ public class Connection extends Thread {
 	}
 
 	public void reestablishConnection() {
+		System.out.println("METHOD CONNECTION.REESTABLISHCONNECTION WAS CALLED");
 		gameState.addReestablishCount();
 		getInstance().cleanUp();
 		Connection.getInstance();
@@ -218,26 +227,23 @@ public class Connection extends Thread {
 		gameState.setLocalPlayerState(game.getLocalPlayer().getPlayerState());
 		gameState.setOpponentPlayerState(game.getOpponent().getPlayerState());
 	}
- 
-	
-	public void addDiscoveryListener(DiscoveryListener listener){
+
+	public void addDiscoveryListener(DiscoveryListener listener) {
 		discoveryListeners.add(listener);
 	}
-	
-	public void findOpponent(){
+
+	public void findOpponent() {
 		NetworkScanner.getInstance();
-		System.out.println("NetworkScanner startet");
 	}
-	
-	public void foundOpponent(String ip, String name){
-		System.out.println("method foundOpponent on Connection is called");
-		for(DiscoveryListener listener : discoveryListeners) {
+
+
+	public void foundOpponent(String ip, String name) {
+		for (DiscoveryListener listener : discoveryListeners) {
 			listener.foundOpponent(ip, name);
-			System.out.println("listener-x");
 		}
-		
+
 	}
-	
+
 	public ConnectionHandler getHandler() {
 		return handler;
 	}

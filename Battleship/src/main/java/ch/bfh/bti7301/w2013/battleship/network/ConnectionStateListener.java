@@ -8,5 +8,5 @@ package ch.bfh.bti7301.w2013.battleship.network;
  * 
  */
 public interface ConnectionStateListener {
-	void stateChanged(ConnectionState newState, String msg);
-}
+		void stateChanged(ConnectionState newState, String msg);
+	}

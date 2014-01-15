@@ -42,6 +42,7 @@ public class GameState {
 	}
 
 	public void restoreGame(Object opponentCounter) {
+		System.out.println("METHOD GAMESTATE.RESTOREGAME WAS CALLED");
 		int oct = (int) opponentCounter;
 		if (this.counter == oct) {
 			Game.getInstance().getLocalPlayer().setPlayerState(localPlayerState);

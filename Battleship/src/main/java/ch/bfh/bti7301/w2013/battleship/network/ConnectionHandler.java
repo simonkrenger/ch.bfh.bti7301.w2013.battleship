@@ -5,18 +5,24 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
+
 
 public class ConnectionHandler extends Thread {
 
 	private Socket connectionSocket;
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
+	private ConnectionKeepalive keepalive;
 
 	public ConnectionHandler(Connection connection, Socket socket)
 			throws IOException {
+		
 		setConnectionSocket(socket);
+		
 		setOut(new ObjectOutputStream(connectionSocket.getOutputStream()));
 		start();
+		startKeepalive();
 	}
 
 	public void run() {
@@ -30,8 +36,9 @@ public class ConnectionHandler extends Thread {
 		while (true) {
 			try {
 				Object inputObject = in.readObject();
+				System.out.println("RECEIVED OBJECT: " + inputObject);
+
 				receiveObject(inputObject);
-				
 			} catch (EOFException e) {
 				e.printStackTrace();
 				Connection.getInstance().catchAndReestablish(ConnectionState.INPUTERROR, "opponent disconnected");
@@ -48,7 +55,7 @@ public class ConnectionHandler extends Thread {
 		}
 	}
 
-	public void sendObject(Object outgoingObject) {
+	public synchronized void sendObject(Object outgoingObject) {
 		try {
 			out.writeObject(outgoingObject);
 
@@ -59,11 +66,14 @@ public class ConnectionHandler extends Thread {
 
 	}
 
-
-	
 	
 	public void receiveObject(Object receivedObject) {
+		if (!(receivedObject instanceof Integer)){
 		Connection.receiveObjectToGame(receivedObject);
+		}
+		else if (!((Integer)receivedObject == -1)){
+		Connection.receiveObjectToGame(receivedObject);
+		}
 	}
 
 	public void setIn(ObjectInputStream in) {
@@ -74,8 +84,9 @@ public class ConnectionHandler extends Thread {
 		this.out = out;
 	}
 
-	public void setConnectionSocket(Socket connectionSocket) {
+	public void setConnectionSocket(Socket connectionSocket) throws SocketException {
 		this.connectionSocket = connectionSocket;
+		this.connectionSocket.setSoTimeout(6000);
 	}
 	
 	public String getLocalIp(){
@@ -85,10 +96,15 @@ public class ConnectionHandler extends Thread {
 	public String getOpponentIp(){
 		return connectionSocket.getInetAddress().getHostAddress();
 	}
+	
+	public void startKeepalive() throws SocketException{
+		this.keepalive = new ConnectionKeepalive();
+	}
 
 	public void closeHandler() {
 		if (!connectionSocket.isClosed()) {
 			try {
+				keepalive.interrupt();
 				in.close();
 				out.close();
 				connectionSocket.close();
@@ -101,4 +117,5 @@ public class ConnectionHandler extends Thread {
 			}
 		}
 	}
+	
 }
