@@ -25,20 +25,25 @@ package ch.bfh.bti7301.w2013.battleship.game.players.ai;
 
 import static ch.bfh.bti7301.w2013.battleship.utils.GameUtils.getAvailableShips;
 import ch.bfh.bti7301.w2013.battleship.game.Board.BoardSetup;
+import ch.bfh.bti7301.w2013.battleship.game.Board;
+import ch.bfh.bti7301.w2013.battleship.game.BoardListener;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Player;
 import ch.bfh.bti7301.w2013.battleship.game.PlayerStateListener;
-import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer;
-import ch.bfh.bti7301.w2013.battleship.network.Connection;
+import ch.bfh.bti7301.w2013.battleship.game.players.NetworkPlayer;
 
 /**
  * @author simon
  * 
  */
-public class ComputerPlayer extends GenericPlayer implements PlayerStateListener {
+public class ComputerPlayer extends NetworkPlayer implements
+		PlayerStateListener, BoardListener {
 
 	StrategyStack strategy;
+
+	Board ownBoard;
+	Board playerBoard;
 
 	public ComputerPlayer() {
 		this("Computer");
@@ -47,38 +52,51 @@ public class ComputerPlayer extends GenericPlayer implements PlayerStateListener
 	public ComputerPlayer(String name) {
 		super(name);
 
+		// Setup environment
+		ownBoard = new Board(Game.getInstance().getRule().getBoardSize());
+		playerBoard = new Board(Game.getInstance().getRule().getBoardSize());
+
 		// Generate 5 random steps
 		strategy = new StrategyStack(10);
 		strategy.addRandom(5);
 
 		// Random setup
-		BoardSetup bs = this.getBoard().getBoardSetup();
-		bs.randomPlacement(
-						getAvailableShips(Game.getInstance().getRule()));
-		
-		bs.done();
-		
+		BoardSetup setup = this.getBoard().getBoardSetup();
+		setup.randomPlacement(getAvailableShips(Game.getInstance().getRule()));
+		setup.done();
+
 		this.setPlayerState(PlayerState.READY);
 	}
 
+	@Override
 	public void sendMissile(Missile m) {
+		//Connection.getInstance().sendMissile(m);
+		// Here, we receive a missile from the player
 		
-		Missile result = Game.getInstance().getLocalPlayer().placeMissile(m);
+		// TODO: Evaluate on board
+		// TODO: Set active player
+		// TODO: Repeat if necessary
+	}
+	
+	// Player state changes
+	@Override
+	public void stateChanged(Player p, PlayerState s) {
+		Player active = Game.getInstance().getActivePlayer();
+		if (this == active) {
+			// Ok, this means we're active
+		}
+	}
+
+	// Board state changes
+	@Override
+	public void stateChanged(Missile m) {
+		// TODO Auto-generated method stub
 		
-		
-		
-		// TODO
-		// This is what gets called in NetworkPlayer: Connection.getInstance().sendMissile(m);
 	}
 
 	@Override
-	public void stateChanged(Player p, PlayerState s) {
-		// TODO Auto-generated method stub
-		if(p == this) {
-			// This means our state changed
-		} else {
-			// Our opponents state changed
-		}
-		
+	public Board getBoard() {
+		return ownBoard;
 	}
+
 }
