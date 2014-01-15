@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
+import ch.bfh.bti7301.w2013.battleship.game.players.NetworkPlayer;
+import ch.bfh.bti7301.w2013.battleship.game.players.ai.ComputerPlayer;
 
 /**
  * Class to represent a gameboard. Features methods to place and update
@@ -99,7 +101,7 @@ public class Board {
 	public void placeMissile(Missile m) {
 
 		// This operation can only be made on the opponents board
-		if (Game.getInstance().getOpponent().getBoard() == this) {
+		if (Game.getInstance().getLocalPlayer().getBoard() != this) {
 			// Check if its the players turn
 			PlayerState playerState = Game.getInstance().getLocalPlayer()
 					.getPlayerState();
@@ -113,7 +115,13 @@ public class Board {
 					}
 				}
 				placedMissiles.add(m);
-				Game.getInstance().getOpponent().sendMissile(m);
+				Player opponent = Game.getInstance().getOpponent();
+				if(opponent instanceof ComputerPlayer) {
+					ComputerPlayer comp = (ComputerPlayer) opponent;
+					comp.sendMissile(m);
+				} else {
+					opponent.sendMissile(m);
+				}
 			} else {
 				throw new RuntimeException("Local player is in state "
 						+ playerState + ", cannot place missile just yet!");

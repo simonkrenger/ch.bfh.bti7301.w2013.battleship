@@ -26,6 +26,7 @@ package ch.bfh.bti7301.w2013.battleship.game;
 import ch.bfh.bti7301.w2013.battleship.game.players.LocalPlayer;
 import ch.bfh.bti7301.w2013.battleship.game.players.NetworkPlayer;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
+import ch.bfh.bti7301.w2013.battleship.game.players.ai.ComputerPlayer;
 import ch.bfh.bti7301.w2013.battleship.network.Connection;
 import ch.bfh.bti7301.w2013.battleship.network.ConnectionState;
 import ch.bfh.bti7301.w2013.battleship.network.ConnectionStateListener;
@@ -58,6 +59,11 @@ public class Game implements ConnectionStateListener {
 	 * The opponent player
 	 */
 	private Player opponentPlayer;
+	
+	/**
+	 * Computer player
+	 */
+	private ComputerPlayer computerPlayer;
 
 	@SuppressWarnings("unused")
 	private Connection connection;
@@ -83,6 +89,9 @@ public class Game implements ConnectionStateListener {
 			// Add players
 			instance.localPlayer = new LocalPlayer();
 			instance.opponentPlayer = new NetworkPlayer();
+			
+			// Add computer player
+			instance.computerPlayer = new ComputerPlayer();
 
 			// Add connection state listener to handle GameRule validation
 			instance.connection = Connection.getInstance();
@@ -110,6 +119,14 @@ public class Game implements ConnectionStateListener {
 	 */
 	public Player getOpponent() {
 		return opponentPlayer;
+	}
+	
+	public ComputerPlayer getComputerPlayer() {
+		return computerPlayer;
+	}
+	
+	public void setComputerPlayer(ComputerPlayer c) {
+		opponentPlayer = c;
 	}
 
 	/**
@@ -196,7 +213,14 @@ public class Game implements ConnectionStateListener {
 			// "FIRED" means the missile was fired and needs to be sent back
 			// with a new status
 			Missile feedback = getLocalPlayer().placeMissile(m);
-			Connection.getInstance().sendMissile(feedback);
+			if(Game.getInstance().getOpponent() instanceof ComputerPlayer) {
+				// Send to computer player
+				ComputerPlayer comp = (ComputerPlayer) Game.getInstance().getOpponent();
+				comp.sendMissile(feedback);
+			} else {
+				// Send to network player
+				Connection.getInstance().sendMissile(feedback);
+			}
 			break;
 		case MISS:
 			setActivePlayer(getOpponent());

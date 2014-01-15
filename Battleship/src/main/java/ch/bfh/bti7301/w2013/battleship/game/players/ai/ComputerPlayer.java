@@ -24,37 +24,44 @@
 package ch.bfh.bti7301.w2013.battleship.game.players.ai;
 
 import static ch.bfh.bti7301.w2013.battleship.utils.GameUtils.getAvailableShips;
+
+import java.util.ArrayList;
+
 import ch.bfh.bti7301.w2013.battleship.game.Board.BoardSetup;
+import ch.bfh.bti7301.w2013.battleship.game.Coordinates;
+import ch.bfh.bti7301.w2013.battleship.game.Missile.MissileState;
 import ch.bfh.bti7301.w2013.battleship.game.Board;
 import ch.bfh.bti7301.w2013.battleship.game.BoardListener;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Player;
 import ch.bfh.bti7301.w2013.battleship.game.PlayerStateListener;
+import ch.bfh.bti7301.w2013.battleship.game.players.LocalPlayer;
 import ch.bfh.bti7301.w2013.battleship.game.players.NetworkPlayer;
+import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 
 /**
  * @author simon
  * 
  */
-public class ComputerPlayer extends NetworkPlayer implements
-		PlayerStateListener, BoardListener {
+public class ComputerPlayer extends LocalPlayer implements
+		PlayerStateListener {
 
 	StrategyStack strategy;
+	
+	ArrayList<Coordinates> shotsTaken = new ArrayList<Coordinates>();
 
-	Board ownBoard;
-	Board playerBoard;
+	Board computerBoard;
 
 	public ComputerPlayer() {
 		this("Computer");
 	}
 
 	public ComputerPlayer(String name) {
-		super(name);
+		super();
 
 		// Setup environment
-		ownBoard = new Board(Game.getInstance().getRule().getBoardSize());
-		playerBoard = new Board(Game.getInstance().getRule().getBoardSize());
+		computerBoard = new Board(Game.getInstance().getRule().getBoardSize());
 
 		// Generate 5 random steps
 		strategy = new StrategyStack(10);
@@ -70,33 +77,73 @@ public class ComputerPlayer extends NetworkPlayer implements
 
 	@Override
 	public void sendMissile(Missile m) {
-		//Connection.getInstance().sendMissile(m);
-		// Here, we receive a missile from the player
-		
-		// TODO: Evaluate on board
-		// TODO: Set active player
-		// TODO: Repeat if necessary
+		if(m.getMissileState() == MissileState.FIRED) {
+			Missile f = super.placeMissile(m);
+			if(this.getBoard().checkAllShipsSunk()) {
+				// ComputerPlayer lost, dang it!
+				System.out.println("Rats, this game was lost!");
+			}
+			Game.getInstance().handleMissile(f);
+		} else {
+			// Is a feedback
+			if(m.getMissileState() == MissileState.GAME_WON) {
+				System.out.println("Yay, I won!");
+			} else {
+				switch(m.getMissileState()) {
+				case HIT:
+				case SUNK:
+					// Insult the player
+					System.out.println("Take that you rat!");
+					fireMissile();
+					break;
+				case MISS:
+					// Insult the player
+					System.out.println("Argh, I swear it just was there!");
+					break;
+				default:
+					break;
+				
+				}
+			}
+		}
+
 	}
 	
 	// Player state changes
 	@Override
 	public void stateChanged(Player p, PlayerState s) {
+		System.out.println("Computer player noticed that the player " + p + " is now " + s);
+		
+		
+		if(p == Game.getInstance().getLocalPlayer() && s == PlayerState.WAITING) {
+			p.setPlayerState(PlayerState.WAITING);
+		}
+		
 		Player active = Game.getInstance().getActivePlayer();
 		if (this == active) {
 			// Ok, this means we're active
+			System.out.println("Computer player is active!");
+			fireMissile();
 		}
 	}
-
-	// Board state changes
+	
 	@Override
-	public void stateChanged(Missile m) {
-		// TODO Auto-generated method stub
-		
+	public void setPlayerState(PlayerState status) {
+		this.status = status;
+	}
+	
+	private void fireMissile() {
+		Coordinates c = strategy.pop();
+		while(shotsTaken.contains(c)) {
+			c = strategy.pop();
+		}
+		shotsTaken.add(c);
+		Game.getInstance().handleMissile(new Missile(c));
 	}
 
 	@Override
 	public Board getBoard() {
-		return ownBoard;
+		return computerBoard;
 	}
 
 }

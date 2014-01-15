@@ -29,6 +29,7 @@ import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Player;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
+import ch.bfh.bti7301.w2013.battleship.game.players.ai.ComputerPlayer;
 import ch.bfh.bti7301.w2013.battleship.network.Connection;
 
 /**
@@ -41,7 +42,7 @@ public class LocalPlayer extends GenericPlayer {
 	public Missile placeMissile(Missile m) {
 
 		// Do some sanity checks
-		if (!playerBoard.withinBoard(m.getCoordinates())) {
+		if (!this.getBoard().withinBoard(m.getCoordinates())) {
 			throw new RuntimeException(
 					"Coordinates of missile not within board!");
 		}
@@ -51,7 +52,7 @@ public class LocalPlayer extends GenericPlayer {
 					+ m.getMissileState() + ", needs to be FIRED!");
 		}
 
-		for (Ship s : playerBoard.getPlacedShips()) {
+		for (Ship s : this.getBoard().getPlacedShips()) {
 			for (Coordinates c : s.getCoordinatesForShip()) {
 				if (c.equals(m.getCoordinates())) {
 					// It's a hit!
@@ -59,7 +60,7 @@ public class LocalPlayer extends GenericPlayer {
 					if (s.isSunk()) {
 						m.setMissileState(MissileState.SUNK);
 						m.setSunkShip(s);
-						if (playerBoard.checkAllShipsSunk()) {
+						if (this.getBoard().checkAllShipsSunk()) {
 							m.setMissileState(MissileState.GAME_WON);
 						}
 					} else {
@@ -93,6 +94,13 @@ public class LocalPlayer extends GenericPlayer {
 		}
 
 		super.setPlayerState(status);
-		Connection.getInstance().sendStatus(status);
+		if(Game.getInstance().getOpponent() instanceof ComputerPlayer) {
+			// If our opponent is a computer player, then use the stateChanged method
+			ComputerPlayer cp = (ComputerPlayer) Game.getInstance().getOpponent();
+			cp.stateChanged(this, status);
+		} else {
+			// Else, send status via the network
+			Connection.getInstance().sendStatus(status);
+		}
 	}
 }
