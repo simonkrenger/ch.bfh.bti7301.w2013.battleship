@@ -87,11 +87,12 @@ public class Board {
 				int oldSize = size;
 				size = newSize;
 
-				List<Ship> ships = GameUtils.getAvailableShips( //
-						SettingsPanel.getSettings().getRule());
-				placedShips.clear();
-				setup.randomPlacement(ships);
-
+				if (!placedShips.isEmpty()) {
+					List<Ship> ships = GameUtils.getAvailableShips( //
+							SettingsPanel.getSettings().getRule());
+					placedShips.clear();
+					setup.randomPlacement(ships);
+				}
 				for (BoardSizeListener l : sizeListeners)
 					l.onSizeChanged(oldSize, newSize);
 			}

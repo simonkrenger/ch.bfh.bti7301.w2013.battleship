@@ -206,7 +206,7 @@ public class Main extends Application {
 			}
 		});
 
-		double scale = 1.2;
+		double scale = 1.0;
 		double baseWidth = pbv.getBoundsInParent().getWidth();
 		double baseHeight = pbv.getBoundsInParent().getHeight();
 		final double width = baseWidth * 1.5 + 40;
