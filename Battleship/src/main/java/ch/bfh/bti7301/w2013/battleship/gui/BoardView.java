@@ -15,13 +15,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.scene.transform.Scale;
 import ch.bfh.bti7301.w2013.battleship.game.Board;
+import ch.bfh.bti7301.w2013.battleship.game.Board.BoardSizeListener;
 import ch.bfh.bti7301.w2013.battleship.game.BoardListener;
 import ch.bfh.bti7301.w2013.battleship.game.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
-import ch.bfh.bti7301.w2013.battleship.game.Ship;
 import ch.bfh.bti7301.w2013.battleship.game.Missile.MissileState;
+import ch.bfh.bti7301.w2013.battleship.game.Ship;
 
 public class BoardView extends Parent {
 	public static final int SIZE = 40;
@@ -31,32 +33,14 @@ public class BoardView extends Parent {
 	private Group ships = new Group();
 	private Group missiles = new Group();
 
+	private Scale scale = new Scale();
+
 	private boolean blocked = false;
 
 	public BoardView(Game game, BoardType type) {
 		final Board board = type.getBoard(game);
 
-		final int rows, columns;
-		rows = columns = board.getBoardSize();
-
-		getChildren().add(getWater(rows, columns));
-		for (int i = 0; i <= rows; i++) {
-			getChildren().add(getLine(i * SIZE, 0, i * SIZE, SIZE * columns));
-		}
-		for (int i = 0; i <= columns; i++) {
-			getChildren().add(getLine(0, i * SIZE, SIZE * rows, i * SIZE));
-		}
-
-		getChildren().add(ships);
-		getChildren().add(missiles);
-
-		for (Ship ship : board.getPlacedShips()) {
-			addShip(ship);
-		}
-
-		for (Missile missile : board.getPlacedMissiles()) {
-			drawMissile(missile);
-		}
+		draw(board);
 
 		// This is for the opponent's board. This has to move somewhere else
 		// later, I think
@@ -75,6 +59,8 @@ public class BoardView extends Parent {
 					try {
 						board.placeMissile(m);
 					} catch (RuntimeException r) {
+						r.printStackTrace();
+						blocked = false;
 						missileViews.get(m.getCoordinates()).setVisible(false);
 					}
 				}
@@ -161,6 +147,53 @@ public class BoardView extends Parent {
 				});
 			}
 		});
+		board.addSizeListener(new BoardSizeListener() {
+			@Override
+			public void onSizeChanged(int oldSize, int newSize) {
+				missileViews.clear();
+				missiles.getChildren().clear();
+				shipViews.clear();
+				ships.getChildren().clear();
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						double sc = 12.0 / board.getBoardSize();
+						scale.setX(sc);
+						scale.setY(sc);
+						getChildren().clear();
+						draw(board);
+					}
+				});
+			}
+		});
+		double sc = 12.0 / board.getBoardSize();
+		scale.setX(sc);
+		scale.setY(sc);
+		getTransforms().add(scale);
+	}
+
+	private void draw(Board board) {
+		final int rows, columns;
+		rows = columns = board.getBoardSize();
+
+		getChildren().add(getWater(rows, columns));
+		for (int i = 0; i <= rows; i++) {
+			getChildren().add(getLine(i * SIZE, 0, i * SIZE, SIZE * columns));
+		}
+		for (int i = 0; i <= columns; i++) {
+			getChildren().add(getLine(0, i * SIZE, SIZE * rows, i * SIZE));
+		}
+
+		getChildren().add(ships);
+		getChildren().add(missiles);
+
+		for (Ship ship : board.getPlacedShips()) {
+			addShip(ship);
+		}
+
+		for (Missile missile : board.getPlacedMissiles()) {
+			drawMissile(missile);
+		}
 	}
 
 	private ShipView getShipView(MouseEvent e) {

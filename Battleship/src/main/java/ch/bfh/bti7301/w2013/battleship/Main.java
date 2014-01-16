@@ -54,10 +54,13 @@ import ch.bfh.bti7301.w2013.battleship.game.Player;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView.BoardType;
+import ch.bfh.bti7301.w2013.battleship.gui.GuiConnectionStateListenerAdapter;
 import ch.bfh.bti7301.w2013.battleship.gui.GuiPlayerStateListenerAdapter;
 import ch.bfh.bti7301.w2013.battleship.gui.NetworkPanel;
 import ch.bfh.bti7301.w2013.battleship.gui.ReadyButton;
 import ch.bfh.bti7301.w2013.battleship.gui.SettingsPanel;
+import ch.bfh.bti7301.w2013.battleship.network.Connection;
+import ch.bfh.bti7301.w2013.battleship.network.ConnectionState;
 import ch.bfh.bti7301.w2013.battleship.sounds.SoundEffectsBoardListener;
 
 /**
@@ -67,6 +70,7 @@ import ch.bfh.bti7301.w2013.battleship.sounds.SoundEffectsBoardListener;
 public class Main extends Application {
 
 	private Game game;
+	private Node modalMessage;
 
 	public Main() throws Exception {
 		game = Game.getInstance();
@@ -114,6 +118,7 @@ public class Main extends Application {
 		root.getChildren().add(guiBox);
 
 		final Button ready = new ReadyButton(game, pbv, obv, guiBox);
+		ready.setDisable(true);
 		guiBox.getChildren().add(ready);
 
 		TabPane tabs = new TabPane();
@@ -121,10 +126,36 @@ public class Main extends Application {
 		tabs.getTabs().add(createTab(new NetworkPanel(), "network"));
 		tabs.getTabs().add(createTab(new SettingsPanel(), "settings"));
 
+		Connection.getInstance().addConnectionStateListener(
+				new GuiConnectionStateListenerAdapter() {
+					@Override
+					public void doStateChanged(ConnectionState newState,
+							String msg) {
+						switch (newState) {
+						case CONNECTIONERROR:
+						case INPUTERROR:
+						case LISTENERERROR:
+						case OUTPUTEROR:
+						case CLOSED:
+							ready.setDisable(true);
+							break;
+						case CONNECTED:
+							ready.setDisable(false);
+							break;
+						case LISTENING:
+							break;
+						}
+					}
+				});
+
 		game.getOpponent().addPlayerStateListener(
 				new GuiPlayerStateListenerAdapter() {
 					@Override
 					public void doStateChanged(Player p, PlayerState s) {
+						if (modalMessage != null) {
+							root.getChildren().remove(modalMessage);
+							modalMessage = null;
+						}
 						switch (s) {
 						case READY:
 							ready.setText(getString("start"));
@@ -152,6 +183,13 @@ public class Main extends Application {
 							pbv.setDisable(true);
 							obv.setDisable(true);
 							displayEnd(root, s);
+							break;
+						case READY:
+							if (game.getOpponent().getPlayerState() != PlayerState.READY) {
+								modalMessage = displayModal(root,
+										getString("game.pleasewait"),
+										Color.NAVY, Color.BLACK, new Font(40));
+							}
 							break;
 						default:
 							break;
@@ -220,25 +258,28 @@ public class Main extends Application {
 	}
 
 	private void displayEnd(Group root, PlayerState state) {
-		Label t = new Label();
-
-		InnerShadow is = new InnerShadow();
-		Font f = new Font(40);
 		switch (state) {
 		case GAME_WON:
-			t.setText(getString("game.won"));
-			t.setTextFill(Color.ALICEBLUE);
-			is.setColor(Color.AQUA);
-			f = getFont("fonts/overhaul.ttf", 40);
+			displayModal(root, getString("game.won"), Color.ALICEBLUE,
+					Color.AQUA, getFont("fonts/overhaul.ttf", 40));
 			break;
 		case GAME_LOST:
-			t.setText(getString("game.lost"));
-			t.setTextFill(Color.DEEPPINK);
-			is.setColor(Color.DARKRED);
-			f = getFont("fonts/thin-pencil-handwriting.ttf", 40);
+			displayModal(root, getString("game.lost"), Color.DEEPPINK,
+					Color.DARKRED,
+					getFont("fonts/thin-pencil-handwriting.ttf", 40));
 		default:
 			break;
 		}
+	}
+
+	private Label displayModal(Group root, String text, Color textColor,
+			Color shadowColor, Font f) {
+		Label t = new Label();
+
+		InnerShadow is = new InnerShadow();
+		t.setText(text);
+		t.setTextFill(textColor);
+		is.setColor(shadowColor);
 		t.setFont(f);
 		t.setWrapText(true);
 
@@ -258,6 +299,7 @@ public class Main extends Application {
 		t.relocate(0, (rootBounds.getHeight() - t.getBoundsInParent()
 				.getHeight()) / 2);
 		root.getChildren().add(t);
+		return t;
 	}
 
 	private Tab createTab(Node content, String name) {
