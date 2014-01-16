@@ -26,10 +26,13 @@ package ch.bfh.bti7301.w2013.battleship.game.players;
 import java.util.ArrayList;
 
 import ch.bfh.bti7301.w2013.battleship.game.Board;
+import ch.bfh.bti7301.w2013.battleship.game.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Player;
 import ch.bfh.bti7301.w2013.battleship.game.PlayerStateListener;
+import ch.bfh.bti7301.w2013.battleship.game.Ship;
+import ch.bfh.bti7301.w2013.battleship.game.Missile.MissileState;
 
 /**
  * @author simon
@@ -84,7 +87,40 @@ public class GenericPlayer implements Player {
 	}
 
 	public Missile placeMissile(Missile m) {
-		throw new RuntimeException("Not implemented");
+
+		// Do some sanity checks
+		if (!this.getBoard().withinBoard(m.getCoordinates())) {
+			throw new RuntimeException(
+					"Coordinates of missile not within board!");
+		}
+
+		if (m.getMissileState() != MissileState.FIRED) {
+			throw new RuntimeException("Missle has state "
+					+ m.getMissileState() + ", needs to be FIRED!");
+		}
+
+		for (Ship s : this.getBoard().getPlacedShips()) {
+			for (Coordinates c : s.getCoordinatesForShip()) {
+				if (c.equals(m.getCoordinates())) {
+					// It's a hit!
+					s.setDamage(m.getCoordinates());
+					if (s.isSunk()) {
+						m.setMissileState(MissileState.SUNK);
+						m.setSunkShip(s);
+						if (this.getBoard().checkAllShipsSunk()) {
+							m.setMissileState(MissileState.GAME_WON);
+						}
+					} else {
+						m.setMissileState(MissileState.HIT);
+					}
+					getBoard().placeMissile(m);
+					return m;
+				}
+			}
+		}
+		m.setMissileState(MissileState.MISS);
+		getBoard().placeMissile(m);
+		return m;
 	}
 
 	public void sendMissile(Missile m) {

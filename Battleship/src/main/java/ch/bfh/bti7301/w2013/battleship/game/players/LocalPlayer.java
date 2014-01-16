@@ -29,6 +29,7 @@ import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
 import ch.bfh.bti7301.w2013.battleship.game.Player;
 import ch.bfh.bti7301.w2013.battleship.game.Ship;
+import ch.bfh.bti7301.w2013.battleship.game.players.ai.ComputerPlayer;
 import ch.bfh.bti7301.w2013.battleship.network.Connection;
 
 /**
@@ -36,44 +37,6 @@ import ch.bfh.bti7301.w2013.battleship.network.Connection;
  * 
  */
 public class LocalPlayer extends GenericPlayer {
-
-	@Override
-	public Missile placeMissile(Missile m) {
-
-		// Do some sanity checks
-		if (!playerBoard.withinBoard(m.getCoordinates())) {
-			throw new RuntimeException(
-					"Coordinates of missile not within board!");
-		}
-
-		if (m.getMissileState() != MissileState.FIRED) {
-			throw new RuntimeException("Missle has state "
-					+ m.getMissileState() + ", needs to be FIRED!");
-		}
-
-		for (Ship s : playerBoard.getPlacedShips()) {
-			for (Coordinates c : s.getCoordinatesForShip()) {
-				if (c.equals(m.getCoordinates())) {
-					// It's a hit!
-					s.setDamage(m.getCoordinates());
-					if (s.isSunk()) {
-						m.setMissileState(MissileState.SUNK);
-						m.setSunkShip(s);
-						if (playerBoard.checkAllShipsSunk()) {
-							m.setMissileState(MissileState.GAME_WON);
-						}
-					} else {
-						m.setMissileState(MissileState.HIT);
-					}
-					getBoard().placeMissile(m);
-					return m;
-				}
-			}
-		}
-		m.setMissileState(MissileState.MISS);
-		getBoard().placeMissile(m);
-		return m;
-	}
 
 	@Override
 	public void setPlayerState(PlayerState status) {
@@ -93,6 +56,13 @@ public class LocalPlayer extends GenericPlayer {
 		}
 
 		super.setPlayerState(status);
-		Connection.getInstance().sendStatus(status);
+		if(Game.getInstance().getOpponent() instanceof ComputerPlayer) {
+			// If our opponent is a computer player, then use the stateChanged method
+			ComputerPlayer cp = (ComputerPlayer) Game.getInstance().getOpponent();
+			cp.stateChanged(this, status);
+		} else {
+			// Else, send status via the network
+			Connection.getInstance().sendStatus(status);
+		}
 	}
 }
