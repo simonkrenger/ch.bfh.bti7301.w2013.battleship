@@ -7,6 +7,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
@@ -42,21 +43,23 @@ public class SettingsPanel extends VBox {
 		rulePane.setText(getString("gamerules"));
 		GridPane ruleBox = new GridPane();
 		rulePane.setContent(ruleBox);
-		final TextField boardSizeField = new TextField(String.valueOf( //
-				settings.getRule().getBoardSize()));
-		boardSizeField.textProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable,
-					String oldValue, String newValue) {
-				try {
-					int bs = Integer.parseInt(newValue);
-					settings.setBoardSize(bs);
-				} catch (Throwable e) {
-					boardSizeField.setText(oldValue);
-				}
-			}
-		});
-		ruleBox.addRow(0, new Label(getString("boardsize")), boardSizeField);
+		final Slider boardSizeSlider = new Slider(10, 30, settings.getRule()
+				.getBoardSize());
+		boardSizeSlider.setShowTickLabels(true);
+		boardSizeSlider.setShowTickMarks(true);
+		boardSizeSlider.setMajorTickUnit(10);
+		boardSizeSlider.setMinorTickCount(10);
+		boardSizeSlider.setBlockIncrement(1);
+		boardSizeSlider.valueProperty().addListener(
+				new ChangeListener<Number>() {
+					@Override
+					public void changed(
+							ObservableValue<? extends Number> observable,
+							Number oldValue, Number newValue) {
+						settings.setBoardSize(newValue.intValue());
+					}
+				});
+		ruleBox.addRow(0, new Label(getString("boardsize")), boardSizeSlider);
 		rulePane.setCollapsible(false);
 		getChildren().add(rulePane);
 	}

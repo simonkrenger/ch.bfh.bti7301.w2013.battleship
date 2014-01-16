@@ -37,9 +37,12 @@ public class ReadyButton extends Button {
 										.node(pbv)
 										.duration(Duration.seconds(1))
 										.toX(-pbv.getBoundsInParent()
-												.getWidth() / 4)
+												.getWidth()
+												/ (4 * pbv.getScaleFactor()))
 										.toY(-pbv.getBoundsInParent()
-												.getHeight() / 4).build(),
+												.getHeight()
+												/ (4 * pbv.getScaleFactor()))
+										.build(),
 								ScaleTransitionBuilder.create().node(obv)
 										.duration(Duration.seconds(1)).toX(2)
 										.toY(2).build(),
@@ -47,8 +50,14 @@ public class ReadyButton extends Button {
 										.create()
 										.node(obv)
 										.duration(Duration.seconds(1))
+										.toX(10
+												+ pbv.getBoundsInParent()
+														.getWidth()
+												* (1 - pbv.getScaleFactor())
+												/ 2)
 										.toY(obv.getBoundsInParent()
-												.getHeight()).build(),
+												.getHeight()
+												/ obv.getScaleFactor()).build(),
 								TranslateTransitionBuilder
 										.create()
 										.node(guiNode)
