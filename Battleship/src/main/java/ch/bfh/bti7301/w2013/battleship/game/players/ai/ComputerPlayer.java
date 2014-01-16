@@ -29,7 +29,6 @@ import java.util.ArrayList;
 
 import ch.bfh.bti7301.w2013.battleship.game.Board.BoardSetup;
 import ch.bfh.bti7301.w2013.battleship.game.Board;
-import ch.bfh.bti7301.w2013.battleship.game.BoardListener;
 import ch.bfh.bti7301.w2013.battleship.game.Coordinates;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.game.Missile;
@@ -80,7 +79,6 @@ public class ComputerPlayer extends LocalPlayer implements
 
 	@Override
 	public void sendMissile(Missile m) {
-		System.out.println("ComputerPlayer.sendMissile()");
 		// This method is called when a Missile arrives from the opponent
 		Game g = Game.getInstance();
         switch (m.getMissileState()) {
@@ -95,8 +93,6 @@ public class ComputerPlayer extends LocalPlayer implements
                 Game.getInstance().handleMissile(f);
                 break;
         case MISS:
-        		// Insult player
-        		System.out.println("Argh! I swear it just was there. Flee, you coward!");
                 g.setActivePlayer(g.getLocalPlayer());
                 break;
         case HIT:
@@ -119,19 +115,15 @@ public class ComputerPlayer extends LocalPlayer implements
 	
 	// Player state changes
 	@Override
-	public void stateChanged(Player p, PlayerState s) {
-		System.out.println("Computer player noticed that the player " + p + " is now " + s);
-        
+	public void stateChanged(Player p, PlayerState s) {        
         Player active = Game.getInstance().getActivePlayer();
         if (this == active) {
                 // Ok, this means we're active
-                System.out.println("Computer player is active!");
                 fireMissile();
         }
 	}
 	
 	private void fireMissile() {
-		System.out.println("ComputerPlayer.fireMissile()");
         Coordinates c = strategy.getNextStep();
         while(shotsTaken.contains(c)) {
                 c = strategy.getNextStep();

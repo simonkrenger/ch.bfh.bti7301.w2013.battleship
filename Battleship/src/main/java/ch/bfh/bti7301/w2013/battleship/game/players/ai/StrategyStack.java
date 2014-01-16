@@ -24,7 +24,6 @@
 package ch.bfh.bti7301.w2013.battleship.game.players.ai;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 import ch.bfh.bti7301.w2013.battleship.game.Coordinates;

@@ -132,10 +132,10 @@ public class BoardView extends Parent {
 		doAddBoardListener(board);
 		doAddSizeListener(board);
 		
-		double sc = 12.0 / board.getBoardSize();
-		scale.setX(sc);
-		scale.setY(sc);
-		getTransforms().add(scale);
+		scaleFactor = 14.4 / board.getBoardSize();
+        scale.setX(scaleFactor);
+        scale.setY(scaleFactor);
+        getTransforms().add(scale);
 	}
 	
 	private void doAddBoardListener(Board b) {
@@ -165,29 +165,25 @@ public class BoardView extends Parent {
 	}
 	
 	private void doAddSizeListener(Board b) {
-		b.addSizeListener(new BoardSizeListener() {
-			@Override
-			public void onSizeChanged(int oldSize, int newSize) {
-				missileViews.clear();
-				missiles.getChildren().clear();
-				shipViews.clear();
-				ships.getChildren().clear();
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						scaleFactor = 14.4 / board.getBoardSize();
-						scale.setX(scaleFactor);
-						scale.setY(scaleFactor);
-						getChildren().clear();
-						draw(board);
-					}
-				});
-			}
-		});
-		scaleFactor = 14.4 / board.getBoardSize();
-		scale.setX(scaleFactor);
-		scale.setY(scaleFactor);
-		getTransforms().add(scale);
+        b.addSizeListener(new BoardSizeListener() {
+                @Override
+                public void onSizeChanged(int oldSize, int newSize) {
+                        missileViews.clear();
+                        missiles.getChildren().clear();
+                        shipViews.clear();
+                        ships.getChildren().clear();
+                        Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+		                        	scaleFactor = 14.4 / board.getBoardSize();
+		                            scale.setX(scaleFactor);
+		                            scale.setY(scaleFactor);
+		                            getChildren().clear();
+		                            draw(board);
+                                }
+                        });
+                }
+        });
 	}
 
 	private void draw(Board board) {
