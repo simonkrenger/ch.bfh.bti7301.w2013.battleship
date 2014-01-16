@@ -59,6 +59,8 @@ public class Game implements ConnectionStateListener {
 	 * The opponent player
 	 */
 	private Player opponentPlayer;
+	
+	private Player computerPlayer;
 
 	@SuppressWarnings("unused")
 	private Connection connection;
@@ -111,6 +113,14 @@ public class Game implements ConnectionStateListener {
 	 */
 	public Player getOpponent() {
 		return opponentPlayer;
+	}
+	
+	public Player getComputerPlayer() {
+		return computerPlayer;
+	}
+	
+	public void setComputerPlayer(Player c) {
+		this.opponentPlayer = c;
 	}
 
 	/**

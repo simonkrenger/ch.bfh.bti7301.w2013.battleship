@@ -26,6 +26,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
+import ch.bfh.bti7301.w2013.battleship.game.Game;
 import ch.bfh.bti7301.w2013.battleship.network.Connection;
 import ch.bfh.bti7301.w2013.battleship.network.ConnectionState;
 import ch.bfh.bti7301.w2013.battleship.network.DiscoveryListener;
@@ -37,6 +38,8 @@ public class NetworkPanel extends VBox {
 	private ObservableList<NetworkClient> opponents = new ObservableListWrapper<NetworkClient>(
 			new LinkedList<NetworkClient>());
 	private Connection conn = Connection.getInstance();
+	
+	private NetworkClient comp = new NetworkClient("Computer", "Computer");
 
 	private Map<String, NetworkClient> peers = new HashMap<>();
 
@@ -47,6 +50,7 @@ public class NetworkPanel extends VBox {
 		getChildren().add(getIpBox());
 		final ListView<NetworkClient> ips = new ListView<>();
 
+		opponents.add(comp);
 		conn.addDiscoveryListener(new DiscoveryListener() {
 			@Override
 			public void foundOpponent(final String ip, final String name) {
@@ -91,6 +95,9 @@ public class NetworkPanel extends VBox {
 			public void run() {
 				if (!toRemove.isEmpty())
 					return;
+				
+				// Computer player is never stale
+				comp.seen();
 
 				for (NetworkClient opponent : opponents) {
 					if (opponent.isStale()) {
@@ -151,7 +158,11 @@ public class NetworkPanel extends VBox {
 		connect.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				Connection.getInstance().connectOpponent(ipAddress.getText());
+				if(ipAddress.getText().trim().equalsIgnoreCase("Computer")) {
+					Game.getInstance().setComputerPlayer(Game.getInstance().getComputerPlayer());
+		        } else {
+		        	Connection.getInstance().connectOpponent(ipAddress.getText());
+		        }
 				System.out.println(ipAddress.getText());
 			}
 		});
