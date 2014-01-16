@@ -39,44 +39,6 @@ import ch.bfh.bti7301.w2013.battleship.network.Connection;
 public class LocalPlayer extends GenericPlayer {
 
 	@Override
-	public Missile placeMissile(Missile m) {
-
-		// Do some sanity checks
-		if (!this.getBoard().withinBoard(m.getCoordinates())) {
-			throw new RuntimeException(
-					"Coordinates of missile not within board!");
-		}
-
-		if (m.getMissileState() != MissileState.FIRED) {
-			throw new RuntimeException("Missle has state "
-					+ m.getMissileState() + ", needs to be FIRED!");
-		}
-
-		for (Ship s : this.getBoard().getPlacedShips()) {
-			for (Coordinates c : s.getCoordinatesForShip()) {
-				if (c.equals(m.getCoordinates())) {
-					// It's a hit!
-					s.setDamage(m.getCoordinates());
-					if (s.isSunk()) {
-						m.setMissileState(MissileState.SUNK);
-						m.setSunkShip(s);
-						if (this.getBoard().checkAllShipsSunk()) {
-							m.setMissileState(MissileState.GAME_WON);
-						}
-					} else {
-						m.setMissileState(MissileState.HIT);
-					}
-					getBoard().placeMissile(m);
-					return m;
-				}
-			}
-		}
-		m.setMissileState(MissileState.MISS);
-		getBoard().placeMissile(m);
-		return m;
-	}
-
-	@Override
 	public void setPlayerState(PlayerState status) {
 		// Prevent infinite loops:
 		if (status == getPlayerState()

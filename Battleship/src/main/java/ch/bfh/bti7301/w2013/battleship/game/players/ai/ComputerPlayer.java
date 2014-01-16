@@ -39,6 +39,7 @@ import ch.bfh.bti7301.w2013.battleship.game.PlayerStateListener;
 import ch.bfh.bti7301.w2013.battleship.game.players.LocalPlayer;
 import ch.bfh.bti7301.w2013.battleship.game.players.NetworkPlayer;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
+import ch.bfh.bti7301.w2013.battleship.network.Connection;
 
 /**
  * @author simon
@@ -77,36 +78,27 @@ public class ComputerPlayer extends LocalPlayer implements
 
 	@Override
 	public void sendMissile(Missile m) {
-		if(m.getMissileState() == MissileState.FIRED) {
+		// This method is called when a Missile arrives from the opponent
+		Game g = Game.getInstance();
+		switch (m.getMissileState()) {
+		case FIRED:
 			Missile f = super.placeMissile(m);
 			if(this.getBoard().checkAllShipsSunk()) {
 				// ComputerPlayer lost, dang it!
 				System.out.println("Rats, this game was lost!");
 			}
-			Game.getInstance().handleMissile(f);
-		} else {
-			// Is a feedback
-			if(m.getMissileState() == MissileState.GAME_WON) {
-				System.out.println("Yay, I won!");
-			} else {
-				switch(m.getMissileState()) {
-				case HIT:
-				case SUNK:
-					// Insult the player
-					System.out.println("Take that you rat!");
-					fireMissile();
-					break;
-				case MISS:
-					// Insult the player
-					System.out.println("Argh, I swear it just was there!");
-					break;
-				default:
-					break;
-				
-				}
-			}
+			break;
+		case MISS:
+			g.setActivePlayer(g.getLocalPlayer());
+			break;
+		case HIT:
+		case SUNK:
+			g.setActivePlayer(g.getComputerPlayer());
+			break;
+		case GAME_WON:
+			g.setWinningPlayer(Game.getInstance().getOpponent());
+			break;
 		}
-
 	}
 	
 	// Player state changes

@@ -110,6 +110,9 @@ public class Board {
 				// Check if coordinates of missile were already used
 				for (Missile placed : placedMissiles) {
 					if (placed.getCoordinates().equals(m.getCoordinates())) {
+						if(Game.getInstance().getComputerPlayer().getBoard() == this) {
+							return;
+						}
 						throw new RuntimeException(
 								"Missile coordinates were already used!");
 					}
@@ -118,7 +121,7 @@ public class Board {
 				Player opponent = Game.getInstance().getOpponent();
 				if(opponent instanceof ComputerPlayer) {
 					ComputerPlayer comp = (ComputerPlayer) opponent;
-					comp.sendMissile(m);
+					comp.placeMissile(m);
 				} else {
 					opponent.sendMissile(m);
 				}

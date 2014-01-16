@@ -26,6 +26,8 @@ import ch.bfh.bti7301.w2013.battleship.game.Missile.MissileState;
 public class BoardView extends Parent {
 	public static final int SIZE = 40;
 
+	private Board board;
+	
 	private Map<Coordinates, MissileView> missileViews = new HashMap<>();
 	private List<ShipView> shipViews = new LinkedList<>();
 	private Group ships = new Group();
@@ -34,7 +36,7 @@ public class BoardView extends Parent {
 	private boolean blocked = false;
 
 	public BoardView(Game game, BoardType type) {
-		final Board board = type.getBoard(game);
+		board = type.getBoard(game);
 
 		final int rows, columns;
 		rows = columns = board.getBoardSize();
@@ -170,6 +172,10 @@ public class BoardView extends Parent {
 			}
 		}
 		return null;
+	}
+	
+	public void setBoard(Board b) {
+		this.board = b;
 	}
 
 	public void addShip(Ship ship) {
