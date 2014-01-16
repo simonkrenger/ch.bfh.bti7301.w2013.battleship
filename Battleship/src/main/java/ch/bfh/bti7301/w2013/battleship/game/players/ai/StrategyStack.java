@@ -56,10 +56,10 @@ public class StrategyStack {
 	}
 
 	public Coordinates pop() {
-		while (this.isEmpty()) {
-			addRandom(5);
+		if (this.isEmpty()) {
+			throw new StackOverflowError("Stack is empty");
 		}
-		return s[(pointer--)-1];
+		return s[pointer--];
 	}
 
 	public Coordinates top() {
