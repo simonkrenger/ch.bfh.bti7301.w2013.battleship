@@ -50,6 +50,8 @@ public class Game implements ConnectionStateListener {
 
 	private GameRule rule = SettingsPanel.getSettings().getRule();
 
+	private RuleChangeListener listener;
+
 	/**
 	 * The local player
 	 */
@@ -180,13 +182,12 @@ public class Game implements ConnectionStateListener {
 	 * @param g
 	 */
 	public void checkGameRule(GameRule g) {
-		if (g.equals(this.rule)) {
+		if (g.equals(rule)) {
 			// Everything is ok
-		} else {
-			// TODO: Notify user that he has different GameRules
-			// if( User wants to replace his gamerules )
-			// { // TODO: Replace this.rule and reload GUI }
-			// else { // TODO: To be discussed (disconnect?) }
+		} else if (listener.accept(g)) {
+			// TODO: update the rest of the rules
+			// - not yet necessary as they can't be changed
+			SettingsPanel.getSettings().setBoardSize(g.getBoardSize());
 		}
 	}
 
@@ -263,4 +264,11 @@ public class Game implements ConnectionStateListener {
 		this.gameID = gameID;
 	}
 
+	public void setRuleChangeListener(RuleChangeListener listener) {
+		this.listener = listener;
+	}
+
+	public static interface RuleChangeListener {
+		boolean accept(GameRule newRule);
+	}
 }

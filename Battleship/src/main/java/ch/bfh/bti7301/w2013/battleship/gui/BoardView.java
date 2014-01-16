@@ -252,6 +252,10 @@ public class BoardView extends Parent {
 		return line;
 	}
 
+	public double getScaleFactor() {
+		return scaleFactor;
+	}
+
 	public static enum BoardType {
 		LOCAL, OPPONENT;
 

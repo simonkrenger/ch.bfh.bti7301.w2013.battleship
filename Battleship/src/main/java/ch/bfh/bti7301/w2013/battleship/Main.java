@@ -50,10 +50,13 @@ import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
+import ch.bfh.bti7301.w2013.battleship.game.Game.RuleChangeListener;
+import ch.bfh.bti7301.w2013.battleship.game.GameRule;
 import ch.bfh.bti7301.w2013.battleship.game.Player;
 import ch.bfh.bti7301.w2013.battleship.game.players.GenericPlayer.PlayerState;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView;
 import ch.bfh.bti7301.w2013.battleship.gui.BoardView.BoardType;
+import ch.bfh.bti7301.w2013.battleship.gui.ConfirmationDialog;
 import ch.bfh.bti7301.w2013.battleship.gui.GuiConnectionStateListenerAdapter;
 import ch.bfh.bti7301.w2013.battleship.gui.GuiPlayerStateListenerAdapter;
 import ch.bfh.bti7301.w2013.battleship.gui.NetworkPanel;
@@ -196,6 +199,14 @@ public class Main extends Application {
 						}
 					}
 				});
+		game.setRuleChangeListener(new RuleChangeListener() {
+			@Override
+			public boolean accept(GameRule newRule) {
+				return ConfirmationDialog.waitForConfirmation(root,
+						getString("notification.ruleChange"), getString("yes"),
+						getString("no"));
+			}
+		});
 
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			@Override
