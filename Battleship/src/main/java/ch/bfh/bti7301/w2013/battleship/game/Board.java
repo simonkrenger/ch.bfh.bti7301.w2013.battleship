@@ -54,7 +54,7 @@ public class Board {
 	/**
 	 * List of placed missiles on this board
 	 */
-	private ArrayList<Missile> placedMissiles = new ArrayList<Missile>();
+	protected ArrayList<Missile> placedMissiles = new ArrayList<Missile>();
 
 	/**
 	 * Setup object. Needed for Board setup
@@ -65,7 +65,7 @@ public class Board {
 	 * List of BoardListeners to notify when a missile is newly placed or has
 	 * its status updated.
 	 */
-	private ArrayList<BoardListener> listeners = new ArrayList<BoardListener>();
+	protected ArrayList<BoardListener> listeners = new ArrayList<BoardListener>();
 	private ArrayList<BoardSizeListener> sizeListeners = new ArrayList<BoardSizeListener>();
 
 	/**

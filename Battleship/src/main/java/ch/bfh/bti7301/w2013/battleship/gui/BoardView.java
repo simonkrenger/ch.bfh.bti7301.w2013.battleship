@@ -32,13 +32,15 @@ public class BoardView extends Parent {
 	private List<ShipView> shipViews = new LinkedList<>();
 	private Group ships = new Group();
 	private Group missiles = new Group();
+	
+	private Board board;
 
 	private Scale scale = new Scale();
 
 	private boolean blocked = false;
 
 	public BoardView(Game game, BoardType type) {
-		final Board board = type.getBoard(game);
+		board = type.getBoard(game);
 
 		draw(board);
 
@@ -124,7 +126,17 @@ public class BoardView extends Parent {
 			break;
 		}
 
-		board.addBoardListener(new BoardListener() {
+		doAddBoardListener(board);
+		doAddSizeListener(board);
+		
+		double sc = 12.0 / board.getBoardSize();
+		scale.setX(sc);
+		scale.setY(sc);
+		getTransforms().add(scale);
+	}
+	
+	private void doAddBoardListener(Board b) {
+		b.addBoardListener(new BoardListener() {
 			@Override
 			public void stateChanged(final Missile m) {
 				Platform.runLater(new Runnable() {
@@ -147,7 +159,10 @@ public class BoardView extends Parent {
 				});
 			}
 		});
-		board.addSizeListener(new BoardSizeListener() {
+	}
+	
+	private void doAddSizeListener(Board b) {
+		b.addSizeListener(new BoardSizeListener() {
 			@Override
 			public void onSizeChanged(int oldSize, int newSize) {
 				missileViews.clear();
@@ -166,10 +181,6 @@ public class BoardView extends Parent {
 				});
 			}
 		});
-		double sc = 12.0 / board.getBoardSize();
-		scale.setX(sc);
-		scale.setY(sc);
-		getTransforms().add(scale);
 	}
 
 	private void draw(Board board) {
@@ -247,6 +258,12 @@ public class BoardView extends Parent {
 		Line line = new Line(x1, y1, x2, y2);
 		line.setStrokeWidth(0.1);
 		return line;
+	}
+	
+	public void setBoard(Board b) {
+	    this.board = b;
+	    doAddBoardListener(board);
+		doAddSizeListener(board);
 	}
 
 	public static enum BoardType {

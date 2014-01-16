@@ -40,6 +40,11 @@ public class NetworkPlayer extends GenericPlayer {
 		super(name);
 	}
 	
+	@Override
+	public Missile placeMissile(Missile m) {
+		throw new RuntimeException("Not implemented!");
+	}
+	
 	public void sendMissile(Missile m) {
 		Connection.getInstance().sendMissile(m);
 	}

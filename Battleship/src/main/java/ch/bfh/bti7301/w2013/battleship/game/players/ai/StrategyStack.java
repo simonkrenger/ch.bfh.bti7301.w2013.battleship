@@ -23,6 +23,7 @@
  */
 package ch.bfh.bti7301.w2013.battleship.game.players.ai;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -34,57 +35,34 @@ import ch.bfh.bti7301.w2013.battleship.game.Game;
  * 
  */
 public class StrategyStack {
-
-	private Coordinates[] s = null;
-
-	private int pointer = 0;
-
-	public StrategyStack() {
-		this(16);
-	}
-
+	
+	ArrayList<Coordinates> stack = new ArrayList<Coordinates>();
+			
+	private final static int UP_SIZE = 5;
+	
 	public StrategyStack(int initialSize) {
-		s = (Coordinates[]) new Coordinates[initialSize];
-	}
-
-	public void push(Coordinates o) {
-
-		if (pointer == s.length) {
-			s = Arrays.copyOf(s, s.length * 2);
+		for(int i=0; i <= initialSize; i++) {
+			stack.add(getRandom());
 		}
-		s[pointer++] = o;
 	}
 
-	public Coordinates pop() {
-		if (this.isEmpty()) {
-			throw new StackOverflowError("Stack is empty");
+	public Coordinates getNextStep() {
+		Random rand = new Random();
+		
+		if(stack.isEmpty()) {
+			for(int i=0; i <= UP_SIZE; i++) {
+				stack.add(getRandom());
+			}
 		}
-		return s[pointer--];
+		return stack.remove(rand.nextInt(stack.size()));
 	}
-
-	public Coordinates top() {
-		if (this.isEmpty()) {
-			throw new StackOverflowError("Stack is empty");
-		}
-		return s[pointer];
-	}
-
-	public int size() {
-		return s.length;
-	}
-
-	public boolean isEmpty() {
-		return (s.length == 0);
-	}
-
-	public void addRandom(int number) {
+	
+	public Coordinates getRandom() {
 		int sizeOfBoard = Game.getInstance().getRule().getBoardSize();
 
 		Random rand = new Random();
-		for (int i = 0; i <= number; i++) {
-			this.push(new Coordinates(rand.nextInt(sizeOfBoard), rand
-					.nextInt(sizeOfBoard)));
-		}
+		return new Coordinates(rand.nextInt(sizeOfBoard)+1, rand
+					.nextInt(sizeOfBoard)+1);
 	}
 
 }

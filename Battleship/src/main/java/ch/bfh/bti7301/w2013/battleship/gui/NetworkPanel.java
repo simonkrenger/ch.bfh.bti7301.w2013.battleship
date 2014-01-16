@@ -27,6 +27,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Shape;
 import ch.bfh.bti7301.w2013.battleship.game.Game;
+import ch.bfh.bti7301.w2013.battleship.game.players.ai.ComputerPlayer;
 import ch.bfh.bti7301.w2013.battleship.network.Connection;
 import ch.bfh.bti7301.w2013.battleship.network.ConnectionState;
 import ch.bfh.bti7301.w2013.battleship.network.DiscoveryListener;
@@ -160,6 +161,9 @@ public class NetworkPanel extends VBox {
 			public void handle(ActionEvent event) {
 				if(ipAddress.getText().trim().equalsIgnoreCase("Computer")) {
 					Game.getInstance().setComputerPlayer(Game.getInstance().getComputerPlayer());
+					Connection.getInstance().setConnectionState(ConnectionState.CONNECTED, "Computer Player connected");
+					ComputerPlayer comp = (ComputerPlayer) Game.getInstance().getComputerPlayer();
+					comp.activate();
 		        } else {
 		        	Connection.getInstance().connectOpponent(ipAddress.getText());
 		        }

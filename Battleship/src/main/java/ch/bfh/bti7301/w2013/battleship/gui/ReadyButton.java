@@ -25,6 +25,7 @@ public class ReadyButton extends Button {
 			@Override
 			public void handle(ActionEvent event) {
 				game.getLocalPlayer().setPlayerState(PlayerState.READY);
+				obv.setBoard(game.getComputerPlayer().getBoard());
 				ParallelTransitionBuilder
 						.create()
 						.children(
