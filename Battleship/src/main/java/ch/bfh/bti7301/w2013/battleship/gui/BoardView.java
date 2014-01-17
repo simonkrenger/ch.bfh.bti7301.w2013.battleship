@@ -33,6 +33,7 @@ public class BoardView extends Parent {
 	private Group ships = new Group();
 	private Group missiles = new Group();
 
+	private double scaleFactor;
 	private Scale scale = new Scale();
 
 	private boolean blocked = false;
@@ -74,14 +75,16 @@ public class BoardView extends Parent {
 					if (sv == null)
 						return;
 
-					final double dx = e.getSceneX() - sv.getLayoutX();
-					final double dy = e.getSceneY() - sv.getLayoutY();
+					final double dx = e.getSceneX() / scaleFactor
+							- sv.getLayoutX();
+					final double dy = e.getSceneY() / scaleFactor
+							- sv.getLayoutY();
 
 					sv.setOnMouseDragged(new EventHandler<MouseEvent>() {
 						@Override
 						public void handle(MouseEvent me) {
-							sv.setLayoutX(me.getSceneX() - dx);
-							sv.setLayoutY(me.getSceneY() - dy);
+							sv.setLayoutX(me.getSceneX() / scaleFactor - dx);
+							sv.setLayoutY(me.getSceneY() / scaleFactor - dy);
 						}
 					});
 					sv.setOnMouseReleased(new EventHandler<MouseEvent>() {
@@ -150,25 +153,30 @@ public class BoardView extends Parent {
 		board.addSizeListener(new BoardSizeListener() {
 			@Override
 			public void onSizeChanged(int oldSize, int newSize) {
-				missileViews.clear();
-				missiles.getChildren().clear();
-				shipViews.clear();
-				ships.getChildren().clear();
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
-						double sc = 12.0 / board.getBoardSize();
-						scale.setX(sc);
-						scale.setY(sc);
-						getChildren().clear();
-						draw(board);
+						missileViews.clear();
+						missiles.getChildren().clear();
+						shipViews.clear();
+						ships.getChildren().clear();
+						Platform.runLater(new Runnable() {
+							@Override
+							public void run() {
+								scaleFactor = 14.4 / board.getBoardSize();
+								scale.setX(scaleFactor);
+								scale.setY(scaleFactor);
+								getChildren().clear();
+								draw(board);
+							}
+						});
 					}
 				});
 			}
 		});
-		double sc = 12.0 / board.getBoardSize();
-		scale.setX(sc);
-		scale.setY(sc);
+		scaleFactor = 14.4 / board.getBoardSize();
+		scale.setX(scaleFactor);
+		scale.setY(scaleFactor);
 		getTransforms().add(scale);
 	}
 
@@ -247,6 +255,10 @@ public class BoardView extends Parent {
 		Line line = new Line(x1, y1, x2, y2);
 		line.setStrokeWidth(0.1);
 		return line;
+	}
+
+	public double getScaleFactor() {
+		return scaleFactor;
 	}
 
 	public static enum BoardType {

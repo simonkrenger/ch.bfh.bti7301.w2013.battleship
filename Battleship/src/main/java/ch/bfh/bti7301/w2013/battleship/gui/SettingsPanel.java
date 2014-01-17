@@ -3,10 +3,13 @@ package ch.bfh.bti7301.w2013.battleship.gui;
 import static ch.bfh.bti7301.w2013.battleship.utils.GameUtils.getString;
 import static ch.bfh.bti7301.w2013.battleship.game.Settings.*;
 import ch.bfh.bti7301.w2013.battleship.game.Settings;
+import ch.bfh.bti7301.w2013.battleship.network.Connection;
+import ch.bfh.bti7301.w2013.battleship.network.ConnectionState;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
@@ -38,27 +41,38 @@ public class SettingsPanel extends VBox {
 		soundPane.setCollapsible(false);
 		getChildren().add(soundPane);
 
-		TitledPane rulePane = new TitledPane();
+		final TitledPane rulePane = new TitledPane();
 		rulePane.setText(getString("gamerules"));
 		GridPane ruleBox = new GridPane();
 		rulePane.setContent(ruleBox);
-		final TextField boardSizeField = new TextField(String.valueOf( //
-				settings.getRule().getBoardSize()));
-		boardSizeField.textProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable,
-					String oldValue, String newValue) {
-				try {
-					int bs = Integer.parseInt(newValue);
-					settings.setBoardSize(bs);
-				} catch (Throwable e) {
-					boardSizeField.setText(oldValue);
-				}
-			}
-		});
-		ruleBox.addRow(0, new Label(getString("boardsize")), boardSizeField);
+		final Slider boardSizeSlider = new Slider(10, 30, settings.getRule()
+				.getBoardSize());
+		boardSizeSlider.setShowTickLabels(true);
+		boardSizeSlider.setShowTickMarks(true);
+		boardSizeSlider.setMajorTickUnit(10);
+		boardSizeSlider.setMinorTickCount(10);
+		boardSizeSlider.setBlockIncrement(1);
+		boardSizeSlider.valueProperty().addListener(
+				new ChangeListener<Number>() {
+					@Override
+					public void changed(
+							ObservableValue<? extends Number> observable,
+							Number oldValue, Number newValue) {
+						settings.setBoardSize(newValue.intValue());
+					}
+				});
+		ruleBox.addRow(0, new Label(getString("boardsize")), boardSizeSlider);
 		rulePane.setCollapsible(false);
 		getChildren().add(rulePane);
+		Connection.getInstance().addConnectionStateListener(
+				new GuiConnectionStateListenerAdapter() {
+					@Override
+					public void doStateChanged(ConnectionState newState,
+							String msg) {
+						if (newState == ConnectionState.CONNECTED)
+							rulePane.setDisable(true);
+					}
+				});
 	}
 
 	private CheckBox createCheckBox(final String id, boolean def) {

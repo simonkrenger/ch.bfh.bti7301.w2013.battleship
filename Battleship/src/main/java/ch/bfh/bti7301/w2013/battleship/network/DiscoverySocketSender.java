@@ -31,7 +31,7 @@ public class DiscoverySocketSender extends Thread {
 
 
 				udpSocket.send(packetOut);
-				sleep(5000);
+				sleep(2000);
 
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
