@@ -153,18 +153,23 @@ public class BoardView extends Parent {
 		board.addSizeListener(new BoardSizeListener() {
 			@Override
 			public void onSizeChanged(int oldSize, int newSize) {
-				missileViews.clear();
-				missiles.getChildren().clear();
-				shipViews.clear();
-				ships.getChildren().clear();
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
-						scaleFactor = 14.4 / board.getBoardSize();
-						scale.setX(scaleFactor);
-						scale.setY(scaleFactor);
-						getChildren().clear();
-						draw(board);
+						missileViews.clear();
+						missiles.getChildren().clear();
+						shipViews.clear();
+						ships.getChildren().clear();
+						Platform.runLater(new Runnable() {
+							@Override
+							public void run() {
+								scaleFactor = 14.4 / board.getBoardSize();
+								scale.setX(scaleFactor);
+								scale.setY(scaleFactor);
+								getChildren().clear();
+								draw(board);
+							}
+						});
 					}
 				});
 			}

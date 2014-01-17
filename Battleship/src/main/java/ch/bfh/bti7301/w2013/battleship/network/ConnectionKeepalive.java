@@ -15,7 +15,7 @@ public class ConnectionKeepalive extends Thread {
 			
 			Connection.getInstance().getHandler().sendObject(KEEP_ALIVE);
 			try {
-				sleep(5000);
+				sleep(2000);
 
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block

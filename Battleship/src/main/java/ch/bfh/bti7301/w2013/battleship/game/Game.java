@@ -148,7 +148,8 @@ public class Game implements ConnectionStateListener {
 
 	public void setWinningPlayer(Player p) {
 		if (p == getOpponent()) {
-
+			getOpponent().setPlayerState(PlayerState.GAME_WON);
+			getLocalPlayer().setPlayerState(PlayerState.GAME_LOST);
 		} else if (p == getLocalPlayer()) {
 			getOpponent().setPlayerState(PlayerState.GAME_LOST);
 			getLocalPlayer().setPlayerState(PlayerState.GAME_WON);

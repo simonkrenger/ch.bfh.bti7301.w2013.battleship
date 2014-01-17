@@ -65,6 +65,8 @@ public class ReadyButton extends Button {
 										.build()//
 						).build().play();
 				setVisible(false);
+				game.getActivePlayer().getBoard().getBoardSetup().done();
+				game.getOpponent().getBoard().getBoardSetup().done();
 			}
 		});
 	}

@@ -43,11 +43,12 @@ public class SoundEffects {
 	private static Effect getClip(String resource) {
 		try {
 			AudioInputStream ais = createReusableAudioInputStream(resource);
-			return new Effect(ais);
+			if (ais != null)
+				return new Effect(ais);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
 		}
+		return null;
 	}
 
 	private static AudioInputStream createReusableAudioInputStream(String res) {
@@ -67,6 +68,7 @@ public class SoundEffects {
 					ais.getFormat(), AudioSystem.NOT_SPECIFIED);
 			return reusableAis;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		} finally {
 			if (ais != null) {

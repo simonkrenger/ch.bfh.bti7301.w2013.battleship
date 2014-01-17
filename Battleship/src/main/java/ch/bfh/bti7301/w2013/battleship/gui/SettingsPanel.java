@@ -3,6 +3,8 @@ package ch.bfh.bti7301.w2013.battleship.gui;
 import static ch.bfh.bti7301.w2013.battleship.utils.GameUtils.getString;
 import static ch.bfh.bti7301.w2013.battleship.game.Settings.*;
 import ch.bfh.bti7301.w2013.battleship.game.Settings;
+import ch.bfh.bti7301.w2013.battleship.network.Connection;
+import ch.bfh.bti7301.w2013.battleship.network.ConnectionState;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.CheckBox;
@@ -39,7 +41,7 @@ public class SettingsPanel extends VBox {
 		soundPane.setCollapsible(false);
 		getChildren().add(soundPane);
 
-		TitledPane rulePane = new TitledPane();
+		final TitledPane rulePane = new TitledPane();
 		rulePane.setText(getString("gamerules"));
 		GridPane ruleBox = new GridPane();
 		rulePane.setContent(ruleBox);
@@ -62,6 +64,15 @@ public class SettingsPanel extends VBox {
 		ruleBox.addRow(0, new Label(getString("boardsize")), boardSizeSlider);
 		rulePane.setCollapsible(false);
 		getChildren().add(rulePane);
+		Connection.getInstance().addConnectionStateListener(
+				new GuiConnectionStateListenerAdapter() {
+					@Override
+					public void doStateChanged(ConnectionState newState,
+							String msg) {
+						if (newState == ConnectionState.CONNECTED)
+							rulePane.setDisable(true);
+					}
+				});
 	}
 
 	private CheckBox createCheckBox(final String id, boolean def) {
