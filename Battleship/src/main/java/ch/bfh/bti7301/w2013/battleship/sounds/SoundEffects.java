@@ -1,5 +1,6 @@
 package ch.bfh.bti7301.w2013.battleship.sounds;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -54,8 +55,9 @@ public class SoundEffects {
 	private static AudioInputStream createReusableAudioInputStream(String res) {
 		AudioInputStream ais = null;
 		try {
-			ais = AudioSystem.getAudioInputStream(SoundEffects.class
-					.getClassLoader().getResourceAsStream(res));
+			ais = AudioSystem.getAudioInputStream(new BufferedInputStream(
+					SoundEffects.class.getClassLoader()
+							.getResourceAsStream(res)));
 			byte[] buffer = new byte[1024 * 32];
 			int read = 0;
 			ByteArrayOutputStream baos = new ByteArrayOutputStream(
